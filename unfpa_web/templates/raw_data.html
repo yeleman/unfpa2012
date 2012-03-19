@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load babel %}
+{% load bolibana %}
+
+{% block title %}{% if no_report %}Rapport indisponible{% else %}Données brutes du rapport {{ report.receipt }}{% endif %}{% endblock %}
+{% block pagetitle %}<h1 class="pagetitle">{% if no_report %}Rapport indisponible{% else %}Rapport de {{ report.entity.display_full_name }}, {{ report.period.middle|datefmt:"MMMM yyyy" }}{% endif %}</h1>{% endblock %}
+{% block page-name %}context{% endblock %}
+
+{% block submenu %}{% include "submenu.html" with content="data_browser" report=report entity=web_provider.first_role paths=paths base_url="raw_data"|url:"0" %}{% endblock %}
+
+{% block jqueryonload %}addJQEventsSubMenu("{% url raw_data %}", "{% url raw_data 0 %}");
+addJQEventPeriodChange("{% url raw_data 'ent_code' 111111 %}", "{{ entity.slug }}");
+addJQEventToggleSources();{% endblock %}
+
+{% block content %}
+{% if periods %}
+<div id="period_nav" {% if report.status < 4 %}class="unvalidated" title="Ce rapport n'a pas encore été validé."{% endif %}><p>Période {% if no_report %}{% include "generic_select.html" with class="browser" items=periods selected=period.pid datefilter="MMMM YYYY" id="period_select" novalue=" - - - - "%}{% else %}{% include "generic_select.html" with class="browser" items=periods selected=period.pid datefilter="MMMM YYYY" id="period_select" %}{% endif %}</select></p></div>
+{% endif %}
+
+<div id="context">
+
+{% if no_report %}
+<p>Désolé, il n'existe pas de rapport validé pour pour la période de {{ period.middle|datefmt:"MMMM yyyy" }} à {{ entity.display_full_name }}.</p>
+{% if periods %}
+<p>Cependant, il existe {{ periods|length}} autre rapport{{ periods|length|pluralize }} pour {{ entity.display_full_name }}. Séléctionnez une autre période pour y accèder.</p>
+{% endif %}
+{%else %}
+
+{% endif %}
+</div>
+{% endblock %}

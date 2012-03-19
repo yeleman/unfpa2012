@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+# encoding=utf-8
+
+# ROOT_DIR contains path of this folder.
+import os
+abs_path = os.path.abspath(__file__)
+ROOT_DIR = os.path.dirname(abs_path)
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+ADMINS = (
+    ('reg', 'rgaudin@gmail.com'),
+)
+
+DATABASES = {'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'unfpa',
+    'USER': 'unfpa',
+    'PASSWORD': 'unfpa',
+    'HOST': 'localhost'},
+    'smsd': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'unfpasms',
+    'USER': 'unfpasms',
+    'PASSWORD': 'unfpasms',
+    'HOST': 'localhost'}}
+
+TIME_ZONE = 'Africa/Bamako'
+
+LANGUAGE_CODE = 'fr-fr'
+
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+MEDIA_URL = ''
+
+import unfpa_web
+STATIC_ROOT = os.path.join(os.path.dirname( \
+                                 os.path.abspath(unfpa_web.__file__)), 'static')
+STATIC_URL = '/static/'
+
+#ADMIN_MEDIA_PREFIX = '/admin_static/'
+
+# change that one!
+SECRET_KEY = 'HOLY_COW_CHANGE_THAT'
+
+TEMPLATE_DIRS = ()
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_HOST_USER = 'pnlp.ml@gmail.com'
+#EMAIL_HOST_PASSWORD = ""
+
+EMAIL_SENDER = "ANTIM <fnuap@sante.gov.ml>"
+
+HOTLINE_NUMBER = "65731076"
+HOTLINE_EMAIL = "fnuap@sante.gov.ml"
+
+SUPPORT_CONTACTS = [('antim', u"ANTIM", 'antim@sante.gov.ml')]
+
+USE_HTTPS = True
