@@ -11,6 +11,7 @@ from bolibana.admin import EntityAdmin, EntityTypeAdmin, PeriodAdmin
 from bolibana.models import Role, Permission, Access, Provider
 from bolibana.admin import (RoleAdmin, PermissionAdmin, \
                             AccessAdmin, ProviderAdmin)
+from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 
 
 class ProviderUserStacked(admin.StackedInline):
@@ -33,3 +34,6 @@ admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Role, RoleAdmin)
 admin.site.register(Access, AccessAdmin)
 admin.site.register(Permission, PermissionAdmin)
+
+admin.site.register(MaternalMortalityReport)
+admin.site.register(ChildrenMortalityReport)
