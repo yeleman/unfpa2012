@@ -7,7 +7,7 @@
 {% block content %}
 
 {% if form.errors %}
-<p>{% trans "Unable to log you in with this username and password." %}</p>
+<p>Impossible de vous identifier avec cet identifiant et ce mot de passe.</p>
 {% endif %}
 
 <h2>Bienvenue !</h2>
@@ -19,12 +19,12 @@
 <form method="post" action="{% url login %}">
 {% csrf_token %}
 <table>
-<tr><th>{% trans "Username" %}</th><td>{{ form.username }}</td>
+<tr><th>Identifiant</th><td>{{ form.username }}</td>
 </tr>
-<tr><th>{% trans "Password" %}</th><td>{{ form.password }}</td></tr>
+<tr><th>Mot de passe</th><td>{{ form.password }}</td></tr>
 </table>
 <input type="hidden" name="next" value="{{ next }}" />
-<button class="formbutt default">{% trans 'Log in' %}</button>
+<button class="formbutt default">S'identifier</button>
 </form>
 
 <p>Si vous souhaitez obtenir un accès ou que vous avez perdu vos identifiants, contactez le <a href="{% url support %}">support technique</a>.</p>

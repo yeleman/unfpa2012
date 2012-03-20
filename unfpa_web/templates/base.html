@@ -21,12 +21,12 @@
             <h1><a href="{% url index %}">FNUAP – Santé maternelle</a></h1>
             <ul id="user-menu">
             {% if web_provider.is_authenticated %}
-            <li><a href="{% url profile %}" title="{% trans 'Edit your informations' %}">{{ web_provider.get_full_name }}</a></li>
-            <li><a href="{% url logout %}" title="{% trans 'Log out' %}">{% trans "Disconnect" %}</a></li>
+            <li><a href="{% url profile %}" title="Modifier vos informations">{{ web_provider.get_full_name }}</a></li>
+            <li><a href="{% url logout %}" title="Se déconnecter">Déconnecter</a></li>
             {% else %}
-            <li><a href="{% url login %}" title="{% trans 'Log in' %}">{% trans "Log in" %}</a></li>
+            <li><a href="{% url login %}" title="S'identifier">S'identifier</a></li>
             {% endif %}
-            <li><a href="{% url help %}" title="{% trans 'View Help Topics' %}">{% trans "Help" %}</a></li>
+            <li><a href="{% url help %}" title="Voir les pages d'aide">Aide</a></li>
             </ul>
 
             <div id="breadcrumbs">{%block breadcrumbs %}{% endblock %}</div>
@@ -35,7 +35,7 @@
         {% block submenu %}{% endblock %}
         <div id="content" class="mainbox {% block page-name %}default{% endblock %} {% block content-class %}{% endblock %}">
         {% if messages %}
-        <ul id="messages" title="{% trans 'Informative Messages. Click to hide.' %}">
+        <ul id="messages" title="Messages d'information. Cliquez pour les faire disparaître.">
             {% for message in messages %}
             <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}
@@ -47,8 +47,8 @@
         </div>
         <div id="footer">
         <ul>
-            <li><a href="{% url support %}" title="{% trans 'Contact Us' %}">{% trans "Contact" %}</a></li>
-            <li><a href="{% url about %}" title="{% trans 'About UNFPA' %}">{% trans "About" %}</a></li>
+            <li><a href="{% url support %}" title="Contactez nous">Contact</a></li>
+            <li><a href="{% url about %}" title="À propos">À propos</a></li>
             <li><a href="{% url media '' %}" title="Documents et téléchargements">Ressources</a></li>
         </ul>
         </div>

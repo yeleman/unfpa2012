@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "My Profile" %}{% endblock %}
-{% block pagetitle %}<h1 class="pagetitle">{% trans "My Profile" %}</h1>{% endblock %}
+{% block title %}Mon profile{% endblock %}
+{% block pagetitle %}<h1 class="pagetitle">Mon profile</h1>{% endblock %}
 
 {% block content %}
-<h2>{% trans "My personnal informations" %}</h2>
+<h2>Mes informations personnelles</h2>
 <form method="POST" action="{% url profile %}" name="profile">
 {% csrf_token %}
 <table>
@@ -16,13 +16,13 @@
 <button class="formbutt default">Enregistrer les modifications</button>
 </form>
 
-<h2>{% trans "Change password" %}</h2>
+<h2>Changer de mot de passe</h2>
 
 <form method="POST" action="{% url profile %}" name="passwd">
 {% csrf_token %}
 <table>
 {{ passwd_form.as_table }}
 </table>
-<button class="formbutt default">{% trans "Change password" %}</button>
+<button class="formbutt default">Changer de mot de passe</button>
 </form>
 {% endblock %}
