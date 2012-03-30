@@ -6,7 +6,7 @@ import re
 
 from datetime import date, timedelta
 
-from unfpa_core.models import MaternalMortalityReport
+from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 from bolibana.models import Entity, Provider
 
 
@@ -129,5 +129,52 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
 
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
+	"""  Incomming:
+            fnuap du5 reporting_location name dob dod death_location
+         Outgoing:
+            [SUCCES] mes condoleances. """
+
+	try:
+		reporting_location_code, name, age_or_dob, dod_text, \
+        death_location_code = args.split()
+	except:
+		return resp_error(message, u"l'enregistrement de rapport "\
+								   u" des moins de 5ans")
+
+    # Entity code
+	try:
+		reporting_location = Entity.objects.get(slug=reporting_location_code)
+	except Entity.DoesNotExist:
+		return message.respond(u"Ce Lieu de rapportage n'existe pas")
+
+    # DOB (YYYY-MM-DD) or age (11y/11m)
+	try:
+		dob, dob_auto = parse_age_dob(age_or_dob)
+	except:
+		return message.respond(u"Cette date de naissance n'est pas valide")
+
+    # Date of Death, YYYY-MM-DD
+	try:
+		dod = parse_age_dob(dod_text, True)
+	except:
+		return message.respond(u"Cette date de mort n'est pas valide")
+
+    # Place of death, entity code
+	try:
+		death_location = Entity.objects.get(slug=death_location_code)
+	except Entity.DoesNotExist:
+		return message.respond(u"Ce lieu de deces n'existe pas")
+
+	report = ChildrenMortalityReport()
+	report.created_by = contact_for(message.identity)
+	report.reporting_location = reporting_location
+	report.name = name
+	report.dob = dob
+	report.dob_auto = dob_auto
+	report.dod = dod
+	report.death_location = death_location
+	report.save()
+
+	message.respond(u"[SUCCES] mes condoleances.")
     
-    return True
+	return True
