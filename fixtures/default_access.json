@@ -1,1 +1,1 @@
-[{"pk": 1, "model": "bolibana.access", "fields": {"role": "antim", "object_id": 1, "content_type": 13}}]
+[{"pk": 1, "model": "bolibana.access", "fields": {"role": "antim", "object_id": 2, "content_type": 17}}]

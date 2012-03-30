@@ -18,7 +18,7 @@ locale.setlocale(locale.LC_ALL, settings.DEFAULT_LOCALE)
 
 
 def nosms_handler(message):
-    """ NUT SMS router """
+    """ FNUAP SMS router """
     def main_nut_handler(message):
         keyword = 'fnuap'
         commands = {
@@ -29,7 +29,7 @@ def nosms_handler(message):
             'test': nut_test,
             'echo': nut_echo}
 
-        if message.content.lower().startswith('nut '):
+        if message.content.lower().startswith('fnuap '):
             for cmd_id, cmd_target in commands.items():
                 command = '%s %s' % (keyword, cmd_id)
                 if message.content.lower().startswith(command):
@@ -54,7 +54,7 @@ def nosms_handler(message):
 
 def nut_test(message, **kwargs):
     try:
-        code, msg = message.content.split('nut test')
+        code, msg = message.content.split('fnuap test')
     except:
         msg = ''
 
