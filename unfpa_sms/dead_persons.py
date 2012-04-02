@@ -82,7 +82,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     try:
         death_location = Entity.objects.get(slug=death_location_code)
     except Entity.DoesNotExist:
-        return resp_error(message, u"le lieu du deces")
+        return message.respond(u"Le lieu du deces %s n'existe pas" % death_location_code)
 
     # Nb of living children
     try:
