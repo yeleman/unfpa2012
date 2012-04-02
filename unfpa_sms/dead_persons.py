@@ -48,69 +48,70 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant 
                       pregnancy_weeks pregnancy_related_death
+            exemple: 'fnuap dpw kid kadi_alou 25y 20120323 kid 2 0 0 4 1'
          Outgoing:
-            [SUCCES] full_name ne fait plus partie du programme.
-            or error message """
+            [SUCCES] Le rapport de name a ete enregistre. 
+            or [ERREUR] message """
 
     try:
         reporting_location_code, name, age_or_dob, dod_text, death_location_code, \
         living_children_text, dead_children_text, pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
     except:
-        return resp_error(message, u"la sortie")
+        return resp_error(message, u"le rapport")
 
     # Entity code
     try:
         reporting_location = Entity.objects.get(slug=reporting_location_code)
     except Entity.DoesNotExist:
-        return resp_error(message, u"la reporting_location")
+        return message.respond(u"Le code %s n'existe pas" % reporting_location_code)
 
     # DOB (YYYY-MM-DD) or age (11y/11m)
     try:
         dob, dob_auto = parse_age_dob(age_or_dob)
     except:
-        return resp_error(message, u"la dob")
+        return resp_error(message, u"la date de naissance")
 
     # Date of Death, YYYY-MM-DD
     try:
         dod = parse_age_dob(dod_text, True)
     except:
-        return resp_error(message, u"la dod")
+        return resp_error(message, u"la date de mort")
 
     # Place of death, entity code
     try:
         death_location = Entity.objects.get(slug=death_location_code)
     except Entity.DoesNotExist:
-        return resp_error(message, u"la death_location")
+        return resp_error(message, u"le lieu du deces")
 
     # Nb of living children
     try:
         living_children = int(living_children_text)
     except:
-        return resp_error(message, u"la living_children")
+        return resp_error(message, u"le nombre d'enfants vivant du defunt")
 
     # Nb of dead children
     try:
         dead_children = int(dead_children_text)
     except:
-        return resp_error(message, u"la dead_children")
+        return resp_error(message, u"le nombre d'enfants morts de la personne decedee")
 
     # was she pregnant (0/1)
-    pregnant = bool(pregnant_text)
+    pregnant = bool(int(pregnant_text))
 
     # Nb of weeks of pregnancy (or 0)
     try:
         pregnancy_weeks = int(pregnancy_weeks_text)
     except:
-        return resp_error(message, u"la pregnancy_weeks")
+        return resp_error(message, u"la Duree de la grossesse")
 
     # Pregnancy related death? (0/1)
-    pregnancy_related_death = bool(pregnancy_related_death_text)
+    pregnancy_related_death = bool(int(pregnancy_related_death_text))
 
     report = MaternalMortalityReport()
     report.created_by = contact_for(message.identity)
     report.reporting_location = reporting_location
-    report.name = name
+    report.name = name.replace('_', ' ')
     report.dob = dob
     report.dob_auto = dob_auto
     report.dod = dod
@@ -122,8 +123,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnancy_related_death = report.YES if pregnancy_related_death else report.NO
     report.save()
 
-    message.respond(u"[SUCCES] %(name)s ne fait plus partie "
-                    u"du programme." %
+    message.respond(u"[SUCCES]  Le rapport de %(name)s a ete enregistre. " %
                     {'name': report.name})
     return True
 
