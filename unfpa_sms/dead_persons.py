@@ -15,16 +15,46 @@ def resp_error(message, action):
                                                                % action)
     return True
 
+
+def resp_error_reporting_location(message, code):
+    message.respond(u"[ERREUR] Le Lieu de rapportage %s n'existe pas."
+                                                               % code)
+    return True
+
+
+def resp_error_death_location(message, code):
+    message.respond(u"[ERREUR] Le lieu du deces %s n'existe pas."
+                                                               % code)
+    return True
+
+
+def resp_error_dob(message):
+    message.respond(u"[ERREUR] la date de naissance n'est pas valide")
+    return True
+
+
+def resp_error_dod(message):
+    message.respond(u"[ERREUR] La date de mort n'est pas valide")
+    return True
+
+
+def resp_success(message, name):
+    message.respond(u"[SUCCES] Le rapport de deces de %(name)s a" \
+                    u" ete enregistre. " % {'name': name})
+    return True
+
+
 def contact_for(identity):
     return Provider.objects.get(phone_number=identity)
 
 
 def parse_age_dob(age_or_dob, only_date=False):
     """ parse argument as date or age. return date and bool if estimation """
-    
+
     if re.match(r'^\d{8}$', age_or_dob):
         auto = False
-        parsed_date = date(int(age_or_dob[0:4]), int(age_or_dob[4:6]), int(age_or_dob[6:8]))
+        parsed_date = date(int(age_or_dob[0:4]), int(age_or_dob[4:6]), \
+                           int(age_or_dob[6:8]))
     else:
         auto = True
         today = date.today()
@@ -46,16 +76,17 @@ def parse_age_dob(age_or_dob, only_date=False):
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap dpw reporting_location name dob dod death_location
-                      living_children dead_children pregnant 
+                      living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
             exemple: 'fnuap dpw kid kadi_alou 25y 20120323 kid 2 0 0 4 1'
          Outgoing:
-            [SUCCES] Le rapport de name a ete enregistre. 
+            [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reporting_location_code, name, age_or_dob, dod_text, death_location_code, \
-        living_children_text, dead_children_text, pregnant_text, pregnancy_weeks_text, \
+        reporting_location_code, name, age_or_dob, dod_text, \
+        death_location_code, living_children_text, dead_children_text, \
+        pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
     except:
         return resp_error(message, u"le rapport")
@@ -64,25 +95,25 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     try:
         reporting_location = Entity.objects.get(slug=reporting_location_code)
     except Entity.DoesNotExist:
-        return message.respond(u"Le code %s n'existe pas" % reporting_location_code)
+        return resp_error_reporting_location(message, reporting_location_code)
 
     # DOB (YYYY-MM-DD) or age (11y/11m)
     try:
         dob, dob_auto = parse_age_dob(age_or_dob)
     except:
-        return resp_error(message, u"la date de naissance")
+        return resp_error_dob(message)
 
     # Date of Death, YYYY-MM-DD
     try:
         dod = parse_age_dob(dod_text, True)
     except:
-        return resp_error(message, u"la date de mort")
+        return resp_error_dod(message)
 
     # Place of death, entity code
     try:
         death_location = Entity.objects.get(slug=death_location_code)
     except Entity.DoesNotExist:
-        return message.respond(u"Le lieu du deces %s n'existe pas" % death_location_code)
+        return resp_error_death_location(message, death_location_code)
 
     # Nb of living children
     try:
@@ -94,7 +125,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     try:
         dead_children = int(dead_children_text)
     except:
-        return resp_error(message, u"le nombre d'enfants morts de la personne decedee")
+        return resp_error(message, u"le nombre d'enfants morts de la"
+                                   u" personne decedee")
 
     # was she pregnant (0/1)
     pregnant = bool(int(pregnant_text))
@@ -120,61 +152,60 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.dead_children = dead_children
     report.pregnant = report.YES if pregnant else report.NO
     report.pregnancy_weeks = pregnancy_weeks
-    report.pregnancy_related_death = report.YES if pregnancy_related_death else report.NO
+    report.pregnancy_related_death = report.YES if pregnancy_related_death \
+                                                else report.NO
     report.save()
 
-    message.respond(u"[SUCCES]  Le rapport de %(name)s a ete enregistre. " %
-                    {'name': report.name})
-    return True
+    return resp_success(message, report.name)
 
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
-	"""  Incomming:
+    """  Incomming:
             fnuap du5 reporting_location name dob dod death_location
+         exemple: 'fnuap du5 kid alou_dolo 20111213 10121203 kid'
          Outgoing:
-            [SUCCES] mes condoleances. """
+            [SUCCES] Le rapport de deces name a ete enregistre.
+            or [ERREUR] message """
 
-	try:
-		reporting_location_code, name, age_or_dob, dod_text, \
+    try:
+        reporting_location_code, name, age_or_dob, dod_text, \
         death_location_code = args.split()
-	except:
-		return resp_error(message, u"l'enregistrement de rapport "\
-								   u" des moins de 5ans")
+    except:
+        return resp_error(message, u"l'enregistrement de rapport "\
+                                   u" des moins de 5ans")
 
     # Entity code
-	try:
-		reporting_location = Entity.objects.get(slug=reporting_location_code)
-	except Entity.DoesNotExist:
-		return message.respond(u"Ce Lieu de rapportage n'existe pas")
+    try:
+        reporting_location = Entity.objects.get(slug=reporting_location_code)
+    except Entity.DoesNotExist:
+        return resp_error_reporting_location(message, reporting_location_code)
 
     # DOB (YYYY-MM-DD) or age (11y/11m)
-	try:
-		dob, dob_auto = parse_age_dob(age_or_dob)
-	except:
-		return message.respond(u"Cette date de naissance n'est pas valide")
+    try:
+        dob, dob_auto = parse_age_dob(age_or_dob)
+    except:
+        return resp_error_dob(message)
 
     # Date of Death, YYYY-MM-DD
-	try:
-		dod = parse_age_dob(dod_text, True)
-	except:
-		return message.respond(u"Cette date de mort n'est pas valide")
+    try:
+        dod = parse_age_dob(dod_text, True)
+    except:
+        return resp_error_dod(message)
 
     # Place of death, entity code
-	try:
-		death_location = Entity.objects.get(slug=death_location_code)
-	except Entity.DoesNotExist:
-		return message.respond(u"Ce lieu de deces n'existe pas")
+    try:
+        death_location = Entity.objects.get(slug=death_location_code)
+    except Entity.DoesNotExist:
+        return resp_error_death_location(message, death_location_code)
 
-	report = ChildrenMortalityReport()
-	report.created_by = contact_for(message.identity)
-	report.reporting_location = reporting_location
-	report.name = name
-	report.dob = dob
-	report.dob_auto = dob_auto
-	report.dod = dod
-	report.death_location = death_location
-	report.save()
+    report = ChildrenMortalityReport()
+    report.created_by = contact_for(message.identity)
+    report.reporting_location = reporting_location
+    report.name = name.replace('_', ' ')
+    report.dob = dob
+    report.dob_auto = dob_auto
+    report.dod = dod
+    report.death_location = death_location
+    report.save()
 
-	message.respond(u"[SUCCES] mes condoleances.")
-    
-	return True
+    return resp_success(message, report.name)
