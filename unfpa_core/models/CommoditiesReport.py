@@ -48,10 +48,12 @@ class RHCommoditiesReport(Report):
                                 u"(unit) or -1."))
     implants = models.IntegerField(_(u"Implants. Quantity in hand "
                                      u"(unit) or -1."))
-    female_sterilization = models.IntegerField(_(u"Female sterilization"),
-                                               choices=YESNOAVAIL)
-    male_sterilization = models.IntegerField(_(u"Male sterilization"),
-                                             choices=YESNOAVAIL)
+    female_sterilization = models.CharField(max_length=20,
+                                            verbose_name=_(u"Female sterilization"),
+                                            choices=YESNOAVAIL)
+    male_sterilization = models.CharField(max_length=20,
+                                          verbose_name=_(u"Male sterilization"),
+                                          choices=YESNOAVAIL)
 
     # Availability of live-saving maternal/RH medecine
     amoxicillin_ij = models.IntegerField(_(u"Amoxicillin (Injectable). "

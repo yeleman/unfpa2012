@@ -10,8 +10,7 @@ import re
 from django.conf import settings
 
 from dead_persons import unfpa_dead_pregnant_woman, unfpa_dead_children_under5
-from products import (unfpa_monthly_used_products,
-                      unfpa_monthly_product_stockouts)
+from products import (unfpa_monthly_product_stockouts)
 
 logger = logging.getLogger(__name__)
 locale.setlocale(locale.LC_ALL, settings.DEFAULT_LOCALE)
@@ -24,7 +23,6 @@ def nosms_handler(message):
         commands = {
             'dpw': unfpa_dead_pregnant_woman,
             'du5': unfpa_dead_children_under5,
-            'mup': unfpa_monthly_used_products,
             'mps': unfpa_monthly_product_stockouts,
             'test': nut_test,
             'echo': nut_echo}
