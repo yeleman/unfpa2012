@@ -84,7 +84,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
-        reporting_location_code, name, age_or_dob, dod_text, \
+        reporting_date, reporting_location_code, name, age_or_dob, dod_text, \
         death_location_code, living_children_text, dead_children_text, \
         pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
@@ -142,6 +142,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
 
     report = MaternalMortalityReport()
     report.created_by = contact_for(message.identity)
+    report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
     report.dob = dob
@@ -168,7 +169,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
-        reporting_location_code, name, age_or_dob, dod_text, \
+        reporting_date, reporting_location_code, name, age_or_dob, dod_text, \
         death_location_code = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "\
@@ -199,13 +200,15 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
         return resp_error_death_location(message, death_location_code)
 
     report = ChildrenMortalityReport()
-    report.created_by = contact_for(message.identity)
+    report.created_by = contact_for(message.identity)    
+    report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
     report.dob = dob
     report.dob_auto = dob_auto
     report.dod = dod
     report.death_location = death_location
+
     report.save()
 
     return resp_success(message, report.name)

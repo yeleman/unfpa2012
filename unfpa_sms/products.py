@@ -47,8 +47,7 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     try:
         period = MonthPeriod.find_create_from(year=int(reporting_year), month=int(reporting_month))
     except:
-        raise
-        return message.respond(u"Cette periode (%s %s) n'existe pas" % (reporting_month, reporting_year))
+        return message.respond(u"La periode (%s %s) n'est pas valide" % (reporting_month, reporting_year))
 
     # Entity code
     try:
