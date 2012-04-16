@@ -23,6 +23,12 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout', \
          {'template_name': 'logout_django.html'}, name='logout'),
 
+    # reports
+    url(r'^reports/(?P<report_type>maternal|children|commodities)/'
+         '(?P<period_type>weekly|monthly|quartely|annual)/'
+         '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
+        views.reports.report_chooser, name='reports'),
+
     # ANTIM : USERS
     url(r'^users/?$', \
         provider_permission('can_manage_users')(bviews.providers. \
