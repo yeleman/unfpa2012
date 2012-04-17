@@ -38,6 +38,7 @@ def report_chooser(request, report_type, period_type, period_str=None):
                            % {'report_type': report_type,
                               'period_type': period_type})
     except:
+        raise
         raise Http404(u"Incorrect URL.")
 
     try:

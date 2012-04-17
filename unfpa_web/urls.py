@@ -25,7 +25,7 @@ urlpatterns = patterns('',
 
     # reports
     url(r'^reports/(?P<report_type>maternal|children|commodities)/'
-         '(?P<period_type>weekly|monthly|quartely|annual)/'
+         '(?P<period_type>weekly|monthly|quarterly|annual)/'
          '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
         views.reports.report_chooser, name='reports'),
 
