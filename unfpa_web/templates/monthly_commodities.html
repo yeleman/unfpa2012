@@ -7,11 +7,23 @@
 {% block content %}
 
 <h2>Rapport mensuel du {{ period.start_on }} au {{ period.end_on }}.</h2>
-
 <table>
-<tr><th>District</th><th>Nombre de décès</th></tr>
-{% for disdata in data %}
-<tr><td>{{ disdata.district }}</td><td>{{ disdata.deaths }}</td></tr>
-{% endfor %}
+    <tr><th>Liste des centres fournissant le planning familiale</th></tr>
+    {% for report in data.list_family_planning %}
+        <tr><td>{{ report.entity }}</td></tr>
+    {% endfor %}
+    <tr><th> liste des centre qui font l'accouchement </th></tr>
+    {% for report in data.list_delivery_services %}
+        <tr><td>{{ report.entity }}</td></tr>
+    {% endfor %}
+    <tr><th> liste des centre qui font l'accouchement et planning familiale </th></tr>
+    {% for report in data.list_both_services %}
+        <tr><td>{{ report.entity }}</td></tr>
+    {% endfor %}
+    <tr><th> Liste de centre en rupture de stock de planning familiale </th></tr>
+    {% for report in data.stoct_out_methods %}
+        <tr><td>{{ report.entity }}</td></tr>
+    {% endfor %}
+
 </table>
 {% endblock %}
