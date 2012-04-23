@@ -1,9 +1,9 @@
 {% load bolibana %}
 {% if web_provider.is_authenticated %}
     <ul>
-    {% if web_provider|has_permission:'can_manage_users' %}<li {% if category = 'users' %}class="hover"{% endif %}><a href="{% url list_users %}">Utilisateurs</a></li>{% endif %}
-    {% if web_provider|has_permission:'can_manage_entities' %}<li {% if category = 'entities' %}class="hover"{% endif %}><a href="{% url list_entities %}">Établissements</a></li>{% endif %}
-    <li {% if category = 'addressbook' %}class="hover"{% endif %}><a href="{% url addressbook %}">Annuaire</a></li>
+    <li {% if category = 'users' %}class="hover"{% endif %}><a href="{% url list_users %}">Enfants</a></li>
+    <li {% if category = 'entities' %}class="hover"{% endif %}><a href="{% url list_entities %}">Femmes enceintes</a></li>
+    <li {% if category = 'addressbook' %}class="hover"{% endif %}><a href="{% url addressbook %}">Produits</a></li>
     </ul>
 {% else %}
 {% if fortune %}<ul><li title="[{{ fortune.0 }}] {{ fortune.2 }}">{{ fortune.1 }}</li></ul>{% endif %}

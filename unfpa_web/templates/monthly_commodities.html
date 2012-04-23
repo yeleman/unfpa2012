@@ -3,27 +3,49 @@
 {% load bolibana %}
 
 {% block title %}Rapport mensuel des produits{% endblock %}
+{% block submenu %}{% include "submenu.html" with content="data_browser" report=report period=period %}{% endblock %}
 
 {% block content %}
 
 <h2>Rapport mensuel du {{ period.start_on }} au {{ period.end_on }}.</h2>
 <table>
-    <tr><th>Liste des centres fournissant le planning familiale</th></tr>
+    <tr><th colspan="2">Liste des centres fournissant le planning familiale</th></tr>
     {% for report in data.list_family_planning %}
-        <tr><td>{{ report.entity }}</td></tr>
+        <tr><td colspan="2" >{{ report.entity }}</td></tr>
     {% endfor %}
-    <tr><th> liste des centre qui font l'accouchement </th></tr>
+    <tr><th colspan="2"> liste des centre qui font l'accouchement </th></tr>
     {% for report in data.list_delivery_services %}
-        <tr><td>{{ report.entity }}</td></tr>
+        <tr><td colspan="2">{{ report.entity }}</td></tr>
     {% endfor %}
-    <tr><th> liste des centre qui font l'accouchement et planning familiale </th></tr>
+    <tr><th colspan="2"> liste des centre qui font l'accouchement et planning familiale </th></tr>
     {% for report in data.list_both_services %}
-        <tr><td>{{ report.entity }}</td></tr>
+        <tr><td colspan="2">{{ report.entity }}</td></tr>
     {% endfor %}
-    <tr><th> Liste de centre en rupture de stock de planning familiale </th></tr>
+    <tr><th colspan="2"> Liste de centre en rupture de stock de planning familiale </th></tr>
     {% for report in data.stoct_out_methods %}
-        <tr><td>{{ report.entity }}</td></tr>
+        <tr><td colspan="2">{{ report.entity }}</td></tr>
     {% endfor %}
 
+    <tr><th colspan="2"> Les centre qui offre au moins trois méthodes de planification familiale</th></tr>
+    <tr><th>Le nombre </th><th> % </th></tr>
+    <tr><td>{{ last_tree_fp }}</td><td>{{ percent_last_tree_fp }}</td></tr>
+
+    <tr><th colspan="2"> Liste des Centres avec rupture de stock de l'oxytocine et de sulfate de magnésium </th></tr>
+    {% for report in data.out_Oxytocin_Magnesium_Sulphate %}
+        <tr><td colspan="2">{{ report.entity }}</td></tr>
+    {% endfor %}
+</table>
+<table>
+    <tr><th colspan="17"> Nombre et pourcentage de centre avec les ruptures de stock de chacune des méthodes de planification familiale par localité et type de centre </th></tr>
+    <tr><th></th><th colspan="2">condon masculine</th><th colspan="2">femme condon</th><th colspan="2">contraceptifs oraux</th><th colspan="2">injectable</th><th colspan="2">diu</th><th colspan="2">implants</th><th colspan="2">stérilisation féminine</th><th colspan="2">stérilisation masculine</th></tr>
+    {% for key, values in dic.items%}
+        {% for value in values %}
+            {% ifchanged %}
+                <tr><th>{{value.entity.parent.type}}</th><td colspan="16">{{key}}</td></tr>
+                <tr><th>type</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th><th>nbre</th><th>%</th></tr>
+            {% endifchanged %} 
+            <tr><td>{{value.entity}}</br>{{value.entity.type}}</td><td>{{value.male_condom}}</td><td>%</td><td>{{value.female_condom}}</td><td>%</td><td>{{value.oral_pills}}</td><td>%</td><td>{{value.injectable}}</td><td>%</td><td>{{value.iud}}</td><td>%</td><td>{{value.implants}}</td><td>%</td><td>{{value.get_female_sterilization_display}}</td><td>%</td><td>{{value.get_male_sterilization_display}}</td><td>%</td></tr>
+        {% endfor %}
+    {% endfor %}
 </table>
 {% endblock %}
