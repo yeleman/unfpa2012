@@ -11,6 +11,7 @@ from django.conf import settings
 
 from dead_persons import unfpa_dead_pregnant_woman, unfpa_dead_children_under5
 from products import (unfpa_monthly_product_stockouts)
+from birth_persons import unfpa_birth
 
 logger = logging.getLogger(__name__)
 locale.setlocale(locale.LC_ALL, settings.DEFAULT_LOCALE)
@@ -18,14 +19,15 @@ locale.setlocale(locale.LC_ALL, settings.DEFAULT_LOCALE)
 
 def nosms_handler(message):
     """ FNUAP SMS router """
-    def main_nut_handler(message):
+    def main_unfpa_handler(message):
         keyword = 'fnuap'
         commands = {
             'dpw': unfpa_dead_pregnant_woman,
             'du5': unfpa_dead_children_under5,
             'mps': unfpa_monthly_product_stockouts,
-            'test': nut_test,
-            'echo': nut_echo}
+            'born': unfpa_birth,
+            'test': unfpa_test,
+            'echo': unfpa_echo}
 
         if message.content.lower().startswith('fnuap '):
             for cmd_id, cmd_target in commands.items():
@@ -41,7 +43,7 @@ def nosms_handler(message):
         else:
             return False
 
-    if main_nut_handler(message):
+    if main_unfpa_handler(message):
         message.status = message.STATUS_PROCESSED
         message.save()
         logger.info(u"[HANDLED] msg: %s" % message)
@@ -50,7 +52,7 @@ def nosms_handler(message):
     return False
 
 
-def nut_test(message, **kwargs):
+def unfpa_test(message, **kwargs):
     try:
         code, msg = message.content.split('fnuap test')
     except:
@@ -61,6 +63,6 @@ def nut_test(message, **kwargs):
     return True
 
 
-def nut_echo(message, **kwargs):
+def unfpa_echo(message, **kwargs):
     message.respond(kwargs['args'])
     return True
