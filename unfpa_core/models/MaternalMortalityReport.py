@@ -22,7 +22,7 @@ class MaternalMortalityReport(IndividualReport):
 
     reporting_location = models.ForeignKey(Entity,
                                            related_name='maternal_reported_in',
-                                          verbose_name=_(u"Reporting location"))
+                                           verbose_name=_(u"Reporting location"))
     name = models.CharField(max_length=100,
                             verbose_name=_(u"Name of the deceased"))
     dob = models.DateField(verbose_name=_(u"Date of birth"))

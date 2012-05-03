@@ -37,8 +37,8 @@ class ChildrenMortalityReport(IndividualReport):
     name = models.CharField(max_length=100,
                             verbose_name=_(u"Name of the deceased"))
     sex = models.CharField(max_length=1,
-                                   choices=SEX,
-                                   verbose_name=_(u"Sex"))
+                           choices=SEX, 
+                           verbose_name=_(u"Sex"))
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
@@ -46,8 +46,8 @@ class ChildrenMortalityReport(IndividualReport):
     place_death = models.CharField(max_length=1,
                                    choices=PLACEDEATH,
                                    verbose_name=_(u"Place of death"))
-    death_location = models.ForeignKey(Entity, related_name='children_dead_in',
-                                       verbose_name=_(u"Place of death"))
+    other = models.CharField(max_length=100,
+                             verbose_name=_(u"Other"), blank=True, null=True)
 
     def __unicode__(self):
         return ugettext(u"%(name)s/%(dod)s" 

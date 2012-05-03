@@ -78,7 +78,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw kid kadi_alou 25y 20120323 kid 2 0 0 4 1'
+            exemple: 'fnuap dpw 20120430 1488 blaise 20070330 20110430 1488 2 3 1 5 0'
+
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
@@ -162,15 +163,17 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap du5 reporting_location name dob dod death_location
-         exemple: 'fnuap du5 kid alou_dolo 20111213 10121203 kid'
+            fnuap du5 reporting_date reporting_location_code name sex age_or_dob dod_text
+                      death_location_code death_location 
+         exemple: 'fnuap du5  20120502 1488 nom F 20100502 20120502 1488 D'
+
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reporting_date, reporting_location_code, name, age_or_dob, dod_text, \
-        death_location_code = args.split()
+        reporting_date, reporting_location_code, name, sex, age_or_dob, dod_text, \
+        death_location_code, place_death = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "\
                                    u" des moins de 5ans")
@@ -200,14 +203,28 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
         return resp_error_death_location(message, death_location_code)
 
     report = ChildrenMortalityReport()
-    report.created_by = contact_for(message.identity)    
+    report.created_by = contact_for(message.identity)
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
+    if sex == 'f':
+        sex = report.FEMAL
+    else:
+        sex = report.MAL
+    report.sex = sex
     report.dob = dob
     report.dob_auto = dob_auto
-    report.dod = dod
+    report.dod = dod    
     report.death_location = death_location
+    if place_death == "d":
+        place_death = report.HOME
+    if place_death == 'c':
+        place_death = report.CENTER
+    else:
+        report.other = place_death
+        place_death = report.OTHER
+    
+    report.place_death = place_death
 
     report.save()
 
