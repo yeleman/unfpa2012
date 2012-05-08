@@ -5,7 +5,8 @@
 
 from unfpa_core.models import BirthReport
 from bolibana.models import Entity, Provider
-from dead_persons import parse_age_dob, resp_error_dob
+from dead_persons import resp_error_dob
+from date_formate import parse_age_dob
 
 
 def contact_for(identity):
@@ -38,7 +39,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     except Entity.DoesNotExist:
         return message.respond(u"Le code %s n'existe pas" % reporting_location)
 
-    # DOB (YYYY-MM-DD) or age (11y/11m)
+    # DOB (YYYY-MM-DD) or age (11a/11m)
     try:
         dob, dob_auto = parse_age_dob(dob)
     except:
@@ -64,9 +65,10 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
 
     report.reporting_location = entity
     report.created_by = contact_for(message.identity)
-    report.name_householder = householder
-    report.name_father = father
-    report.name_mother = mother
+    report.name_householder = householder.replace('_', ' ')
+    report.name_father = father.replace('_', ' ')
+    report.name_mother = mother.replace('_', ' ')
+    report.name_child = child.replace('_', ' ')
     report.sex =  sex
     report.dob = dob
     report.birth_location = birth_location
@@ -74,7 +76,6 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.born_alive = born
     if len(loc) != 1:
         report.other = loc
-    report.name_child = child
     report.save()
 
     message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "

@@ -2,12 +2,10 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import re
-
-from datetime import date, timedelta
 
 from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 from bolibana.models import Entity, Provider
+from date_formate import parse_age_dob
 
 
 def resp_error(message, action):
@@ -46,31 +44,6 @@ def resp_success(message, name):
 
 def contact_for(identity):
     return Provider.objects.get(phone_number=identity)
-
-
-def parse_age_dob(age_or_dob, only_date=False):
-    """ parse argument as date or age. return date and bool if estimation """
-
-    if re.match(r'^\d{8}$', age_or_dob):
-        auto = False
-        parsed_date = date(int(age_or_dob[0:4]), int(age_or_dob[4:6]), \
-                           int(age_or_dob[6:8]))
-    else:
-        auto = True
-        today = date.today()
-        unit = age_or_dob[-1]
-        value = int(age_or_dob[:-1])
-        if unit.lower() == 'y':
-            parsed_date = today - timedelta(365 * value) - timedelta(160)
-        elif unit.lower() == 'm':
-            parsed_date = today - timedelta(30 * value) - timedelta(15)
-        else:
-            raise ValueError(u"Age unit unknown: %s" % unit)
-
-    if only_date:
-        return parsed_date
-    else:
-        return (parsed_date, auto)
 
 
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
@@ -172,6 +145,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
+        print args, 'yyyyyyyyyyyy'
         reporting_date, reporting_location_code, name, sex, age_or_dob, dod_text, \
         death_location_code, place_death = args.split()
     except:
@@ -184,15 +158,17 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     except Entity.DoesNotExist:
         return resp_error_reporting_location(message, reporting_location_code)
 
-    # DOB (YYYY-MM-DD) or age (11y/11m)
+    # DOB (YYYY-MM-DD) or age (11a/11m)
     try:
         dob, dob_auto = parse_age_dob(age_or_dob)
+        print "nnn"
     except:
         return resp_error_dob(message)
 
     # Date of Death, YYYY-MM-DD
     try:
         dod = parse_age_dob(dod_text, True)
+        print dod ,"iiiii"
     except:
         return resp_error_dod(message)
 
