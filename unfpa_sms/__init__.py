@@ -12,6 +12,7 @@ from django.conf import settings
 from dead_persons import unfpa_dead_pregnant_woman, unfpa_dead_children_under5
 from products import (unfpa_monthly_product_stockouts)
 from birth_persons import unfpa_birth
+from pregnancy_persons import unfpa_pregnancy
 
 logger = logging.getLogger(__name__)
 locale.setlocale(locale.LC_ALL, settings.DEFAULT_LOCALE)
@@ -26,6 +27,7 @@ def nosms_handler(message):
             'du5': unfpa_dead_children_under5,
             'mps': unfpa_monthly_product_stockouts,
             'born': unfpa_birth,
+            'gpw': unfpa_pregnancy,
             'test': unfpa_test,
             'echo': unfpa_echo}
 

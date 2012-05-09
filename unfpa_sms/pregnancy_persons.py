@@ -3,7 +3,7 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 
-from unfpa_core.models import BirthReport
+from unfpa_core.models import PregnancyReport
 from bolibana.models import Entity, Provider
 from dead_persons import resp_error_dob
 from date_formate import parse_age_dob
@@ -18,19 +18,21 @@ def resp_error(message, action):
                                                                % action)
 
 
-def unfpa_birth(message, args, sub_cmd, **kwargs):
+def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap born date reporting_location householder
             father mother child dob loc sex born
         example:
-           'fnuap born 20120502 kid ali Adama Tata Aba 20100502 D M 1'
+           'fnuap gpw kid alou_dolo 20120509 tata_keita 45 rene_org 9 20120509
+            0 20120509'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        date, reporting_location, householder, father, mother, child,\
-        dob, loc, sex, born = args.split()
+        reporting_location, householder, date_recording, name_woman, dob, \
+        husband, age_pregnancy, expected_date_confinement, result, \
+        date_pregnancy = args.split()
     except:
         return resp_error(message, u"le rapport")
 
@@ -41,44 +43,47 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
         return message.respond(u"Le code %s n'existe pas" % reporting_location)
 
     # DOB (YYYY-MM-DD) or age (11a/11m)
+    dob = dob + 'a'
     try:
         dob, dob_auto = parse_age_dob(dob)
     except:
         return resp_error_dob(message)
 
-    report = BirthReport()
-    if loc == 'd':
-        birth_location = report.HOME
-    elif loc == 'c':
-        birth_location = report.CENTER
-    else:
-        birth_location = report.OTHER
+    # date recording
+    try:
+        date_recording, date_recordingd = parse_age_dob(date_recording)
+    except:
+        return resp_error_dob(message)
 
-    if sex == 'm':
-        sex = report.MAL
-    else:
-        sex = report.FEMALE
+    # expected date confinement
+    try:
+        expected, expectedd = parse_age_dob(expected_date_confinement)
+    except:
+        return resp_error_dob(message)
 
-    if born == '1':
-        born = report.YES
-    else:
-        born = report.NO
+    # date pregnancy
+    try:
+        date_pregnancy, date_pregnancyd = parse_age_dob(date_pregnancy)
+    except:
+        date_pregnancy = None
+
+    report = PregnancyReport()
 
     report.reporting_location = entity
     report.created_by = contact_for(message.identity)
     report.name_householder = householder.replace('_', ' ')
-    report.name_father = father.replace('_', ' ')
-    report.name_mother = mother.replace('_', ' ')
-    report.name_child = child.replace('_', ' ')
-    report.sex = sex
+    report.name_woman = name_woman.replace('_', ' ')
+    report.name_husband = husband.replace('_', ' ')
     report.dob = dob
-    report.birth_location = birth_location
     report.dob_auto = dob_auto
-    report.born_alive = born
-    if len(loc) != 1:
-        report.other = loc
+    report.age_pregnancy = int(age_pregnancy)
+    report.date_recording = date_recording
+    report.expected_date_confinement = expected
+    report.date_pregnancy = date_pregnancy
+    report.result_pregnancy = int(result)
+
     report.save()
 
-    message.respond(u"[SUCCES] Le rapport de naissance de %(name_child)s "
+    message.respond(u"[SUCCES] Le rapport de grossesse de %(name_woman)s "
                     u"a ete enregistre." \
-                    % {'name_child': report.name_child})
+                    % {'name_woman': report.name_woman})
