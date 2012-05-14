@@ -34,13 +34,12 @@ class BirthReport(IndividualReport):
     reporting_location = models.ForeignKey(Entity,
                                          related_name='birth_reported_in',
                                          verbose_name=_(u"Reporting location"))
-    name_householder = models.CharField(max_length=100,
+    dob = models.DateField(verbose_name=_(u"Reporting date"))
+    family_name = models.CharField(max_length=100,
                             verbose_name=_(u"Householder"))
-    name_father = models.CharField(max_length=100,
-                            verbose_name=_(u"Name of father"))
-    name_mother = models.CharField(max_length=100,
+    name_mother = models.CharField(max_length=100, blank=True, null=True,
                             verbose_name=_(u"Name of mother"))
-    name_child = models.CharField(max_length=100,
+    name_child = models.CharField(max_length=100, blank=True, null=True,
                             verbose_name=_(u"Name of child"))
 
     sex = models.CharField(max_length=1,
@@ -55,8 +54,6 @@ class BirthReport(IndividualReport):
     birth_location = models.CharField(max_length=1,
                                    choices=PLACEBIRTH,
                                    verbose_name=_(u"Place of birth"))
-    other = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name=_(u"Autre"))
 
     def __unicode__(self):
         return ugettext(u"%(name_child)s/%(dob)s" 

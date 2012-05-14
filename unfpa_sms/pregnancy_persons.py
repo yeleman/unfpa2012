@@ -23,6 +23,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
             fnuap born date reporting_location householder
             father mother child dob loc sex born
         example:
+
            'fnuap gpw kid alou_dolo 20120509 tata_keita 45 rene_org 9 20120509
             0 20120509'
         Outgoing:

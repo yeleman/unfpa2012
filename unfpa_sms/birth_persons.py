@@ -12,6 +12,10 @@ from date_formate import parse_age_dob
 def contact_for(identity):
     return Provider.objects.get(phone_number=identity)
 
+def resp_error_date(message):
+    message.respond(u"[ERREUR] la date n'est pas valide")
+    return True
+
 
 def resp_error(message, action):
     message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
@@ -20,16 +24,16 @@ def resp_error(message, action):
 
 def unfpa_birth(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap born date reporting_location householder
-            father mother child dob loc sex born
+            fnuap born date reporting_location family_name
+            mother child dob loc sex born
         example:
-           'fnuap born 20120502 kid ali Adama Tata Aba 20100502 D M 1'
+           'fnuap born 20120514 kid dolo assan mele 20120514 D M 1'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        date, reporting_location, householder, father, mother, child,\
+        date, reporting_location, family_name, mother, child,\
         dob, loc, sex, born = args.split()
     except:
         return resp_error(message, u"le rapport")
@@ -45,6 +49,11 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
         dob, dob_auto = parse_age_dob(dob)
     except:
         return resp_error_dob(message)
+
+    try:
+        reporting_date, date_auto = parse_age_dob(date)
+    except:
+        return resp_error_date(message)
 
     report = BirthReport()
     if loc == 'd':
@@ -64,10 +73,14 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     else:
         born = report.NO
 
+    if mother == '-':
+        mother = ''
+    if child == '-':
+        mother = ''
+
     report.reporting_location = entity
     report.created_by = contact_for(message.identity)
-    report.name_householder = householder.replace('_', ' ')
-    report.name_father = father.replace('_', ' ')
+    report.name_family_name = family_name.replace('_', ' ')
     report.name_mother = mother.replace('_', ' ')
     report.name_child = child.replace('_', ' ')
     report.sex = sex
@@ -75,8 +88,6 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.birth_location = birth_location
     report.dob_auto = dob_auto
     report.born_alive = born
-    if len(loc) != 1:
-        report.other = loc
     report.save()
 
     message.respond(u"[SUCCES] Le rapport de naissance de %(name_child)s "
