@@ -51,7 +51,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw 20120430 1488 blaise 20070330 20110430 1488 2 3 1 5 0'
+            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 2 3 1 5 0'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
@@ -138,14 +138,13 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap du5 reporting_date reporting_location_code name sex age_or_dob dod_text
                       death_location_code death_location 
-         exemple: 'fnuap du5  20120502 1488 nom F 20100502 20120502 1488 D'
+         exemple: 'fnuap du5 20120502 1488 nom F 20100502 20120502 1488 D'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        print args, 'yyyyyyyyyyyy'
         reporting_date, reporting_location_code, name, sex, age_or_dob, dod_text, \
         death_location_code, place_death = args.split()
     except:
@@ -161,14 +160,12 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     # DOB (YYYY-MM-DD) or age (11a/11m)
     try:
         dob, dob_auto = parse_age_dob(age_or_dob)
-        print "nnn"
     except:
         return resp_error_dob(message)
 
     # Date of Death, YYYY-MM-DD
     try:
         dod = parse_age_dob(dod_text, True)
-        print dod ,"iiiii"
     except:
         return resp_error_dod(message)
 
@@ -197,7 +194,6 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     if place_death == 'c':
         place_death = report.CENTER
     else:
-        report.other = place_death
         place_death = report.OTHER
     
     report.place_death = place_death

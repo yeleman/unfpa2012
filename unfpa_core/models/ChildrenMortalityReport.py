@@ -46,8 +46,6 @@ class ChildrenMortalityReport(IndividualReport):
     place_death = models.CharField(max_length=1,
                                    choices=PLACEDEATH,
                                    verbose_name=_(u"Place of death"))
-    other = models.CharField(max_length=100,
-                             verbose_name=_(u"Other"), blank=True, null=True)
 
     def __unicode__(self):
         return ugettext(u"%(name)s/%(dod)s" 

@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from bolibana.models import Entity, IndividualReport
 
 
-class PregnancyReport  (IndividualReport):
+class PregnancyReport(IndividualReport):
 
     NONE = 0
     ALIVE = 1

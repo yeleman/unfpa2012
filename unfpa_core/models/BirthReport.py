@@ -36,11 +36,11 @@ class BirthReport(IndividualReport):
                                          verbose_name=_(u"Reporting location"))
     dob = models.DateField(verbose_name=_(u"Reporting date"))
     family_name = models.CharField(max_length=100,
-                            verbose_name=_(u"Householder"))
-    name_mother = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name=_(u"Name of mother"))
-    name_child = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name=_(u"Name of child"))
+                            verbose_name=_(u"Family name"))
+    surname_mother = models.CharField(max_length=100, blank=True, null=True,
+                            verbose_name=_(u"Surname of mother"))
+    surname_child = models.CharField(max_length=100, blank=True, null=True,
+                            verbose_name=_(u"Surname of child"))
 
     sex = models.CharField(max_length=1,
                                    choices=SEX,
@@ -56,9 +56,8 @@ class BirthReport(IndividualReport):
                                    verbose_name=_(u"Place of birth"))
 
     def __unicode__(self):
-        return ugettext(u"%(name_child)s/%(dob)s" 
-                % {'name_child': self.name_child.title(),
+        return ugettext(u"%(surname_child)s/%(dob)s" 
+                % {'surname_child': self.surname_child.title(),
                    'dob': self.dob.strftime('%d-%m-%Y')})
-
 
 reversion.register(BirthReport)

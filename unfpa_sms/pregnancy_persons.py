@@ -20,11 +20,10 @@ def resp_error(message, action):
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap born date reporting_location householder
-            father mother child dob loc sex born
+            fnuap gpw reporting_location householder date_recording mother
+            dob age_pregnancy expected_date_confinement result date_pregnancy
         example:
-
-           'fnuap gpw kid alou_dolo 20120509 tata_keita 45 rene_org 9 20120509
+           'fnuap gpw kid alou_dolo 20120509 tata_keita 45 9 20120509
             0 20120509'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
@@ -32,7 +31,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
 
     try:
         reporting_location, householder, date_recording, name_woman, dob, \
-        husband, age_pregnancy, expected_date_confinement, result, \
+        age_pregnancy, expected_date_confinement, result, \
         date_pregnancy = args.split()
     except:
         return resp_error(message, u"le rapport")
@@ -74,7 +73,6 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     report.created_by = contact_for(message.identity)
     report.name_householder = householder.replace('_', ' ')
     report.name_woman = name_woman.replace('_', ' ')
-    report.name_husband = husband.replace('_', ' ')
     report.dob = dob
     report.dob_auto = dob_auto
     report.age_pregnancy = int(age_pregnancy)

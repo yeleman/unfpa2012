@@ -80,9 +80,9 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
 
     report.reporting_location = entity
     report.created_by = contact_for(message.identity)
-    report.name_family_name = family_name.replace('_', ' ')
-    report.name_mother = mother.replace('_', ' ')
-    report.name_child = child.replace('_', ' ')
+    report.family_name = family_name.replace('_', ' ')
+    report.surname_mother = mother.replace('_', ' ')
+    report.surname_child = child.replace('_', ' ')
     report.sex = sex
     report.dob = dob
     report.birth_location = birth_location
@@ -90,6 +90,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.born_alive = born
     report.save()
 
-    message.respond(u"[SUCCES] Le rapport de naissance de %(name_child)s "
+    message.respond(u"[SUCCES] Le rapport de naissance de %(surname_child)s "\
+                    u"%(family_name)s"
                     u"a ete enregistre." \
-                    % {'name_child': report.name_child})
+                    % {'surname_child': report.surname_child,
+                       'family_name': report.family_name})
