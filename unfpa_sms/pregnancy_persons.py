@@ -4,35 +4,28 @@
 
 
 from unfpa_core.models import PregnancyReport
-from bolibana.models import Entity, Provider
+from bolibana.models import Entity
 from dead_persons import resp_error_dob
 from date_formate import parse_age_dob
-
-
-def contact_for(identity):
-    return Provider.objects.get(phone_number=identity)
-
-
-def resp_error(message, action):
-    message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
-                                                               % action)
+from common import contact_for, resp_error, conv_str_int
 
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap gpw reporting_location householder date_recording mother
-            dob age_pregnancy expected_date_confinement result date_pregnancy
+            fnuap gpw reporting_location householder_name reccord_date
+            mother_name dob pregnancy_age expected_delivery_date 
+            pregnancy_result delivery_date
         example:
-           'fnuap gpw kid alou_dolo 20120509 tata_keita 45 9 20120509
-            0 20120509'
+           'fnuap gpw kid alou_dolo 20120509 tata_keita 45a 9 20120509 0 
+            20120509'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reporting_location, householder, date_recording, name_woman, dob, \
-        age_pregnancy, expected_date_confinement, result, \
-        date_pregnancy = args.split()
+        reporting_location, householder_name, reccord_date, mother_name, dob, \
+        pregnancy_age, expected_delivery_date, pregnancy_result, \
+        delivery_date = args.split()
     except:
         return resp_error(message, u"le rapport")
 
@@ -43,46 +36,73 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
         return message.respond(u"Le code %s n'existe pas" % reporting_location)
 
     # DOB (YYYY-MM-DD) or age (11a/11m)
-    dob = dob + 'a'
     try:
         dob, dob_auto = parse_age_dob(dob)
     except:
         return resp_error_dob(message)
 
-    # date recording
+    # reccord date
     try:
-        date_recording, date_recordingd = parse_age_dob(date_recording)
+        reccord_date, _reccord_date = parse_age_dob(reccord_date)
     except:
         return resp_error_dob(message)
 
-    # expected date confinement
+    # expected delivery date
     try:
-        expected, expectedd = parse_age_dob(expected_date_confinement)
+        expected_delivery_date, _expected_delivery_date = \
+                                parse_age_dob(expected_delivery_date)
     except:
         return resp_error_dob(message)
 
-    # date pregnancy
+    # delivery date
     try:
-        date_pregnancy, date_pregnancyd = parse_age_dob(date_pregnancy)
+        delivery_date, _delivery_date = parse_age_dob(delivery_date)
     except:
-        date_pregnancy = None
+        delivery_date = None
+
+    contact = contact_for(message.identity)
+    pregnancy_age = conv_str_int(pregnancy_age)
+    pregnancy_result = conv_str_int(pregnancy_result)        
 
     report = PregnancyReport()
 
     report.reporting_location = entity
-    report.created_by = contact_for(message.identity)
-    report.name_householder = householder.replace('_', ' ')
-    report.name_woman = name_woman.replace('_', ' ')
+
+    if contact:
+        report.created_by = contact
+    else:
+        message.respond(u"L'identifiant n'existe pas.")
+        return True
+
+    report.householder_name = householder_name.replace('_', ' ')
+    report.mother_name = mother_name.replace('_', ' ')
     report.dob = dob
     report.dob_auto = dob_auto
-    report.age_pregnancy = int(age_pregnancy)
-    report.created_on = date_recording
-    report.expected_date_confinement = expected
-    report.date_pregnancy = date_pregnancy
-    report.result_pregnancy = int(result)
 
-    report.save()
+    if not pregnancy_age:
+        report.pregnancy_age = pregnancy_age
+    else:
+        message.respond(u"[Age de la grossesse] l'age n'est pas correct.")
+        return True
 
-    message.respond(u"[SUCCES] Le rapport de grossesse de %(name_woman)s "
-                    u"a ete enregistre." \
-                    % {'name_woman': report.name_woman})
+    report.created_on = reccord_date
+    report.expected_delivery_date = expected_delivery_date
+    report.delivery_date = delivery_date
+
+    if not pregnancy_result:
+        report.pregnancy_result = pregnancy_result
+    else:
+        message.respond(u"[Issu de la grossesse] ce choix n'est pas correct.")
+        return True
+
+    try:
+        report.save()
+        message.respond(u"[SUCCES] Le rapport de grossesse de %(mother_name)s "
+                        u"a ete enregistre." \
+                        % {'mother_name': report.mother_name})
+    except:
+        message.respond(u"[ERREUR] Le rapport de naissance "
+                        u"n'a pas ete enregistre.")
+
+    return True
+
