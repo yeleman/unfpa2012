@@ -53,7 +53,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 
+            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid
                       2 3 1 5 0'
 
          Outgoing:
@@ -120,9 +120,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     try:
         entity = contact_for(message.identity)
     except:
-        return resp_error(message, 
+        return resp_error(message,
                          u"Aucun entité ne poséde ce numéro de telephone")
-
 
     report = MaternalMortalityReport()
     report.created_by = entity
@@ -144,14 +143,13 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     except:
         return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
 
-
     return resp_success(message, report.name)
 
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap du5 reporting_date reporting_location_code name sex age_or_dob dod_text
-                      death_location_code death_location 
+            fnuap du5 reporting_date reporting_location_code name sex
+            age_or_dob dod_text death_location_code place_death
          exemple: 'fnuap du5 20120502 1488 nom F 20100502 20120502 1488 D'
 
          Outgoing:
@@ -159,8 +157,8 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
-        reporting_date, reporting_location_code, name, sex, age_or_dob, dod_text, \
-        death_location_code, place_death = args.split()
+        reporting_date, reporting_location_code, name, sex, age_or_dob, \
+        dod_text, death_location_code, place_death = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "\
                                    u" des moins de 5ans")
@@ -192,7 +190,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     try:
         entity = contact_for(message.identity)
     except:
-        return resp_error(message, 
+        return resp_error(message,
                          u"Aucun entité ne poséde ce numéro de telephone")
 
     report = ChildrenMortalityReport()
@@ -203,12 +201,12 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.sex = SEX.get(sex, ChildrenMortalityReport.MALE)
     report.dob = dob
     report.dob_auto = dob_auto
-    report.dod = dod    
+    report.dod = dod
     report.death_location = death_location
-    report.place_death = DEATHPLACE.get(place_death, ChildrenMortalityReport.OTHER)
+    report.death_place = DEATHPLACE.get(place_death, \
+                                        ChildrenMortalityReport.OTHER)
     try:
         report.save()
+        resp_success(message, report.name)
     except:
-        return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
-
-    return resp_success(message, report.name)
+        return message.respond(u"Le rapport de deces n'a pas ete enregistre.")

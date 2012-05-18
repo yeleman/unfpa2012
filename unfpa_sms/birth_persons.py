@@ -103,7 +103,6 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
                         u"%(full_name_dob)s a ete enregistre." \
                         % {'full_name_dob': report.full_name_dob()})
     except:
-        raise
         message.respond(u"[ERREUR] Le rapport de naissance "
                         u"\n'a pas ete enregistre.")
 
