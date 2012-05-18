@@ -11,20 +11,16 @@ from bolibana.models import Entity, IndividualReport
 
 class BirthReport(IndividualReport):
 
-    YES = 'Y'
-    NO = 'N'
-    YESNO = ((YES, _(u"Yes")), (NO, _(u"No")))
-
-    HOME = "D"
-    CENTER = "C"
-    OTHER = "A"
-    PLACEBIRTH = ((HOME, _(u"Home")),
+    HOME = 'H'
+    CENTER = 'C'
+    OTHER = 'O'
+    BIRTHPLACE = ((HOME, _(u"Home")),
                   (CENTER, _(u"Center")),
                   (OTHER, _(u"Other")))
 
-    MAL = 'M'
+    MALE = 'M'
     FEMALE = 'F'
-    SEX = ((FEMALE, _(u"F")), (MAL, _(u"M")))
+    SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
 
     class Meta:
         app_label = 'unfpa_core'
@@ -48,11 +44,10 @@ class BirthReport(IndividualReport):
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
-    born_alive = models.CharField(max_length=1,
-                                   choices=YESNO,
-                                   verbose_name=_(u"Born alive"))
+    born_alive = models.BooleanField(verbose_name=_(u"Born alive"))
+    
     birth_location = models.CharField(max_length=1,
-                                   choices=PLACEBIRTH,
+                                   choices=BIRTHPLACE,
                                    verbose_name=_(u"Place of birth"))
 
     def __unicode__(self):

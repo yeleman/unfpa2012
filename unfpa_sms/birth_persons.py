@@ -12,14 +12,28 @@ from date_formate import parse_age_dob
 def contact_for(identity):
     return Provider.objects.get(phone_number=identity)
 
+
 def resp_error_date(message):
     message.respond(u"[ERREUR] la date n'est pas valide")
     return True
 
 
 def resp_error(message, action):
-    message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
-                                                               % action)
+    message.respond(u"[ERREUR] Impossible de comprendre "
+                    u"le SMS pour %s" % action)
+    return True
+
+
+BIRTHPLACE = {
+    'd': BirthReport.HOME,
+    'c': BirthReport.CENTER,
+    'a': BirthReport.OTHER
+}
+
+SEX = {
+    'm': BirthReport.MALE,
+    'f': BirthReport.FEMALE
+}
 
 
 def unfpa_birth(message, args, sub_cmd, **kwargs):
@@ -42,7 +56,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     try:
         entity = Entity.objects.get(slug=reporting_location)
     except Entity.DoesNotExist:
-        return message.respond(u"Le code %s n'existe pas" % reporting_location)
+        message.respond(u"Le code %s n'existe pas" % reporting_location)
+        return True
 
     # DOB (YYYY-MM-DD) or age (11a/11m)
     try:
@@ -56,25 +71,17 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
         return resp_error_date(message)
 
     report = BirthReport()
-    if loc == 'd':
-        birth_location = report.HOME
-    elif loc == 'c':
-        birth_location = report.CENTER
-    else:
-        birth_location = report.OTHER
 
-    if sex == 'm':
-        sex = report.MAL
-    else:
-        sex = report.FEMALE
+    birth_location = BIRTHPLACE.get(loc, BIRTHPLACE.OTHER)
 
-    if born == '1':
-        born = report.YES
-    else:
-        born = report.NO
+    sex = BIRTHPLACE.get(sex, BIRTHPLACE.FEMALE)
+
+    born = bool(born)
+
 
     if mother == '-':
         mother = ''
+
     if child == '-':
         mother = ''
 
@@ -89,6 +96,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.birth_location = birth_location
     report.dob_auto = dob_auto
     report.born_alive = born
+
+
     report.save()
 
     message.respond(u"[SUCCES] Le rapport de naissance de %(surname_child)s "\
@@ -96,3 +105,4 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
                     u"a ete enregistre." \
                     % {'surname_child': report.surname_child,
                        'family_name': report.family_name})
+    return True
