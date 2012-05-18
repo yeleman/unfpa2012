@@ -134,10 +134,9 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.death_location = death_location
     report.living_children = living_children
     report.dead_children = dead_children
-    report.pregnant = report.YES if pregnant else report.NO
+    report.pregnant = pregnant
     report.pregnancy_weeks = pregnancy_weeks
-    report.pregnancy_related_death = report.YES if pregnancy_related_death \
-                                                else report.NO
+    report.pregnancy_related_death = pregnancy_related_death
     try:
         report.save()
     except:
