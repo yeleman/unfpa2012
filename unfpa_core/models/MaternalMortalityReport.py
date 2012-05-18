@@ -11,10 +11,6 @@ from bolibana.models import Entity, IndividualReport
 
 class MaternalMortalityReport(IndividualReport):
 
-    YES = 'Y'
-    NO = 'N'
-    YESNO = ((YES, _(u"Yes")), (NO, _(u"No")))
-
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Maternal Mortality Report")
