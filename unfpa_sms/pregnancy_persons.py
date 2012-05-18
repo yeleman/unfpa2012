@@ -6,7 +6,7 @@
 from unfpa_core.models import PregnancyReport
 from bolibana.models import Entity
 from date_formate import parse_age_dob
-from common import (contact_for, resp_error, conv_str_int, resp_error_dob, \
+from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
                     resp_error_provider)
 
 
@@ -98,7 +98,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     try:
         report.save()
         message.respond(u"[SUCCES] Le rapport de grossesse de %(mother_name)s "
-                        u"a ete enregistre." \
+                        u"a ete enregistre."
                         % {'mother_name': report.mother_name})
     except:
         message.respond(u"[ERREUR] Le rapport de naissance "

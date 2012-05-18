@@ -39,7 +39,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
 
     try:
         reccord_date, reporting_location, family_name, name_mother,\
-         name_child, dob, birth_location, sex, born_alive = args.split()
+        name_child, dob, birth_location, sex, born_alive = args.split()
     except:
         resp_error(message, u"l'enregistrement de la naissance.")
         return True
@@ -67,8 +67,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
 
     report = BirthReport()
 
-    birth_location = BIRTHPLACE.get(birth_location)
-    sex = SEX.get(sex)
+    birth_location = BIRTHPLACE.get(birth_location, BirthReport.OTHER)
+    sex = SEX.get(sex, BirthReport.FEMALE)
     born_alive = bool(int(born_alive))
 
     # if no name of the mother

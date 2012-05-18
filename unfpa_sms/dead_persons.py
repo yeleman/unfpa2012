@@ -38,7 +38,7 @@ def resp_error_dod(message):
 
 
 def resp_success(message, name):
-    message.respond(u"[SUCCES] Le rapport de deces de %(name)s a" \
+    message.respond(u"[SUCCES] Le rapport de deces de %(name)s a"
                     u" ete enregistre. " % {'name': name})
     return True
 
@@ -113,7 +113,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     pregnancy_related_death = bool(int(pregnancy_related_death_text))
 
     contact = contact_for(message.identity)
-    
+
     report = MaternalMortalityReport()
     if contact:
         report.created_by = contact
@@ -155,7 +155,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
         reporting_date, reporting_location_code, name, sex, age_or_dob, \
         dod_text, death_location_code, place_death = args.split()
     except:
-        return resp_error(message, u"l'enregistrement de rapport "\
+        return resp_error(message, u"l'enregistrement de rapport "
                                    u" des moins de 5ans")
 
     # Entity code
@@ -198,7 +198,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.dob_auto = dob_auto
     report.dod = dod
     report.death_location = death_location
-    report.death_place = DEATHPLACE.get(place_death, \
+    report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
     try:
         report.save()

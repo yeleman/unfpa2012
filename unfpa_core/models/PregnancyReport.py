@@ -16,9 +16,9 @@ class PregnancyReport(IndividualReport):
     STILLBORN = 2
     ABORTION = 3
 
-    RESULT = ((NONE, "None"), \
-              (ALIVE, "Né vivant"), \
-              (STILLBORN, "Mort-né"), \
+    RESULT = ((NONE, "None"),
+              (ALIVE, "Né vivant"),
+              (STILLBORN, "Mort-né"),
               (ABORTION, "Avortement"))
 
     class Meta:
@@ -39,9 +39,9 @@ class PregnancyReport(IndividualReport):
                                    verbose_name=_(u"DOB is an estimation?"))
     pregnancy_age = models.IntegerField(max_length=2,
                                    verbose_name=_(u"Pregnancy age"))
-    expected_delivery_date = models.DateField( \
+    expected_delivery_date = models.DateField(
                                 verbose_name=_(u"Expected delivery date"))
-    delivery_date = models.DateField(blank=True, null=True, \
+    delivery_date = models.DateField(blank=True, null=True,
                                 verbose_name=_(u"Delivery date"))
     pregnancy_result = models.CharField(max_length=1,
                                    choices=RESULT,
