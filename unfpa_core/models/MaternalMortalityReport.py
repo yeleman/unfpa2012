@@ -11,10 +11,6 @@ from bolibana.models import Entity, IndividualReport
 
 class MaternalMortalityReport(IndividualReport):
 
-    YES = 'Y'
-    NO = 'N'
-    YESNO = ((YES, _(u"Yes")), (NO, _(u"No")))
-
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Maternal Mortality Report")
@@ -33,19 +29,16 @@ class MaternalMortalityReport(IndividualReport):
                                        related_name='maternal_dead_in',
                                        verbose_name=_(u"Place of death"))
     living_children = models.PositiveIntegerField(verbose_name=_(u"Living "
-                                                    "children of the deceased"))
+                                                                 u"children of the deceased"))
     dead_children = models.PositiveIntegerField(verbose_name=_(u"Dead children "
-                                                             "of the deceased"))
-    pregnant = models.CharField(max_length=1, choices=YESNO,
-                                verbose_name=_(u"Pregnant?"))
+                                                               u"of the deceased"))
+    pregnant = models.BooleanField(verbose_name=_(u"Pregnant?"))
     pregnancy_weeks = models.PositiveIntegerField(null=True, blank=True,
                                                   verbose_name=_(u"Duration "
-                                                    "of the pregnancy (weeks)"))
-    pregnancy_related_death = models.CharField(max_length=1,
-                                               choices=YESNO,
-                                               null=True, blank=True,
-                                               verbose_name=_(u"Pregnancy "
-                                                              u"related death"))
+                                                                 u"of the pregnancy (weeks)"))
+    pregnancy_related_death = models.BooleanField(default=False,
+                                                  verbose_name=_(u"Pregnancy "
+                                                                 u"related death"))
 
     def __unicode__(self):
         return ugettext(u"%(name)s/%(dod)s" 

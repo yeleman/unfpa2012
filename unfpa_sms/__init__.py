@@ -10,7 +10,7 @@ import re
 from django.conf import settings
 
 from dead_persons import unfpa_dead_pregnant_woman, unfpa_dead_children_under5
-from products import (unfpa_monthly_product_stockouts)
+from products import unfpa_monthly_product_stockouts
 from birth_persons import unfpa_birth
 from pregnancy_persons import unfpa_pregnancy
 
