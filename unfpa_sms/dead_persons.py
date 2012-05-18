@@ -4,7 +4,8 @@
 
 
 from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
-from bolibana.models import Entity, Provider
+from bolibana.models import Entity
+from unfpa_core.data import contact_for, resp_error
 from date_formate import parse_age_dob
 
 SEX = {
@@ -17,12 +18,6 @@ DEATHPLACE = {
     'c': ChildrenMortalityReport.CENTER,
     'a': ChildrenMortalityReport.OTHER,
 }
-
-
-def resp_error(message, action):
-    message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
-                                                               % action)
-    return True
 
 
 def resp_error_reporting_location(message, code):
@@ -53,16 +48,13 @@ def resp_success(message, name):
     return True
 
 
-def contact_for(identity):
-    return Provider.objects.get(phone_number=identity)
-
-
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 2 3 1 5 0'
+            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 
+                      2 3 1 5 0'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
@@ -125,8 +117,15 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     # Pregnancy related death? (0/1)
     pregnancy_related_death = bool(int(pregnancy_related_death_text))
 
+    try:
+        entity = contact_for(message.identity)
+    except:
+        return resp_error(message, 
+                         u"Aucun entité ne poséde ce numéro de telephone")
+
+
     report = MaternalMortalityReport()
-    report.created_by = contact_for(message.identity)
+    report.created_by = entity
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
@@ -140,7 +139,11 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnancy_weeks = pregnancy_weeks
     report.pregnancy_related_death = report.YES if pregnancy_related_death \
                                                 else report.NO
-    report.save()
+    try:
+        report.save()
+    except:
+        return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
+
 
     return resp_success(message, report.name)
 
@@ -186,8 +189,14 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     except Entity.DoesNotExist:
         return resp_error_death_location(message, death_location_code)
 
+    try:
+        entity = contact_for(message.identity)
+    except:
+        return resp_error(message, 
+                         u"Aucun entité ne poséde ce numéro de telephone")
+
     report = ChildrenMortalityReport()
-    report.created_by = contact_for(message.identity)
+    report.created_by = entity
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
@@ -197,6 +206,9 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.dod = dod    
     report.death_location = death_location
     report.place_death = DEATHPLACE.get(place_death, ChildrenMortalityReport.OTHER)
-    report.save()
+    try:
+        report.save()
+    except:
+        return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
 
     return resp_success(message, report.name)

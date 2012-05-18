@@ -11,13 +11,9 @@ from bolibana.models import Entity, IndividualReport
 
 class ChildrenMortalityReport(IndividualReport):
 
-    YES = 'Y'
-    NO = 'N'
-    YESNO = ((YES, _(u"Yes")), (NO, _(u"No")))
-
-    HOME = "D"
-    CENTER = "C"
-    OTHER = "A"
+    HOME = 'D'
+    CENTER = 'C'
+    OTHER = 'A'
     DEATHPLACE = ((HOME, _(u"Domicile")),
                   (CENTER, _(u"Centre")),
                   (OTHER, _(u"Autre")))
@@ -43,7 +39,7 @@ class ChildrenMortalityReport(IndividualReport):
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
     dod = models.DateField(verbose_name=_(u"Date of death"))
-    place_death = models.CharField(max_length=1,
+    death_place = models.CharField(max_length=1,
                                    choices=DEATHPLACE,
                                    verbose_name=_(u"Place of death"))
 
