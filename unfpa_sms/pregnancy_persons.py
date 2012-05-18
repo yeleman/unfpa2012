@@ -76,7 +76,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     report.dob = dob
     report.dob_auto = dob_auto
     report.age_pregnancy = int(age_pregnancy)
-    report.date_recording = date_recording
+    report.created_on = date_recording
     report.expected_date_confinement = expected
     report.date_pregnancy = date_pregnancy
     report.result_pregnancy = int(result)

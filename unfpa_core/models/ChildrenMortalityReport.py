@@ -37,7 +37,7 @@ class ChildrenMortalityReport(IndividualReport):
     name = models.CharField(max_length=100,
                             verbose_name=_(u"Name of the deceased"))
     sex = models.CharField(max_length=1,
-                           choices=SEX, 
+                           choices=SEX,
                            verbose_name=_(u"Sex"))
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
@@ -48,7 +48,7 @@ class ChildrenMortalityReport(IndividualReport):
                                    verbose_name=_(u"Place of death"))
 
     def __unicode__(self):
-        return ugettext(u"%(name)s/%(dod)s" 
+        return ugettext(u"%(name)s/%(dod)s"
                 % {'name': self.name.title(),
                    'dod': self.dod.strftime('%d-%m-%Y')})
 

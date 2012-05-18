@@ -34,15 +34,12 @@ class PregnancyReport(IndividualReport):
                                          verbose_name=_(u"Reporting location"))
     name_householder = models.CharField(max_length=100,
                             verbose_name=_(u"Householder"))
-    date_recording = models.DateField(verbose_name=_(u"Date recording"))
     name_woman = models.CharField(max_length=100,
                             verbose_name=_(u"Name of woman"))
 
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
-    name_husband = models.CharField(max_length=100,
-                                    verbose_name=_("Name husband"))
     age_pregnancy = models.IntegerField(max_length=2,
                                    verbose_name=_(u"Age of pregnancy"))
     expected_date_confinement = models.DateField( \
