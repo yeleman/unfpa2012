@@ -21,9 +21,6 @@ class PregnancyReport(IndividualReport):
               (STILLBORN, "Mort-né"), \
               (ABORTION, "Avortement"))
 
-    MAL = 'M'
-    FEMALE = 'F'
-
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Pregnancy Report")
@@ -32,23 +29,23 @@ class PregnancyReport(IndividualReport):
     reporting_location = models.ForeignKey(Entity,
                                          related_name='pregnancy_reported_in',
                                          verbose_name=_(u"Reporting location"))
-    name_householder = models.CharField(max_length=100,
-                            verbose_name=_(u"Householder"))
-    name_woman = models.CharField(max_length=100,
-                            verbose_name=_(u"Name of woman"))
+    householder_name = models.CharField(max_length=100,
+                            verbose_name=_(u"Householder name"))
+    mother_name = models.CharField(max_length=100,
+                            verbose_name=_(u"Mother name"))
 
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
-    age_pregnancy = models.IntegerField(max_length=2,
-                                   verbose_name=_(u"Age of pregnancy"))
-    expected_date_confinement = models.DateField( \
-                                verbose_name=_(u"Expected date confinement"))
-    date_pregnancy = models.DateField(blank=True, null=True, \
-                                verbose_name=_(u"Date pregnancy"))
-    result_pregnancy = models.CharField(max_length=1,
+    pregnancy_age = models.IntegerField(max_length=2,
+                                   verbose_name=_(u"Pregnancy age"))
+    expected_delivery_date = models.DateField( \
+                                verbose_name=_(u"Expected delivery date"))
+    delivery_date = models.DateField(blank=True, null=True, \
+                                verbose_name=_(u"Delivery date"))
+    pregnancy_result = models.CharField(max_length=1,
                                    choices=RESULT,
-                                   verbose_name=_(u"Resulting pregnancy"))
+                                   verbose_name=_(u"Pregnancy result"))
 
     def __unicode__(self):
         return ugettext(u"%(name_woman)s/%(dob)s"
