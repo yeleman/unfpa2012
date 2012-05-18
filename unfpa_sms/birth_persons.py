@@ -5,9 +5,9 @@
 
 from unfpa_core.models import BirthReport
 from bolibana.models import Entity
-from dead_persons import resp_error_dob
 from date_formate import parse_age_dob
-from unfpa_sms.common import contact_for, resp_error
+from unfpa_sms.common import (contact_for, resp_error, resp_error_dob, 
+                             resp_error_provider)
 
 
 def resp_error_date(message):
@@ -85,7 +85,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     if contact:
         report.created_by = contact
     else:
-        message.respond(u"L'identifiant n'existe pas.")
+        resp_error_provider(message)
         return True
     report.created_on = reccord_date
     report.family_name = family_name.replace('_', ' ')

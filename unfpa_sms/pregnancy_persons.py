@@ -5,9 +5,9 @@
 
 from unfpa_core.models import PregnancyReport
 from bolibana.models import Entity
-from dead_persons import resp_error_dob
 from date_formate import parse_age_dob
-from common import contact_for, resp_error, conv_str_int
+from common import (contact_for, resp_error, conv_str_int, resp_error_dob, \
+                    resp_error_provider)
 
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
@@ -71,7 +71,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     if contact:
         report.created_by = contact
     else:
-        message.respond(u"L'identifiant n'existe pas.")
+        resp_error_provider(message)
         return True
 
     report.householder_name = householder_name.replace('_', ' ')

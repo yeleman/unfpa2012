@@ -26,3 +26,10 @@ def conv_str_int(value):
         value = None
     return value
 
+def resp_error_dob(message):
+    message.respond(u"[ERREUR] la date de naissance n'est pas valide")
+    return True
+
+def resp_error_provider(message):
+    message.respond(u"Aucun utilisateur ne possede ce numero de telephone")
+    return True
