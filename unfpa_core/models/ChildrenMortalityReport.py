@@ -18,13 +18,13 @@ class ChildrenMortalityReport(IndividualReport):
     HOME = "D"
     CENTER = "C"
     OTHER = "A"
-    PLACEDEATH = ((HOME, _(u"Domicile")),
+    DEATHPLACE = ((HOME, _(u"Domicile")),
                   (CENTER, _(u"Centre")),
                   (OTHER, _(u"Autre")))
 
-    MAL = 'M'
-    FEMAL = 'F'
-    SEX = ((FEMAL, _(u"F")), (MAL, _(u"M")))
+    MALE = 'M'
+    FEMALE = 'F'
+    SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
 
     class Meta:
         app_label = 'unfpa_core'
@@ -44,7 +44,7 @@ class ChildrenMortalityReport(IndividualReport):
                                    verbose_name=_(u"DOB is an estimation?"))
     dod = models.DateField(verbose_name=_(u"Date of death"))
     place_death = models.CharField(max_length=1,
-                                   choices=PLACEDEATH,
+                                   choices=DEATHPLACE,
                                    verbose_name=_(u"Place of death"))
 
     def __unicode__(self):

@@ -7,6 +7,17 @@ from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 from bolibana.models import Entity, Provider
 from date_formate import parse_age_dob
 
+SEX = {
+    'm': ChildrenMortalityReport.MALE,
+    'f': ChildrenMortalityReport.FEMALE
+}
+
+DEATHPLACE = {
+    'd': ChildrenMortalityReport.HOME,
+    'c': ChildrenMortalityReport.CENTER,
+    'a': ChildrenMortalityReport.OTHER,
+}
+
 
 def resp_error(message, action):
     message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
@@ -180,24 +191,12 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
-    if sex == 'f':
-        sex = report.FEMAL
-    else:
-        sex = report.MAL
-    report.sex = sex
+    report.sex = SEX.get(sex, ChildrenMortalityReport.MALE)
     report.dob = dob
     report.dob_auto = dob_auto
     report.dod = dod    
     report.death_location = death_location
-    if place_death == "d":
-        place_death = report.HOME
-    if place_death == 'c':
-        place_death = report.CENTER
-    else:
-        place_death = report.OTHER
-    
-    report.place_death = place_death
-
+    report.place_death = DEATHPLACE.get(place_death, ChildrenMortalityReport.OTHER)
     report.save()
 
     return resp_success(message, report.name)
