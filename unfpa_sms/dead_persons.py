@@ -5,7 +5,7 @@
 
 from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 from bolibana.models import Entity
-from unfpa_core.data import contact_for, resp_error
+from common import contact_for, resp_error, resp_error_dob, resp_error_provider
 from date_formate import parse_age_dob
 
 SEX = {
@@ -29,11 +29,6 @@ def resp_error_reporting_location(message, code):
 def resp_error_death_location(message, code):
     message.respond(u"[ERREUR] Le lieu du deces %s n'existe pas."
                                                                % code)
-    return True
-
-
-def resp_error_dob(message):
-    message.respond(u"[ERREUR] la date de naissance n'est pas valide")
     return True
 
 
@@ -117,14 +112,14 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     # Pregnancy related death? (0/1)
     pregnancy_related_death = bool(int(pregnancy_related_death_text))
 
-    try:
-        entity = contact_for(message.identity)
-    except:
-        return resp_error(message,
-                         u"Aucun entité ne poséde ce numéro de telephone")
-
+    contact = contact_for(message.identity)
+    
     report = MaternalMortalityReport()
-    report.created_by = entity
+    if contact:
+        report.created_by = contact
+    else:
+        resp_error_provider(message)
+        return True
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
@@ -186,14 +181,14 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     except Entity.DoesNotExist:
         return resp_error_death_location(message, death_location_code)
 
-    try:
-        entity = contact_for(message.identity)
-    except:
-        return resp_error(message,
-                         u"Aucun entité ne poséde ce numéro de telephone")
+    contact = contact_for(message.identity)
 
     report = ChildrenMortalityReport()
-    report.created_by = entity
+    if contact:
+        report.created_by = contact
+    else:
+        resp_error_provider(message)
+        return True
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
