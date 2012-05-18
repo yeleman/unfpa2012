@@ -45,14 +45,32 @@ class BirthReport(IndividualReport):
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
     born_alive = models.BooleanField(verbose_name=_(u"Born alive"))
-    
     birth_location = models.CharField(max_length=1,
                                    choices=BIRTHPLACE,
                                    verbose_name=_(u"Place of birth"))
 
     def __unicode__(self):
-        return ugettext(u"%(surname_child)s/%(dob)s" 
-                % {'surname_child': self.surname_child.title(),
+        return ugettext(u"%(family_name)s/%(dob)s"
+                % {'family_name': self.family_name.title(),
                    'dob': self.dob.strftime('%d-%m-%Y')})
+
+    def full_name(self):
+        if self.surname_child:
+            return (u"%(surname_child)s %(family_name)s" %
+            {'surname_child': self.surname_child,
+            'family_name': self.family_name
+            })
+        elif self.surname_mother:
+            return (u"%(surname_child)s %(family_name)s" %
+            {'surname_mother': self.surname_mother,
+            'family_name': self.family_name
+            })
+        else:
+            return (u"%(family_name)s" %
+            {'family_name': self.family_name})
+
+    def full_name_dob(self):
+        return self.full_name() + "/%(dob)s" % \
+            {'dob': self.dob.strftime('%d-%m-%Y')}
 
 reversion.register(BirthReport)
