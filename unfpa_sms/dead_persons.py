@@ -115,11 +115,12 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report = MaternalMortalityReport()
+    
     if contact:
         report.created_by = contact
     else:
         resp_error_provider(message)
-        return True
+
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
@@ -184,11 +185,12 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report = ChildrenMortalityReport()
+
     if contact:
         report.created_by = contact
     else:
         resp_error_provider(message)
-        return True
+
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
