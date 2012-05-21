@@ -30,7 +30,6 @@ class BirthReport(IndividualReport):
     reporting_location = models.ForeignKey(Entity,
                                          related_name='birth_reported_in',
                                          verbose_name=_(u"Reporting location"))
-    dob = models.DateField(verbose_name=_(u"Reporting date"))
     family_name = models.CharField(max_length=100,
                             verbose_name=_(u"Family name"))
     surname_mother = models.CharField(max_length=100, blank=True, null=True,
