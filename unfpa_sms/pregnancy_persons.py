@@ -27,7 +27,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
         pregnancy_age, expected_delivery_date, pregnancy_result, \
         delivery_date = args.split()
     except:
-        return resp_error(message, u"le rapport")
+        return resp_error(message, u"l'enregistrement de la grossesse.")
 
     # Entity code
     try:
@@ -72,7 +72,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
         report.created_by = contact
     else:
         resp_error_provider(message)
-        return True
+
 
     report.householder_name = householder_name.replace('_', ' ')
     report.mother_name = mother_name.replace('_', ' ')

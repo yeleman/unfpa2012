@@ -82,11 +82,12 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report.reporting_location = entity
+    
     if contact:
         report.created_by = contact
     else:
         resp_error_provider(message)
-        return True
+
     report.created_on = reccord_date
     report.family_name = family_name.replace('_', ' ')
     report.surname_mother = name_mother.replace('_', ' ')
