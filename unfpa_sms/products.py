@@ -44,8 +44,7 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         ergometrine_vials, iron, folate, iron_folate, magnesium_sulfate, \
         metronidazole, oxytocine = args.split()
     except:
-        resp_error(message, u"le rapport")
-        return True
+        return resp_error(message, u"le rapport")
 
     try:
         period = MonthPeriod.find_create_from(year=int(reporting_year), month=int(reporting_month))
@@ -74,7 +73,7 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         report.created_by = contact
     else:
         return resp_error_provider(message)
-        
+
     report.type = 0
     report.period = period
     report.entity = entity
