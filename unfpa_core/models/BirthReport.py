@@ -28,25 +28,24 @@ class BirthReport(IndividualReport):
         verbose_name_plural = _(u"Birth Reports")
 
     reporting_location = models.ForeignKey(Entity,
-                                         related_name='birth_reported_in',
-                                         verbose_name=_(u"Reporting location"))
+                                           related_name='birth_reported_in',
+                                           verbose_name=_(u"Reporting location"))
     family_name = models.CharField(max_length=100,
-                            verbose_name=_(u"Family name"))
+                                   verbose_name=_(u"Family name"))
     surname_mother = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name=_(u"Surname of mother"))
+                                      verbose_name=_(u"Surname of mother"))
     surname_child = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name=_(u"Surname of child"))
-
+                                     verbose_name=_(u"Surname of child"))
     sex = models.CharField(max_length=1,
-                                   choices=SEX,
-                                   verbose_name=_(u"Sex"))
+                           choices=SEX,
+                           verbose_name=_(u"Sex"))
     dob = models.DateField(verbose_name=_(u"Date of birth"))
     dob_auto = models.BooleanField(default=False,
                                    verbose_name=_(u"DOB is an estimation?"))
     born_alive = models.BooleanField(verbose_name=_(u"Born alive"))
     birth_location = models.CharField(max_length=1,
-                                   choices=BIRTHPLACE,
-                                   verbose_name=_(u"Place of birth"))
+                                     choices=BIRTHPLACE,
+                                     verbose_name=_(u"Place of birth"))
 
     def __unicode__(self):
         return ugettext(u"%(family_name)s/%(dob)s"

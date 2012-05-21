@@ -69,12 +69,12 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report = RHCommoditiesReport()
+
     if contact:
         report.created_by = contact
     else:
-        resp_error_provider(message)
-        return True
-
+        return resp_error_provider(message)
+        
     report.type = 0
     report.period = period
     report.entity = entity
@@ -107,14 +107,13 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
 
     try:
         report.save()
+        message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "
+                        u"a ete enregistre. " \
+                        u"Le No de recu est #%(receipt)s." \
+                        % {'cscom': report.entity.display_full_name(), \
+                           'period': report.period, \
+                           'receipt': report.receipt})
     except:
         message.respond(message, u"[ERREUR] Le rapport n est pas enregiste")
-        return True
 
-    message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "
-                    u"a ete enregistre. " \
-                    u"Le No de recu est #%(receipt)s." \
-                    % {'cscom': report.entity.display_full_name(), \
-                       'period': report.period, \
-                       'receipt': report.receipt})
     return True
