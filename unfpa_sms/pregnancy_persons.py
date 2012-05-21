@@ -71,7 +71,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     if contact:
         report.created_by = contact
     else:
-        resp_error_provider(message)
+        return resp_error_provider(message)
 
 
     report.householder_name = householder_name.replace('_', ' ')
