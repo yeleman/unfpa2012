@@ -203,4 +203,4 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
         report.save()
         resp_success(message, report.name)
     except:
-        return message.respond(u"Le rapport de deces n'a pas ete enregistre.")
+        return resp_error(u"Le rapport de deces n'a pas ete enregistre.")

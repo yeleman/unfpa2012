@@ -4,16 +4,16 @@
 
 
 from unfpa_core.models import RHCommoditiesReport
-from bolibana.models import Entity, MonthPeriod, Provider
+from bolibana.models import Entity, MonthPeriod
+from common import contact_for, resp_error, resp_error_provider
 
 
-def contact_for(identity):
-    return Provider.objects.get(phone_number=identity)
+YESNOAVAIL = {
+    '0': RHCommoditiesReport.NO,
+    '1': RHCommoditiesReport.SUPPLIES_AVAILABLE,
+    '2': RHCommoditiesReport.SUPPLIES_NOT_AVAILABLE,
+}
 
-
-def resp_error(message, action):
-    message.respond(u"[ERREUR] Impossible de comprendre le SMS pour %s"
-                                                               % action)
 
 def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     """  Incomming:
@@ -27,12 +27,13 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
             folate iron_folate magnesium_sulfate metronidazole
             oxytocine sources
         example: 
-           'fnuap mps 2012 02 kid 1 0 1 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+           'fnuap mps 2012 02 1488 1 0 1 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
          Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
+        # -1 represente le non disponible
         args = args.replace("-", "-1")
         reporting_year, reporting_month, location_of_sdp, family_planning, \
         delivery_services, male_condom, female_condom,\
@@ -43,59 +44,72 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         ergometrine_vials, iron, folate, iron_folate, magnesium_sulfate, \
         metronidazole, oxytocine = args.split()
     except:
-        return resp_error(message, u"le rapport")
+        resp_error(message, u"le rapport")
+        return True
+
     try:
         period = MonthPeriod.find_create_from(year=int(reporting_year), month=int(reporting_month))
     except:
-        return message.respond(u"La periode (%s %s) n'est pas valide" % (reporting_month, reporting_year))
+        message.respond(u"La periode (%s %s) n'est pas valide" % (reporting_month, reporting_year))
+        return True
 
     # Entity code
     try:
         entity = Entity.objects.get(slug=location_of_sdp)
     except Entity.DoesNotExist:
-        return message.respond(u"Le code %s n'existe pas" % location_of_sdp)
+        message.respond(u"Le code %s n'existe pas" % location_of_sdp)
+        return True
+
+    def check_int(val):
+        try:
+            return int(val)
+        except:
+            return -1
+
+    contact = contact_for(message.identity)
 
     report = RHCommoditiesReport()
-
-    def steril_test(val):
-        if int(val) == 1:
-            return report.SUPPLIES_AVAILABLE
-        elif int(val) == 0:
-            return report.NO
-        else:
-            return report.SUPPLIES_NOT_AVAILABLE
+    if contact:
+        report.created_by = contact
+    else:
+        resp_error_provider(message)
+        return True
 
     report.type = 0
     report.period = period
     report.entity = entity
-    report.created_by = contact_for(message.identity)
-    report.family_planning = int(family_planning)
-    report.delivery_services = int(delivery_services)
-    report.male_condom = int(male_condom)
-    report.female_condom = int(female_condom)
-    report.oral_pills = int(oral_pills)
-    report.injectable = int(injectable)
-    report.iud = int(iud)
-    report.implants = int(implants)
-    report.female_sterilization = steril_test(female_sterilization)
-    report.male_sterilization = steril_test(male_sterilization)
-    report.amoxicillin_ij = int(amoxicillin_ij)
-    report.amoxicillin_cap_gel = int(amoxicillin_cap_gel)
-    report.amoxicillin_suspension = int(amoxicillin_suspension)
-    report.azithromycine_tab = int(azithromycine_tab)
-    report.azithromycine_suspension = int(azithromycine_suspension)
-    report.benzathine_penicillin = int(benzathine_penicillin)
-    report.cefexime = int(cefexime)
-    report.clotrimazole = int(clotrimazole)
-    report.ergometrine_tab = int(ergometrine_tab)
-    report.ergometrine_vials = int(ergometrine_vials)
-    report.iron = int(iron)
-    report.folate = int(folate)
-    report.iron_folate = int(iron_folate)
-    report.magnesium_sulfate = int(magnesium_sulfate)
-    report.metronidazole = int(metronidazole)
-    report.oxytocine = int(oxytocine)
-    report.save()
+    report.family_planning = check_int(family_planning)
+    report.delivery_services = check_int(delivery_services)
+    report.male_condom = check_int(male_condom)
+    report.female_condom = check_int(female_condom)
+    report.oral_pills = check_int(oral_pills)
+    report.injectable = check_int(injectable)
+    report.iud = check_int(iud)
+    report.implants = check_int(implants)
+    report.female_sterilization = YESNOAVAIL.get(female_sterilization, RHCommoditiesReport.NO)
+    report.male_sterilization = YESNOAVAIL.get(male_sterilization, RHCommoditiesReport.NO)
+    report.amoxicillin_ij = check_int(amoxicillin_ij)
+    report.amoxicillin_cap_gel = check_int(amoxicillin_cap_gel)
+    report.amoxicillin_suspension = check_int(amoxicillin_suspension)
+    report.azithromycine_tab = check_int(azithromycine_tab)
+    report.azithromycine_suspension = check_int(azithromycine_suspension)
+    report.benzathine_penicillin = check_int(benzathine_penicillin)
+    report.cefexime = check_int(cefexime)
+    report.clotrimazole = check_int(clotrimazole)
+    report.ergometrine_tab = check_int(ergometrine_tab)
+    report.ergometrine_vials = check_int(ergometrine_vials)
+    report.iron = check_int(iron)
+    report.folate = check_int(folate)
+    report.iron_folate = check_int(iron_folate)
+    report.magnesium_sulfate = check_int(magnesium_sulfate)
+    report.metronidazole = check_int(metronidazole)
+    report.oxytocine = check_int(oxytocine)
+
+    try:
+        report.save()
+    except:
+        message.respond(message, u"[ERREUR] Le rapport n est pas enregiste")
+        return True
 
     message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "
                     u"a ete enregistre. " \
@@ -103,3 +117,4 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
                     % {'cscom': report.entity.display_full_name(), \
                        'period': report.period, \
                        'receipt': report.receipt})
+    return True
