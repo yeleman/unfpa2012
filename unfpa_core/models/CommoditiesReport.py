@@ -49,7 +49,8 @@ class RHCommoditiesReport(Report):
     implants = models.IntegerField(_(u"Implants. Quantity in hand "
                                      u"(unit) or -1."))
     female_sterilization = models.CharField(max_length=20,
-                                            verbose_name=_(u"Female sterilization"),
+                                            verbose_name=_(u"Female"
+                                                           u"sterilization"),
                                             choices=YESNOAVAIL)
     male_sterilization = models.CharField(max_length=20,
                                           verbose_name=_(u"Male sterilization"),
@@ -184,11 +185,12 @@ class RHCommoditiesReport(Report):
 
     @classmethod
     def create_aggregated(cls, period, entity, author, *args, **kwargs):
-        agg_report = cls.start(period, entity, author, \
-               type=Report.TYPE_AGGREGATED, *args, **kwargs)
+        agg_report = cls.start(period, entity, author,
+                               type=Report.TYPE_AGGREGATED, *args, **kwargs)
 
-        sources = RHCommoditiesReport.validated.filter(period=period, \
-            entity__in=entity.get_children())
+        sources = RHCommoditiesReport.validated\
+                                     .filter(period=period,
+                                             entity__in=entity.get_children())
 
         if sources.count() == 0:
             agg_report.fill_blank()

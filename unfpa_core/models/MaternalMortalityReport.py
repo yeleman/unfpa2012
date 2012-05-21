@@ -29,21 +29,23 @@ class MaternalMortalityReport(IndividualReport):
                                        related_name='maternal_dead_in',
                                        verbose_name=_(u"Place of death"))
     living_children = models.PositiveIntegerField(verbose_name=_(u"Living "
-                                                                 u"children of the deceased"))
+                                                                 u"children of"
+                                                                 u" the deceased"))
     dead_children = models.PositiveIntegerField(verbose_name=_(u"Dead children "
                                                                u"of the deceased"))
     pregnant = models.BooleanField(verbose_name=_(u"Pregnant?"))
     pregnancy_weeks = models.PositiveIntegerField(null=True, blank=True,
                                                   verbose_name=_(u"Duration "
-                                                                 u"of the pregnancy (weeks)"))
+                                                                 u"of the pregnancy"
+                                                                 u" (weeks)"))
     pregnancy_related_death = models.BooleanField(default=False,
                                                   verbose_name=_(u"Pregnancy "
                                                                  u"related death"))
 
     def __unicode__(self):
         return ugettext(u"%(name)s/%(dod)s" 
-                % {'name': self.name.title(),
-                   'dod': self.dod.strftime('%d-%m-%Y')})
+                        % {'name': self.name.title(),
+                           'dod': self.dod.strftime('%d-%m-%Y')})
 
 
 reversion.register(MaternalMortalityReport)
