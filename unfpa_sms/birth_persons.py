@@ -5,9 +5,8 @@
 
 from unfpa_core.models import BirthReport
 from bolibana.models import Entity
-from date_formate import parse_age_dob
 from unfpa_sms.common import (contact_for, resp_error, resp_error_dob, 
-                             resp_error_provider)
+                             resp_error_provider, parse_age_dob)
 
 
 def resp_error_date(message):
@@ -41,8 +40,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
         reccord_date, reporting_location, family_name, name_mother,\
         name_child, dob, birth_location, sex, born_alive = args.split()
     except:
-        resp_error(message, u"l'enregistrement de la naissance.")
-        return True
+        return resp_error(message, u"l'enregistrement de la naissance.")
 
     # Entity code
     try:
@@ -55,15 +53,13 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     try:
         dob, dob_auto = parse_age_dob(dob)
     except:
-        resp_error_dob(message)
-        return True
+        return resp_error_dob(message)
 
     # Reporting date (YYYY-MM-DD)
     try:
         reccord_date, _reccord_date = parse_age_dob(reccord_date)
     except:
-        resp_error_date(message, reccord_date)
-        return True
+        return resp_error_date(message, reccord_date)
 
     report = BirthReport()
 
@@ -82,11 +78,11 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report.reporting_location = entity
-    
+
     if contact:
         report.created_by = contact
     else:
-        resp_error_provider(message)
+        return resp_error_provider(message)
 
     report.created_on = reccord_date
     report.family_name = family_name.replace('_', ' ')

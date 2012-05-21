@@ -5,8 +5,8 @@
 
 from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
 from bolibana.models import Entity
-from common import contact_for, resp_error, resp_error_dob, resp_error_provider
-from date_formate import parse_age_dob
+from common import (contact_for, resp_error, resp_error_dob, 
+                    resp_error_provider, parse_age_dob)
 
 SEX = {
     'm': ChildrenMortalityReport.MALE,
@@ -39,7 +39,7 @@ def resp_error_dod(message):
 
 def resp_success(message, name):
     message.respond(u"[SUCCES] Le rapport de deces de %(name)s a"
-                    u" ete enregistre. " % {'name': name})
+                    u" ete enregistre." % {'name': name})
     return True
 
 
@@ -48,7 +48,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             fnuap dpw reporting_location name dob dod death_location
                       living_children dead_children pregnant
                       pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid
+            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 
                       2 3 1 5 0'
 
          Outgoing:

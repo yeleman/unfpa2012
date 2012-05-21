@@ -5,9 +5,8 @@
 
 from unfpa_core.models import PregnancyReport
 from bolibana.models import Entity
-from date_formate import parse_age_dob
 from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
-                    resp_error_provider)
+                    resp_error_provider, parse_age_dob)
 
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
@@ -33,7 +32,8 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     try:
         entity = Entity.objects.get(slug=reporting_location)
     except Entity.DoesNotExist:
-        return message.respond(u"Le code %s n'existe pas" % reporting_location)
+        message.respond(u"Le code %s n'existe pas" % reporting_location)
+        return True
 
     # DOB (YYYY-MM-DD) or age (11a/11m)
     try:
@@ -80,10 +80,10 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     report.dob_auto = dob_auto
 
     if not pregnancy_age:
-        report.pregnancy_age = pregnancy_age
-    else:
         message.respond(u"[Age de la grossesse] l'age n'est pas correct.")
         return True
+    else:
+        report.pregnancy_age = pregnancy_age
 
     report.created_on = reccord_date
     report.expected_delivery_date = expected_delivery_date
