@@ -189,7 +189,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     if contact:
         report.created_by = contact
     else:
-        resp_error_provider(message)
+        return resp_error_provider(message)
 
     report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
@@ -203,6 +203,6 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
                                         ChildrenMortalityReport.OTHER)
     try:
         report.save()
-        resp_success(message, report.name)
+        return resp_success(message, report.name)
     except:
         return resp_error(u"Le rapport de deces n'a pas ete enregistre.")
