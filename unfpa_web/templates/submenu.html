@@ -1,0 +1,41 @@
+{% load bolibana %}
+<div id="submenu">
+{% if content = 'data_browserr' %}
+<p><label for="source">Sélectionnez une Periode</label><a class="toplevel" href="{{ base_url|index:":-1" }}">
+
+<select id ="type_periode">
+  <option selected="selected" value="week">Semaine</option>
+  <option value="month">Mois</option>
+  <option value="quarter">Trimestre</option>
+  <option value="annual">Année</option>
+</select> 
+<select id ="periodes">
+  <option>Volvo</option>
+  <option selected="selected">Saab</option>
+  <option value = "all" >Mercedes</option>
+  <option>Audi</option>
+</select> </p>
+{% endif %}
+</div>
+<script>
+function truc()
+{
+a=document.getElementById("type_periode");
+b=document.getElementById("periodes");
+// b.selectedIndex=a.selectedIndex;
+
+b=new Option(["New 1st option"],["0"])
+}
+</script>
+<select id ="type_periode"  onchange= "truc()">
+  <option selected="selected" value="week">Semaine</option>
+  <option value="month">Mois</option>
+  <option value="quarter">Trimestre</option>
+  <option value="annual">Année</option>
+</select> 
+<select id ="periodes">
+  <option value = "1" >Volvo</option>
+  <option value = "2" selected="selected">Saab</option>
+  <option value = "3" >Mercedes</option>
+  <option>Audi</option>
+</select>
