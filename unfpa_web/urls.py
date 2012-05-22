@@ -29,6 +29,11 @@ urlpatterns = patterns('',
          '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
         views.reports.report_chooser, name='reports'),
 
+    # CREDOS
+    url(r'^pregnancy/$', views.pregnancy.pregnancy, name='pregnancy'),
+    url(r'^birth/$', views.birth.birth, name='birth'),
+    url(r'^death/$', views.death.death, name='death'),
+
     # ANTIM : USERS
     url(r'^users/?$', \
         provider_permission('can_manage_users')(bviews.providers. \

@@ -55,6 +55,7 @@ def monthly_commodities(request, period):
 
     all_reports = RHCommoditiesReport.objects.filter(period=period)
     last_tree_fp = 0
+    print all_reports, 'alou'
     for report in all_reports:
         if check_planing_method(report) >= 3:
             last_tree_fp += 1

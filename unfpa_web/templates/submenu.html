@@ -16,7 +16,14 @@
   <option>Audi</option>
 </select> </p>
 {% endif %}
+
+  <p style="text-align:center"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
+   <a  {% if category = 'pregnancy' %} class="hover"{% endif %} href="{% url pregnancy %}">Grossesse</a>
+     <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
+    </p>
+
 </div>
+
 <script>
 function truc()
 {
@@ -27,15 +34,3 @@ b=document.getElementById("periodes");
 b=new Option(["New 1st option"],["0"])
 }
 </script>
-<select id ="type_periode"  onchange= "truc()">
-  <option selected="selected" value="week">Semaine</option>
-  <option value="month">Mois</option>
-  <option value="quarter">Trimestre</option>
-  <option value="annual">Année</option>
-</select> 
-<select id ="periodes">
-  <option value = "1" >Volvo</option>
-  <option value = "2" selected="selected">Saab</option>
-  <option value = "3" >Mercedes</option>
-  <option>Audi</option>
-</select>
