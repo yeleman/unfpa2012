@@ -58,9 +58,10 @@ def monthly_commodities(request, period):
     for report in all_reports:
         if check_planing_method(report) >= 3:
             last_tree_fp += 1
-
-    percent_last_tree_fp = (last_tree_fp * 100) / len(all_reports)
-
+    try:
+        percent_last_tree_fp = (last_tree_fp * 100) / len(all_reports)
+    except:
+        percent_last_tree_fp = 0
     context.update({"last_tree_fp": last_tree_fp, 
                  "percent_last_tree_fp": percent_last_tree_fp})
 
