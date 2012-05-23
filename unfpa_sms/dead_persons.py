@@ -121,7 +121,6 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     else:
         resp_error_provider(message)
 
-    report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
     report.dob = dob
@@ -134,6 +133,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnancy_weeks = pregnancy_weeks
     report.pregnancy_related_death = pregnancy_related_death
     try:
+        report.save()
+        report.created_on = parse_age_dob(reporting_date, True)
         report.save()
     except:
         return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
@@ -191,7 +192,6 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     else:
         return resp_error_provider(message)
 
-    report.created_on = parse_age_dob(reporting_date, True)
     report.reporting_location = reporting_location
     report.name = name.replace('_', ' ')
     report.sex = SEX.get(sex, ChildrenMortalityReport.MALE)
@@ -202,6 +202,8 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
     try:
+        report.save()
+        report.created_on = parse_age_dob(reporting_date, True)
         report.save()
         return resp_success(message, report.name)
     except:

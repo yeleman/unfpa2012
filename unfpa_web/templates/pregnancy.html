@@ -9,9 +9,31 @@
 {% block content %}
 
 <div id="context">
-{{eg}}
-<h2>Indicateurs</h2>
 
+<h2>Indicateurs {{eg}}</h2>
+    <table>
+        <tr>
+            <th rowspan="2"> Mois </th>
+            <th colspan="5">  INDICATEURS </th>
+        </tr>
+        <tr>
+            <td>Nbre total de femmes enceintes</td>
+            <td>Nbre total d'accouchement enregistrés</td>
+            <td>Nbre total de grossesses interrompues</td>
+            <td>Nbre total de grossesses avec enfants vivants</td>
+            <td>Nbre total avec morts nées</td>
+        </tr>
+        {% for indicator in indicators%}
+        <tr>
+            <td>{{indicator.month}}</td>
+            <td>{{indicator.fe}}</td>
+            <td>{{indicator.ae}}</td>
+            <td>{{indicator.gi}}</td>
+            <td>{{indicator.av}}</td>
+            <td>{{indicator.mn}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 {% endblock %}

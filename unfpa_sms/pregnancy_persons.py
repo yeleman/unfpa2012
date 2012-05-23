@@ -4,7 +4,7 @@
 
 
 from unfpa_core.models import PregnancyReport
-from bolibana.models import Entity
+from bolibana.models import Entity, MonthPeriod
 from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
                     resp_error_provider, parse_age_dob)
 
@@ -47,6 +47,8 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     except:
         return resp_error_dob(message)
 
+    MonthPeriod.find_create_from(year=reccord_date.year, month=reccord_date.month)
+
     # expected delivery date
     try:
         expected_delivery_date, _expected_delivery_date = \
@@ -85,7 +87,6 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     else:
         report.pregnancy_age = pregnancy_age
 
-    report.created_on = reccord_date
     report.expected_delivery_date = expected_delivery_date
     report.delivery_date = delivery_date
 
@@ -96,6 +97,8 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
         return True
 
     try:
+        report.save()
+        report.created_on = reccord_date
         report.save()
         message.respond(u"[SUCCES] Le rapport de grossesse de %(mother_name)s "
                         u"a ete enregistre."

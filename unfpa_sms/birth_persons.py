@@ -84,7 +84,6 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     else:
         return resp_error_provider(message)
 
-    report.created_on = reccord_date
     report.family_name = family_name.replace('_', ' ')
     report.surname_mother = name_mother.replace('_', ' ')
     report.surname_child = name_child.replace('_', ' ')
@@ -95,6 +94,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.born_alive = born_alive
 
     try:
+        report.save()
+        report.created_on = reccord_date
         report.save()
         message.respond(u"[SUCCES] Le rapport de naissance de" \
                         u"%(full_name_dob)s a ete enregistre." \

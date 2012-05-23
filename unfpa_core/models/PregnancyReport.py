@@ -46,8 +46,8 @@ class PregnancyReport(IndividualReport):
                                         verbose_name=_(u"Pregnancy result"))
 
     def __unicode__(self):
-        return ugettext(u"%(name_woman)s/%(dob)s"
-                % {'name_woman': self.name_woman.title(),
+        return ugettext(u"%(mother_name)s/%(dob)s"
+                % {'mother_name': self.mother_name.title(),
                    'dob': self.dob.strftime('%d-%m-%Y')})
 
 
