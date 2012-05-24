@@ -21,6 +21,7 @@ def weekly_maternal(request, period):
 
     return render(request, 'weekly_maternal.html', context)
 
+
 @provider_required
 def monthly_maternal(request, period):
 

@@ -18,7 +18,8 @@ class MaternalMortalityReport(IndividualReport):
 
     reporting_location = models.ForeignKey(Entity,
                                            related_name='maternal_reported_in',
-                                           verbose_name=_(u"Reporting location"))
+                                           verbose_name=_(u"Reporting "
+                                                          u"location"))
     name = models.CharField(max_length=100,
                             verbose_name=_(u"Name of the deceased"))
     dob = models.DateField(verbose_name=_(u"Date of birth"))
@@ -29,21 +30,19 @@ class MaternalMortalityReport(IndividualReport):
                                        related_name='maternal_dead_in',
                                        verbose_name=_(u"Place of death"))
     living_children = models.PositiveIntegerField(verbose_name=_(u"Living "
-                                                                 u"children of"
-                                                                 u" the deceased"))
-    dead_children = models.PositiveIntegerField(verbose_name=_(u"Dead children "
-                                                               u"of the deceased"))
+                                                 u"children of the deceased"))
+    dead_children = models.PositiveIntegerField(verbose_name=_(u"Dead children"
+                                                u" of the deceased"))
     pregnant = models.BooleanField(verbose_name=_(u"Pregnant?"))
     pregnancy_weeks = models.PositiveIntegerField(null=True, blank=True,
                                                   verbose_name=_(u"Duration "
-                                                                 u"of the pregnancy"
-                                                                 u" (weeks)"))
+                                                  u"of the pregnancy (weeks)"))
     pregnancy_related_death = models.BooleanField(default=False,
                                                   verbose_name=_(u"Pregnancy "
-                                                                 u"related death"))
+                                                  u"related death"))
 
     def __unicode__(self):
-        return ugettext(u"%(name)s/%(dod)s" 
+        return ugettext(u"%(name)s/%(dod)s"
                         % {'name': self.name.title(),
                            'dod': self.dod.strftime('%d-%m-%Y')})
 

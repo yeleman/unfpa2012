@@ -53,8 +53,8 @@ class RHCommoditiesReport(Report):
                                                            u"sterilization"),
                                             choices=YESNOAVAIL)
     male_sterilization = models.CharField(max_length=20,
-                                          verbose_name=_(u"Male sterilization"),
-                                          choices=YESNOAVAIL)
+                                         verbose_name=_(u"Male sterilization"),
+                                         choices=YESNOAVAIL)
 
     # Availability of live-saving maternal/RH medecine
     amoxicillin_ij = models.IntegerField(_(u"Amoxicillin (Injectable). "
@@ -63,8 +63,8 @@ class RHCommoditiesReport(Report):
     amoxicillin_cap_gel = models.IntegerField(_(u"Amoxicillin (capsule/gel). "
                                                 u"Quantity in hand "
                                                 u"(capsules) or -1."))
-    amoxicillin_suspension = models.IntegerField(_(u"Amoxicillin (Suspension). "
-                                                   u"Quantity in hand "
+    amoxicillin_suspension = models.IntegerField(_(u"Amoxicillin (Suspension)."
+                                                   u" Quantity in hand "
                                                    u"(vials) or -1."))
     azithromycine_tab = models.IntegerField(_(u"Azithromicine (tablet/gel). "
                                               u"Quantity in hand "

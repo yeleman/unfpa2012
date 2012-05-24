@@ -11,7 +11,6 @@ from bolibana.models import (MonthPeriod, WeekPeriod,
 from bolibana.web.decorators import provider_required
 
 
-
 def import_path(name):
     """ import a callable from full module.callable name """
     modname, _, attr = name.rpartition('.')

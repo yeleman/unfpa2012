@@ -14,7 +14,7 @@ def weekly_children(request, period):
     context = {'period': period}
 
     data = []
-    
+
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = 0
         data.append({'district': district, 'deaths': nb_deaths})

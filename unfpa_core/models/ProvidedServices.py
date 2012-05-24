@@ -41,14 +41,15 @@ class ProvidedServicesReport(Report):
     pf_visit_ams_ticket = models.PositiveIntegerField(_(u"Visits by "
                                                         u"AMS ticket"))
     pf_visit_provider_ticket = models.PositiveIntegerField(_(u"Visits by "
-                                                            u"provider ticket"))
+                                                           u"provider ticket"))
     pf_visit_short_term = models.PositiveIntegerField(_(u"Visit for short term"
                                                         u"PF method"))
     pf_visit_long_term = models.PositiveIntegerField(_(u"Visit for long term"
                                                         u"PF method"))
     client_hiv_counselling = models.PositiveIntegerField(_(u"Client receving"
                                                            u"HIV Counselling"))
-    client_hiv_tested = models.PositiveIntegerField(_(u"Client tested for HIV"))
+    client_hiv_tested = models.PositiveIntegerField(_(u"Client tested"
+                                                      u" for HIV"))
     client_hiv_positive = models.PositiveIntegerField(_(u"HIV+ Client tested"))
 
     implant_removal = models.PositiveIntegerField(_(u"5y implant removal"))
@@ -56,7 +57,7 @@ class ProvidedServicesReport(Report):
 
     total_hiv_test = models.PositiveIntegerField(_(u"Total HIV tests"))
 
-    sources = models.ManyToManyField('ProvidedServicesReport', \
+    sources = models.ManyToManyField('ProvidedServicesReport',
                                      verbose_name=_(u"Sources"), \
                                      blank=True, null=True)
 

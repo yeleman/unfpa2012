@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # encoding=utf-8
-# maintainer: 
+# maintainer:
 
 from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import ChildrenMortalityReport
-                               
+
 
 def sum_month(month):
     child_reports = ChildrenMortalityReport.objects\
                                      .filter(created_on__gte=month.start_on,
                                              created_on__lte=month.end_on)
 
-    indicator = {'month': month, 'ntd': 0, 'dd': 0, 'dc': 0, 'da': 0, 'sm': 0, 'sf': 0}
+    indicator = {'month': month, 'ntd': 0, 'dd': 0, 'dc': 0, 'da': 0, 'sm': 0,
+                 'sf': 0}
 
     print child_reports
 
@@ -42,5 +43,5 @@ def death(request):
         indicators.append(indicator)
 
     context.update({'indicators': indicators})
-    
+
     return render(request, 'death.html', context)

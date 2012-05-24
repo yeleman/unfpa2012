@@ -21,7 +21,7 @@ class Command(BaseCommand):
             if ct.model_class() == Entity:
                 nut_id = ct
                 break
-        
+
         if not nut_id:
             print(u"Unable to find %s in ContentType" % Entity)
             exit(1)
@@ -32,6 +32,5 @@ class Command(BaseCommand):
             acc.content_type = nut_id
             acc.save()
             print(u"\tfixed %s" % acc)
-        
-        print(u"All done.")
 
+        print(u"All done.")

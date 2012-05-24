@@ -28,8 +28,8 @@ class ChildrenMortalityReport(IndividualReport):
         verbose_name_plural = _(u"Children Mortality Reports")
 
     reporting_location = models.ForeignKey(Entity,
-                                           related_name='children_reported_in',
-                                           verbose_name=_(u"Reporting location"))
+                                         related_name='children_reported_in',
+                                         verbose_name=_(u"Reporting location"))
     name = models.CharField(max_length=100,
                             verbose_name=_(u"Name of the deceased"))
     sex = models.CharField(max_length=1,
