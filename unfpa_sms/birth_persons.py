@@ -4,8 +4,8 @@
 
 
 from unfpa_core.models import BirthReport
-from bolibana.models import Entity
-from unfpa_sms.common import (contact_for, resp_error, resp_error_dob, 
+from bolibana.models import Entity, MonthPeriod
+from unfpa_sms.common import (contact_for, resp_error, resp_error_dob,
                              resp_error_provider, parse_age_dob)
 
 
@@ -61,6 +61,8 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     except:
         return resp_error_date(message, reccord_date)
 
+    MonthPeriod.find_create_from(year=reccord_date.year,
+                                 month=reccord_date.month)
     report = BirthReport()
 
     birth_location = BIRTHPLACE.get(birth_location, BirthReport.OTHER)

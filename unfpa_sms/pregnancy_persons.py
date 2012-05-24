@@ -12,10 +12,10 @@ from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap gpw reporting_location householder_name reccord_date
-            mother_name dob pregnancy_age expected_delivery_date 
+            mother_name dob pregnancy_age expected_delivery_date
             pregnancy_result delivery_date
         example:
-           'fnuap gpw kid alou_dolo 20120509 tata_keita 45a 9 20120509 0 
+           'fnuap gpw kid alou_dolo 20120509 tata_keita 45a 9 20120509 0
             20120509'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
@@ -47,7 +47,8 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     except:
         return resp_error_dob(message)
 
-    MonthPeriod.find_create_from(year=reccord_date.year, month=reccord_date.month)
+    MonthPeriod.find_create_from(year=reccord_date.year,
+                                 month=reccord_date.month)
 
     # expected delivery date
     try:
@@ -64,7 +65,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
 
     contact = contact_for(message.identity)
     pregnancy_age = conv_str_int(pregnancy_age)
-    pregnancy_result = conv_str_int(pregnancy_result)        
+    pregnancy_result = conv_str_int(pregnancy_result)
 
     report = PregnancyReport()
 
@@ -74,7 +75,6 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
         report.created_by = contact
     else:
         return resp_error_provider(message)
-
 
     report.householder_name = householder_name.replace('_', ' ')
     report.mother_name = mother_name.replace('_', ' ')
@@ -108,4 +108,3 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
                         u"n'a pas ete enregistre.")
 
     return True
-

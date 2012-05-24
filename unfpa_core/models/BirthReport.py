@@ -28,8 +28,8 @@ class BirthReport(IndividualReport):
         verbose_name_plural = _(u"Birth Reports")
 
     reporting_location = models.ForeignKey(Entity,
-                                           related_name='birth_reported_in',
-                                           verbose_name=_(u"Reporting location"))
+                                        related_name='birth_reported_in',
+                                        verbose_name=_(u"Reporting location"))
     family_name = models.CharField(max_length=100,
                                    verbose_name=_(u"Family name"))
     surname_mother = models.CharField(max_length=100, blank=True, null=True,

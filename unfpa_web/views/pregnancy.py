@@ -7,6 +7,7 @@ from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import PregnancyReport
 
+
 def sum_month(month):
     reports = PregnancyReport.objects.filter(created_on__gte=month.start_on,
                                              created_on__lte=month.end_on)
@@ -25,9 +26,10 @@ def sum_month(month):
 
     return indicator
 
+
 def pregnancy(request):
     context = {'category': 'pregnancy', 'eg': 'pregnancy'}
-    
+
     indicators = []
     for month in MonthPeriod.objects.all().order_by('start_on'):
         indicator = sum_month(month)
