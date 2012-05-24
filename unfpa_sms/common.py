@@ -23,6 +23,11 @@ def resp_error(message, action):
     return True
 
 
+def resp_error_date(message):
+    message.respond(u"[Date de visite] la date n'est pas valide.")
+    return True
+
+
 def conv_str_int(value):
     try:
         value = int(value)

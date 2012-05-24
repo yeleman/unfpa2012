@@ -6,12 +6,8 @@
 from unfpa_core.models import BirthReport
 from bolibana.models import Entity, MonthPeriod
 from unfpa_sms.common import (contact_for, resp_error, resp_error_dob,
-                             resp_error_provider, parse_age_dob)
-
-
-def resp_error_date(message):
-    message.respond(u"[Date de visite] la date n'est pas valide.")
-    return True
+                             resp_error_provider, parse_age_dob,
+                             resp_error_date)
 
 
 BIRTHPLACE = {

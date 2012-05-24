@@ -4,9 +4,9 @@
 
 
 from unfpa_core.models import MaternalMortalityReport, ChildrenMortalityReport
-from bolibana.models import Entity
-from common import (contact_for, resp_error, resp_error_dob, 
-                    resp_error_provider, parse_age_dob)
+from bolibana.models import Entity, MonthPeriod
+from common import (contact_for, resp_error, resp_error_dob,
+                    resp_error_provider, parse_age_dob, resp_error_date)
 
 SEX = {
     'm': ChildrenMortalityReport.MALE,
@@ -33,7 +33,7 @@ def resp_error_death_location(message, code):
 
 
 def resp_error_dod(message):
-    message.respond(u"[ERREUR] La date de mort n'est pas valide")
+    message.respond(u"[ERREUR] La date de décès n'est pas valide")
     return True
 
 
@@ -45,7 +45,7 @@ def resp_success(message, name):
 
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap dpw reporting_date reporting_location_code name age_or_dob 
+            fnuap dpw reccord_date reporting_location_code name age_or_dob
                       dod_text death_location_code living_children_text
                       dead_children_text pregnant_text pregnancy_weeks_text
                       pregnancy_related_death_text
@@ -57,13 +57,11 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
-        print args
-        reporting_date, reporting_location_code, name, age_or_dob, dod_text, \
+        reccord_date, reporting_location_code, name, age_or_dob, dod_text, \
         death_location_code, living_children_text, dead_children_text, \
         pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
     except:
-        raise
         return resp_error(message, u"le rapport")
 
     # Entity code
@@ -77,6 +75,15 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
         dob, dob_auto = parse_age_dob(age_or_dob)
     except:
         return resp_error_dob(message)
+
+    # reccord date
+    try:
+        reccord_date, _reccord_date = parse_age_dob(reccord_date)
+    except:
+        return resp_error_date(message)
+
+    MonthPeriod.find_create_from(year=reccord_date.year,
+                                 month=reccord_date.month)
 
     # Date of Death, YYYY-MM-DD
     try:
@@ -118,7 +125,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     contact = contact_for(message.identity)
 
     report = MaternalMortalityReport()
-    
+
     if contact:
         report.created_by = contact
     else:
@@ -137,7 +144,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnancy_related_death = pregnancy_related_death
     try:
         report.save()
-        report.created_on = parse_age_dob(reporting_date, True)
+        report.created_on = reccord_date
         report.save()
     except:
         message.respond(u"[ERREUR] Le rapport n est pas enregiste")
@@ -148,7 +155,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap du5 reporting_date reporting_location_code name sex
+            fnuap du5 reccord_date reporting_location_code name sex
             age_or_dob dod_text death_location_code place_death
          exemple: 'fnuap du5 20120502 1488 nom F 20100502 20120502 1488 D'
 
@@ -157,7 +164,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
             or [ERREUR] message """
 
     try:
-        reporting_date, reporting_location_code, name, sex, age_or_dob, \
+        reccord_date, reporting_location_code, name, sex, age_or_dob, \
         dod_text, death_location_code, place_death = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "
@@ -174,6 +181,15 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
         dob, dob_auto = parse_age_dob(age_or_dob)
     except:
         return resp_error_dob(message)
+
+    # reccord date
+    try:
+        reccord_date, _reccord_date = parse_age_dob(reccord_date)
+    except:
+        return resp_error_date(message)
+
+    MonthPeriod.find_create_from(year=reccord_date.year,
+                                 month=reccord_date.month)
 
     # Date of Death, YYYY-MM-DD
     try:
@@ -207,7 +223,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
                                         ChildrenMortalityReport.OTHER)
     try:
         report.save()
-        report.created_on = parse_age_dob(reporting_date, True)
+        report.created_on = reccord_date
         report.save()
         return resp_success(message, report.name)
     except:

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
+from django.db import IntegrityError
 
 from unfpa_core.models import RHCommoditiesReport
 from bolibana.models import Entity, MonthPeriod
@@ -22,13 +23,14 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
             female_sterilization male_sterilization
             amoxicillin_ij amoxicillin_cap_gel
             amoxicillin_suspension azithromycine_tab
-            azithromycine_suspension benzathine_penicillin cefexime 
+            azithromycine_suspension benzathine_penicillin cefexime
             clotrimazole ergometrine_tab ergometrine_vials iron
             folate iron_folate magnesium_sulfate metronidazole
             oxytocine sources
-        example: 
-           'fnuap mps 2012 02 1488 1 0 1 0 0 0 0 0 0 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
-         Outgoing:
+        example:
+           'fnuap mps 2012 05 kid 0 0 20 - - - - - 0 0 - - - - - - - - - - - -
+             - - - -'
+        Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
@@ -47,9 +49,11 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         return resp_error(message, u"le rapport")
 
     try:
-        period = MonthPeriod.find_create_from(year=int(reporting_year), month=int(reporting_month))
+        period = MonthPeriod.find_create_from(year=int(reporting_year),
+                                              month=int(reporting_month))
     except:
-        message.respond(u"La periode (%s %s) n'est pas valide" % (reporting_month, reporting_year))
+        message.respond(u"La periode (%s %s) n'est pas valide" %
+                        (reporting_month, reporting_year))
         return True
 
     # Entity code
@@ -85,8 +89,10 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     report.injectable = check_int(injectable)
     report.iud = check_int(iud)
     report.implants = check_int(implants)
-    report.female_sterilization = YESNOAVAIL.get(female_sterilization, RHCommoditiesReport.NO)
-    report.male_sterilization = YESNOAVAIL.get(male_sterilization, RHCommoditiesReport.NO)
+    report.female_sterilization = YESNOAVAIL.get(female_sterilization,
+                                                 RHCommoditiesReport.NO)
+    report.male_sterilization = YESNOAVAIL.get(male_sterilization,
+                                               RHCommoditiesReport.NO)
     report.amoxicillin_ij = check_int(amoxicillin_ij)
     report.amoxicillin_cap_gel = check_int(amoxicillin_cap_gel)
     report.amoxicillin_suspension = check_int(amoxicillin_suspension)
@@ -107,12 +113,14 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     try:
         report.save()
         message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "
-                        u"a ete enregistre. " \
-                        u"Le No de recu est #%(receipt)s." \
-                        % {'cscom': report.entity.display_full_name(), \
-                           'period': report.period, \
+                        u"a ete enregistre. "
+                        u"Le No de recu est #%(receipt)s."
+                        % {'cscom': report.entity.display_full_name(),
+                           'period': report.period,
                            'receipt': report.receipt})
+    except IntegrityError:
+        message.respond(u"[ERREUR] il ya deja un rapport pour cette periode")
     except:
-        message.respond(message, u"[ERREUR] Le rapport n est pas enregiste")
+        message.respond(u"[ERREUR] Le rapport n est pas enregiste")
 
     return True

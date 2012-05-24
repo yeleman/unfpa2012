@@ -6,7 +6,8 @@
 from unfpa_core.models import PregnancyReport
 from bolibana.models import Entity, MonthPeriod
 from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
-                    resp_error_provider, parse_age_dob)
+                    resp_error_provider, parse_age_dob,
+                    resp_error_date)
 
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
@@ -45,7 +46,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     try:
         reccord_date, _reccord_date = parse_age_dob(reccord_date)
     except:
-        return resp_error_dob(message)
+        return resp_error_date(message)
 
     MonthPeriod.find_create_from(year=reccord_date.year,
                                  month=reccord_date.month)
