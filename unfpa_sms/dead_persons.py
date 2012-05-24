@@ -45,22 +45,25 @@ def resp_success(message, name):
 
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap dpw reporting_location name dob dod death_location
-                      living_children dead_children pregnant
-                      pregnancy_weeks pregnancy_related_death
-            exemple: 'fnuap dpw 20120430 kid blaise 20070330 20110430 kid 
-                      2 3 1 5 0'
+            fnuap dpw reporting_date reporting_location_code name age_or_dob 
+                      dod_text death_location_code living_children_text
+                      dead_children_text pregnant_text pregnancy_weeks_text
+                      pregnancy_related_death_text
+            exemple: 'fnuap dpw 20120524 110 kona_diarra 20120524 20120524 110
+                      1 0 0 - 0'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
+        print args
         reporting_date, reporting_location_code, name, age_or_dob, dod_text, \
         death_location_code, living_children_text, dead_children_text, \
         pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
     except:
+        raise
         return resp_error(message, u"le rapport")
 
     # Entity code
@@ -107,7 +110,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     try:
         pregnancy_weeks = int(pregnancy_weeks_text)
     except:
-        return resp_error(message, u"la Duree de la grossesse")
+        pregnancy_weeks = None
 
     # Pregnancy related death? (0/1)
     pregnancy_related_death = bool(int(pregnancy_related_death_text))
@@ -137,7 +140,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
         report.created_on = parse_age_dob(reporting_date, True)
         report.save()
     except:
-        return resp_error(message, u"[ERREUR] Le rapport n est pas enregiste")
+        message.respond(u"[ERREUR] Le rapport n est pas enregiste")
+        return True
 
     return resp_success(message, report.name)
 
