@@ -15,8 +15,6 @@ def sum_month(month):
     indicator = {'month': month, 'ntd': 0, 'dd': 0, 'dc': 0, 'da': 0, 'sm': 0,
                  'sf': 0}
 
-    print child_reports
-
     for report in child_reports:
         indicator['ntd'] += 1
         if report.death_place == ChildrenMortalityReport.HOME:
