@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "bolibana.entity", "fields": {"phone_number": "", "rght": 4, "name": "Mali", "parent": null, "level": 0, "lft": 1, "tree_id": 1, "type": 1, "slug": "ml"}}, {"pk": 2, "model": "bolibana.entity", "fields": {"phone_number": "111", "rght": 3, "name": "Kidal", "parent": 1, "level": 1, "lft": 2, "tree_id": 1, "type": 2, "slug": "kid"}}]
