@@ -1,5 +1,5 @@
 {% load bolibana %}
-<div id="submenu">
+<div id="submenu" style="padding-top:0; padding-bottom: 0;">
 {% if content = 'data_browserr' %}
 <p><label for="source">Sélectionnez une Periode</label><a class="toplevel" href="{{ base_url|index:":-1" }}">
 
@@ -17,7 +17,7 @@
 </select> </p>
 {% endif %}
 
-  <p style="text-align:center"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
+  <p  class="transmissionsub"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
    <a  {% if category = 'pregnancy' %} class="hover"{% endif %} href="{% url pregnancy %}">Grossesse</a>
      <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
     </p>
