@@ -2,23 +2,23 @@
 {% load babel %}
 {% load bolibana %}
 
-{% block title %}Naissance{% endblock %}
+{% block title %}Rapports mensuels de naissances{% endblock %}
 {% block submenu %}{% include "submenu.html" %}{% endblock %}
 
 {% block content %}
 
 <div id="context">
 
-<h2>Les rapports mensuels de naissances</h2>
+<h2>Rapports mensuels de naissances</h2>
 <table>
     <tr>
         <th rowspan="2"> Mois </th>
         <th colspan="8" style="text-align:center">INDICATEURS</th>
     </tr>
-    <tr>
-        <td>Naissance</td>
-        <td>à Domicile</td>
-        <td>au Centre</td>
+    <tr style="text-align:center">
+        <td><strong>Total naissance</strong></td>
+        <td>Domicile</td>
+        <td>Centre</td>
         <td>Ailleurs</td>
         <td>Sexe masculin</td>
         <td>Sexe feminin</td>
@@ -26,9 +26,9 @@
         <td>Mort-né</td>
     </tr>
     {% for indicator in indicators%}
-    <tr>
+    <tr style="text-align:center">
         <td>{{indicator.month.full_name}}</td>
-        <td>{{indicator.birth}}</td>
+        <td><strong>{{indicator.birth}}</strong></td>
         <td>{{indicator.residence}}</td>
         <td>{{indicator.center}}</td>
         <td>{{indicator.other}}</td>

@@ -2,7 +2,7 @@
 {% load babel %}
 {% load bolibana %}
 
-{% block title %}Grosesse{% endblock %}
+{% block title %}Rapports mensuels de grossesses{% endblock %}
 {% block submenu %}{% include "submenu.html" %}{% endblock %}
 
 
@@ -10,23 +10,23 @@
 
 <div id="context">
 
-<h2>Les rapports mensuels de grossesses</h2>
+<h2>Rapports mensuels de grossesses</h2>
     <table>
         <tr>
             <th rowspan="2"> Mois </th>
             <th colspan="5" style="text-align:center">INDICATEURS</th>
         </tr>
-        <tr>
-            <td>Femmes enceintes</td>
+        <tr style="text-align:center">
+            <td><strong>Total femmes enceintes</strong></td>
             <td>Accouchement enregistrés</td>
             <td>Grossesses interrompues</td>
             <td>Grossesses avec enfants vivants</td>
             <td>Grossesses avec morts nées</td>
         </tr>
         {% for indicator in indicators%}
-        <tr>
+        <tr style="text-align:center">
             <td>{{indicator.month.full_name}}</td>
-            <td>{{indicator.fe}}</td>
+            <td><strong>{{indicator.fe}}</strong></td>
             <td>{{indicator.ae}}</td>
             <td>{{indicator.gi}}</td>
             <td>{{indicator.av}}</td>

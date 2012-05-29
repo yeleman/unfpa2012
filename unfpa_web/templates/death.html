@@ -2,7 +2,7 @@
 {% load babel %}
 {% load bolibana %}
 
-{% block title %}Deces{% endblock %}
+{% block title %}Rapports mensuels de décès{% endblock %}
 {% block submenu %}{% include "submenu.html" %}{% endblock %}
 
 
@@ -10,24 +10,24 @@
 
 <div id="context">
 
-<h2>Les rapports mensuels de décès</h2>
+<h2>Rapports mensuels de décès</h2>
     <table>
         <tr>
             <th rowspan="2"> Mois </th>
-            <th colspan="6" style="text-align:center">  INDICATEURS </th>
+            <th colspan="6" style="text-align:center">INDICATEURS</th>
         </tr>
-        <tr>
-            <td>Décès</td>
-            <td>à Domicile</td>
-            <td>au Centre</td>
+        <tr style="text-align:center">
+            <td><strong>Total décès</strong></td>
+            <td>Domicile</td>
+            <td>Centre</td>
             <td>Ailleurs</td>
             <td>Sexe masculin</td>
             <td>Sexe feminin</td>
         </tr>
         {% for indicator in indicators%}
-        <tr>
-            <td>{{indicator.month.full_name}}</td>
-            <td>{{indicator.ntd}}</td>
+        <tr style="text-align:center">
+            <td >{{indicator.month.full_name}}</td>
+            <td><strong>{{indicator.ntd}}</strong></td>
             <td>{{indicator.dd}}</td>
             <td>{{indicator.dc}}</td>
             <td>{{indicator.da}}</td>
