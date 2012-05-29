@@ -42,7 +42,7 @@ class PregnancyReport(IndividualReport):
                                                              u"delivery date"))
     delivery_date = models.DateField(blank=True, null=True,
                                      verbose_name=_(u"Delivery date"))
-    pregnancy_result = models.CharField(max_length=1, choices=RESULT,
+    pregnancy_result = models.IntegerField(max_length=1, choices=RESULT,
                                         verbose_name=_(u"Pregnancy result"))
 
     def __unicode__(self):
