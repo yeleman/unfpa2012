@@ -11,12 +11,12 @@
 <div id="context">
 
 <h2>Rapports mensuels de grossesses</h2>
-    <table>
+    <table style="text-align:center">
         <tr>
             <th rowspan="2"> Mois </th>
             <th colspan="5" style="text-align:center">INDICATEURS</th>
         </tr>
-        <tr style="text-align:center">
+        <tr>
             <td><strong>Total femmes enceintes</strong></td>
             <td>Accouchement enregistrés</td>
             <td>Grossesses interrompues</td>
@@ -24,13 +24,20 @@
             <td>Grossesses avec morts nées</td>
         </tr>
         {% for indicator in indicators%}
-        <tr style="text-align:center">
-            <td>{{indicator.month.full_name}}</td>
+        <tr>
+            <td rowspan="2">{{indicator.month.full_name}}</td>
             <td><strong>{{indicator.fe}}</strong></td>
             <td>{{indicator.ae}}</td>
             <td>{{indicator.gi}}</td>
             <td>{{indicator.av}}</td>
             <td>{{indicator.mn}}</td>
+        </tr>
+        <tr>
+            <td><strong>{{indicator.rate_fe}} %</strong></td>
+            <td>{{indicator.rate_ae}} %</td>
+            <td>{{indicator.rate_gi}} %</td>
+            <td>{{indicator.rate_av}} %</td>
+            <td>{{indicator.rate_mn}} %</td>
         </tr>
         {% endfor %}
     </table>

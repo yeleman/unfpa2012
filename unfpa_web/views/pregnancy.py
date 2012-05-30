@@ -6,7 +6,7 @@
 from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import PregnancyReport
-
+from unfpa_web.views.data import rate_cal
 
 def sum_month(month):
     reports = PregnancyReport.objects.filter(created_on__gte=month.start_on,
@@ -34,6 +34,11 @@ def pregnancy(request):
     for month in MonthPeriod.objects.all().order_by('start_on'):
         indicator = sum_month(month)
         indicators.append(indicator)
+        indicator['rate_fe'] = rate_cal(indicator['fe'], indicator['fe'])
+        indicator['rate_ae'] = rate_cal(indicator['ae'], indicator['fe'])
+        indicator['rate_gi'] = rate_cal(indicator['gi'], indicator['fe'])
+        indicator['rate_av'] = rate_cal(indicator['av'], indicator['fe'])
+        indicator['rate_mn'] = rate_cal(indicator['mn'], indicator['fe'])
 
     context.update({'indicators': indicators})
 

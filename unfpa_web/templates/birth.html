@@ -10,12 +10,12 @@
 <div id="context">
 
 <h2>Rapports mensuels de naissances</h2>
-<table>
+<table style="text-align:center">
     <tr>
         <th rowspan="2"> Mois </th>
         <th colspan="8" style="text-align:center">INDICATEURS</th>
     </tr>
-    <tr style="text-align:center">
+    <tr>
         <td><strong>Total naissance</strong></td>
         <td>Domicile</td>
         <td>Centre</td>
@@ -26,8 +26,8 @@
         <td>Mort-né</td>
     </tr>
     {% for indicator in indicators%}
-    <tr style="text-align:center">
-        <td>{{indicator.month.full_name}}</td>
+    <tr>
+        <td rowspan="2">{{indicator.month.full_name}}</td>
         <td><strong>{{indicator.birth}}</strong></td>
         <td>{{indicator.residence}}</td>
         <td>{{indicator.center}}</td>
@@ -36,6 +36,16 @@
         <td>{{indicator.female}}</td>
         <td>{{indicator.alive}}</td>
         <td>{{indicator.stillborn}}</td>
+    </tr>
+    <tr>
+        <td><strong>{{indicator.rate_birth}} %</strong></td>
+        <td>{{indicator.rate_residence}} %</td>
+        <td>{{indicator.rate_center}} %</td>
+        <td>{{indicator.rate_other}} %</td>
+        <td>{{indicator.rate_male}} %</td>
+        <td>{{indicator.rate_female}} %</td>
+        <td>{{indicator.rate_alive}} %</td>
+        <td>{{indicator.rate_stillborn}} %</td>
     </tr>
     {% endfor %}
 </table>

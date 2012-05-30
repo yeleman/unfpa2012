@@ -5,7 +5,7 @@
 from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import ChildrenMortalityReport
-
+from unfpa_web.views.data import rate_cal
 
 def sum_month(month):
     child_reports = ChildrenMortalityReport.objects\
@@ -39,6 +39,13 @@ def death(request):
     for month in MonthPeriod.objects.all().order_by('start_on'):
         indicator = sum_month(month)
         indicators.append(indicator)
+        indicator['rate_ntd'] = rate_cal(indicator['ntd'], 
+                                           indicator['ntd'])
+        indicator['rate_dd'] = rate_cal(indicator['dd'], indicator['ntd'])
+        indicator['rate_dc'] = rate_cal(indicator['dc'], indicator['ntd'])
+        indicator['rate_da'] = rate_cal(indicator['da'], indicator['ntd'])
+        indicator['rate_sm'] = rate_cal(indicator['sm'], indicator['ntd'])
+        indicator['rate_sf'] = rate_cal(indicator['sf'], indicator['ntd'])
 
     context.update({'indicators': indicators})
 
