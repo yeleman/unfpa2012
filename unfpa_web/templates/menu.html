@@ -1,7 +1,7 @@
 {% load bolibana %}
 {% if web_provider.is_authenticated %}
     <ul>
-    <li {% if category = 'unfpa' %}class="hover"{% endif %}><a href="#">FUNUAP</a></li>
+    <li {% if category = 'unfpa' %}class="hover"{% endif %}><a href="#">FNUAP</a></li>
     <li {% if category = 'credos' %}class="hover"{% endif %}><a href="{% url birth %}">CREDOS</a></li>
     <li {% if category = 'users' %}class="hover"{% endif %}><a href="{% url list_users %}">Utilisateurs</a></li>
     <li {% if category = 'entities' %}class="hover"{% endif %}><a href="{% url list_entities %}">Établissements</a></li>
