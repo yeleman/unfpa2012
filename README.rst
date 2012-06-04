@@ -56,6 +56,13 @@ cp nosmsd.conf.py.exemple nosmsd.conf.py
 * Creation du super user
 	./manage.py createsuperuser
 
+_______________________
+installation de gammu
+_______________________
+
+sudo add-apt-repository ppa:nijel/ppa
+sudo apt-get update
+sudo apt-get install gammu
 
 
 

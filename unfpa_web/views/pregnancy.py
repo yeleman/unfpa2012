@@ -28,7 +28,7 @@ def sum_month(month):
 
 
 def pregnancy(request):
-    context = {'category': 'pregnancy', 'eg': 'pregnancy'}
+    context = {'category': 'credos'}
 
     indicators = []
     for month in MonthPeriod.objects.all().order_by('start_on'):

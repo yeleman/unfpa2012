@@ -33,7 +33,7 @@ def sum_month(month):
 
 def death(request):
 
-    context = {'category': 'death', 'eg': 'death'}
+    context = {'category': 'credos'}
 
     indicators = []
     for month in MonthPeriod.objects.all().order_by('start_on'):
