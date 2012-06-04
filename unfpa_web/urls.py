@@ -24,7 +24,7 @@ urlpatterns = patterns('',
          {'template_name': 'logout_django.html'}, name='logout'),
 
     # reports
-    url(r'^reports/(?P<report_type>maternal|children|commodities)/'
+    url(r'^unfpa/(?P<report_type>maternal|children|commodities)/'
          '(?P<period_type>weekly|monthly|quarterly|annual)/'
          '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
         views.reports.report_chooser, name='reports'),
@@ -33,6 +33,11 @@ urlpatterns = patterns('',
     url(r'^credos/pregnancy/$', views.pregnancy.pregnancy, name='pregnancy'),
     url(r'^credos/birth/$', views.birth.birth, name='birth'),
     url(r'^credos/death/$', views.death.death, name='death'),
+
+    # UNFPA
+    # url(r'^unfpa/maternal/$', views.pregnancy.pregnancy, name='pregnancy'),
+    # url(r'^unfpa/children/$', views.birth.birth, name='birth'),
+    # url(r'^unfpa/products/$', views.death.death, name='death'),
 
     # ANTIM : USERS
     url(r'^users/?$', \
