@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load babel %}
+{% load bolibana %}
+
+{% block title %}Rapport de décès {% ifequal type "quarterly" %}trimestriel{% else %}annuel{% endifequal %} concernant les enfants de moins de 5ans{% endblock %}
+
+{% block content %}
+
+<h2>Rapport {% ifequal type "quarterly" %}trimestriel{% else %}annuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
+
+<table>
+<tr><th>District</th>{% for month in months %}<th>{{ month.middle|datefmt:"MMM" }}</th>{% endfor %}<th>Total</th><th>Pourcentage</th></tr>
+{% for disdata in data %}
+<tr><td>{{ disdata.district }}</td>{% for mdeath in disdata.mdeaths %}<td>{{ mdeath }}</td>{% endfor %}<td>{{ disdata.total }}</td><td>{{ disdata.percent_of_all|percent }}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

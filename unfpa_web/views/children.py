@@ -32,3 +32,40 @@ def weekly_children(request, period):
 @provider_required
 def monthly_children(request, period):
     return weekly_monthly_children(request, period, 'monthly')
+
+
+def quarterly_annual_children(request, period, rtype):
+    context = {'period': period}
+    data = []
+    months = period.months
+
+    # total deaths for all districts
+    # /!\ UNFPA districts only
+    all_deaths = ChildrenMortalityReport.periods.within(period).count()
+
+    # for each district
+    for district in Entity.objects.filter(type__slug='district'):
+        mdeaths = []
+        for month in months:
+            nb_deaths = ChildrenMortalityReport.periods.within(month) \
+                           .filter(death_location__in=district.get_descendants()) \
+                           .count()
+            mdeaths.append(nb_deaths)
+        total = sum(mdeaths)
+        data.append({'district': district, 'mdeaths': mdeaths,
+                     'total': total, 'all_deaths': all_deaths,
+                     'percent_of_all': float(total) / all_deaths})
+
+    context.update({'data': data, 'type': rtype, 'months': months})
+
+    return render(request, 'quarterly_annual_children.html', context) 
+
+
+@provider_required
+def quarterly_children(request, period):
+    return quarterly_annual_children(request, period, 'quarterly')
+
+
+@provider_required
+def annual_children(request, period):
+    return quarterly_annual_children(request, period, 'annual')
