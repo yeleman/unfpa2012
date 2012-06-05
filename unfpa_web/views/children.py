@@ -58,7 +58,7 @@ def quarterly_annual_children(request, period, rtype):
 
     context.update({'data': data, 'type': rtype, 'months': months})
 
-    return render(request, 'quarterly_annual_children.html', context) 
+    return render(request, 'quarterly_annual_children.html', context)
 
 
 @provider_required

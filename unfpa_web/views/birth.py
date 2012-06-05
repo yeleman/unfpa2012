@@ -37,7 +37,7 @@ def sum_month(month):
 
 
 def birth(request):
-    context = {'category': 'credos'}
+    context = {'category': 'credos_dashboard'}
 
     indicators = []
     for month in MonthPeriod.objects.all().order_by('start_on'):
@@ -45,19 +45,19 @@ def birth(request):
 
         indicator['rate_birth'] = rate_cal(indicator['birth'], 
                                            indicator['birth'])
-        indicator['rate_residence'] = rate_cal(indicator['residence'], 
+        indicator['rate_residence'] = rate_cal(indicator['residence'],
                                            indicator['birth'])
-        indicator['rate_center'] = rate_cal(indicator['center'], 
+        indicator['rate_center'] = rate_cal(indicator['center'],
                                            indicator['birth'])
         indicator['rate_other'] = rate_cal(indicator['other'], 
                                            indicator['birth'])
         indicator['rate_male'] = rate_cal(indicator['male'], 
                                            indicator['birth'])
-        indicator['rate_female'] = rate_cal(indicator['female'], 
+        indicator['rate_female'] = rate_cal(indicator['female'],
                                            indicator['birth'])
         indicator['rate_alive'] = rate_cal(indicator['alive'], 
                                            indicator['birth'])
-        indicator['rate_stillborn'] = rate_cal(indicator['stillborn'], 
+        indicator['rate_stillborn'] = rate_cal(indicator['stillborn'],
                                            indicator['birth'])
 
         indicators.append(indicator)

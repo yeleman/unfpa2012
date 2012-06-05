@@ -30,11 +30,13 @@ urlpatterns = patterns('',
         views.reports.report_chooser, name='reports'),
 
     # CREDOS
+    url(r'^credos/dashboard/$', views.credos_dashboard.credos_dashboard, name='credos_dashboard'),
     url(r'^credos/pregnancy/$', views.pregnancy.pregnancy, name='pregnancy'),
     url(r'^credos/birth/$', views.birth.birth, name='birth'),
     url(r'^credos/death/$', views.death.death, name='death'),
 
     # UNFPA
+    url(r'^unfpa/dashboard/$', views.unfpa_dashboard.unfpa_dashboard, name='unfpa_dashboard'),
     # url(r'^unfpa/maternal/$', views.pregnancy.pregnancy, name='pregnancy'),
     # url(r'^unfpa/children/$', views.birth.birth, name='birth'),
     # url(r'^unfpa/products/$', views.death.death, name='death'),
