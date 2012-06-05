@@ -7,6 +7,7 @@ from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import BirthReport
 from unfpa_web.views.data import rate_cal
+from datetime import datetime
 
 
 def sum_month(month):
@@ -40,7 +41,8 @@ def birth(request):
     context = {'category': 'credos_dashboard'}
 
     indicators = []
-    for month in MonthPeriod.objects.all().order_by('start_on'):
+    for month in MonthPeriod.objects.filter(start_on__lt=datetime.now) \
+                                    .order_by('start_on'):
         indicator = sum_month(month)
 
         indicator['rate_birth'] = rate_cal(indicator['birth'], 

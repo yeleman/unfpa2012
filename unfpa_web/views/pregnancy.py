@@ -7,6 +7,8 @@ from django.shortcuts import render
 from bolibana.models import MonthPeriod
 from unfpa_core.models import PregnancyReport
 from unfpa_web.views.data import rate_cal
+from datetime import datetime
+
 
 def sum_month(month):
     reports = PregnancyReport.objects.filter(created_on__gte=month.start_on,
@@ -31,7 +33,8 @@ def pregnancy(request):
     context = {'category': 'credos_dashboard'}
 
     indicators = []
-    for month in MonthPeriod.objects.all().order_by('start_on'):
+    for month in MonthPeriod.objects.filter(start_on__lt=datetime.now) \
+                                    .order_by('start_on'):
         indicator = sum_month(month)
         indicators.append(indicator)
         indicator['rate_fe'] = rate_cal(indicator['fe'], indicator['fe'])
