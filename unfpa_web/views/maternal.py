@@ -22,7 +22,7 @@ def weekly_monthly_maternal(request, period, rtype):
 
     context.update({'data': data, 'type': rtype})
 
-    return render(request, 'weekly_monthly_maternal.html', context) 
+    return render(request, 'weekly_monthly_maternal.html', context)
 
 
 @provider_required
@@ -52,7 +52,8 @@ def quarterly_annual_maternal(request, period, rtype):
         for month in months:
             nb_deaths = MaternalMortalityReport.periods.within(month) \
                            .filter(pregnancy_related_death=True) \
-                           .filter(death_location__in=district.get_descendants()) \
+                           .filter(death_location__in=district
+                                   .get_descendants()) \
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
@@ -62,7 +63,7 @@ def quarterly_annual_maternal(request, period, rtype):
 
     context.update({'data': data, 'type': rtype, 'months': months})
 
-    return render(request, 'quarterly_annual_maternal.html', context) 
+    return render(request, 'quarterly_annual_maternal.html', context)
 
 
 @provider_required

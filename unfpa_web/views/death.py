@@ -41,8 +41,7 @@ def death(request):
                                     .order_by('start_on'):
         indicator = sum_month(month)
         indicators.append(indicator)
-        indicator['rate_ntd'] = rate_cal(indicator['ntd'], 
-                                           indicator['ntd'])
+        indicator['rate_ntd'] = rate_cal(indicator['ntd'], indicator['ntd'])
         indicator['rate_dd'] = rate_cal(indicator['dd'], indicator['ntd'])
         indicator['rate_dc'] = rate_cal(indicator['dc'], indicator['ntd'])
         indicator['rate_da'] = rate_cal(indicator['da'], indicator['ntd'])

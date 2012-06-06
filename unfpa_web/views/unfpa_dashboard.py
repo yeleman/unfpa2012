@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # encoding=utf-8
-# maintainer: rgaudin
+# maintainer: fad
 
 from django.shortcuts import render
 
 from bolibana.web.decorators import provider_required
-
 
 
 @provider_required

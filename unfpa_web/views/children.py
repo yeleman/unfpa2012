@@ -21,13 +21,13 @@ def weekly_monthly_children(request, period, rtype):
 
     context.update({'data': data, 'type': rtype})
 
-    return render(request, 'weekly_monthly_children.html', context) 
+    return render(request, 'weekly_monthly_children.html', context)
 
 
 @provider_required
 def weekly_children(request, period):
     return weekly_monthly_children(request, period, 'weekly')
-    
+
 
 @provider_required
 def monthly_children(request, period):
@@ -48,7 +48,8 @@ def quarterly_annual_children(request, period, rtype):
         mdeaths = []
         for month in months:
             nb_deaths = ChildrenMortalityReport.periods.within(month) \
-                           .filter(death_location__in=district.get_descendants()) \
+                           .filter(death_location__in=district
+                                   .get_descendants()) \
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
