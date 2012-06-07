@@ -3,101 +3,102 @@
 # maintainer: rgaudin
 
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Sum
 
 from bolibana.models import Entity
 from bolibana.web.decorators import provider_required
+
+from unfpa_core import unfpa_districts
 from unfpa_core.models import RHCommoditiesReport
-
-
-def check_planing_method(report):
-    i = 0
-    if report.male_condom != -1:
-        i += 1
-    if report.female_condom != -1:
-        i += 1
-    if report.oral_pills != -1:
-        i += 1
-    if report.injectable != -1:
-        i += 1
-    if report.iud != -1:
-        i += 1
-    if report.implants != -1:
-        i += 1
-    if report.female_sterilization == 'T':
-        i += 1
-    if report.male_sterilization == 'T':
-        i += 1
-    return i
 
 
 @provider_required
 def monthly_commodities(request, period):
 
     context = {'period': period}
-    data = {}
-    list_family_planning = RHCommoditiesReport.objects.filter(period=period,
-                                                         family_planning=True)
-    data.update({"list_family_planning": list_family_planning})
+    
+    fp_services = RHCommoditiesReport.validated \
+                                     .filter(period=period) \
+                                     .filter(family_planning=True)
 
-    list_delivery_services = RHCommoditiesReport.objects.filter(period=period,
-                                                     delivery_services=True)
-    data.update({"list_delivery_services": list_delivery_services})
-    list_both_services = []
-    list_both_services.extend(list_family_planning)
-    list_both_services = [element for element in list_delivery_services \
-                                  if element in list_both_services]
-    data.update({"list_both_services": list_both_services})
+    delivery_services = RHCommoditiesReport.validated \
+                                     .filter(period=period) \
+                                     .filter(delivery_services=True)
 
-    val = -1
-    query = (Q(male_condom=val) | Q(female_condom=val) | Q(oral_pills=val) |
-             Q(injectable=val) | Q(iud=val) | Q(implants=val) |
-             Q(female_sterilization='N') | Q(male_sterilization='N'))
+    both_services = RHCommoditiesReport.validated \
+                                     .filter(period=period) \
+                                     .filter(delivery_services=True) \
+                                     .filter(family_planning=True)
 
-    stoct_out_methods = RHCommoditiesReport.objects.filter(query,
-                                                           period=period)
-    data.update({"stoct_out_methods": stoct_out_methods})
+    # filter on validated with chained manager
+    fp_stockout = RHCommoditiesReport.fp_stockout.filter(period=period)
 
-    all_reports = RHCommoditiesReport.objects.filter(period=period)
-    last_tree_fp = 0
-    print all_reports, 'alou'
-    for report in all_reports:
-        if check_planing_method(report) >= 3:
-            last_tree_fp += 1
+    atleast_3methods = sum([1 
+                        for report 
+                        in RHCommoditiesReport.validated.filter(period=period)
+                        if report.fp_stockout_3methods()])
     try:
-        percent_last_tree_fp = (last_tree_fp * 100) / len(all_reports)
-    except:
-        percent_last_tree_fp = 0
-    context.update({"last_tree_fp": last_tree_fp,
-                 "percent_last_tree_fp": percent_last_tree_fp})
+        atleast_3methods_percent = float(atleast_3methods) / \
+                               RHCommoditiesReport.validated \
+                                                  .filter(period=period).count()
+    except ZeroDivisionError:
+        atleast_3methods_percent = 0
 
-    list_family_planning = RHCommoditiesReport.objects.filter(period=period,
-                                                        family_planning=True)
-    data.update({"list_family_planning": list_family_planning})
+    otoxycin_magnesium_stockout = RHCommoditiesReport.validated \
+                                     .filter(period=period) \
+                                     .filter(magnesium_sulfate=0) \
+                                     .filter(oxytocine=0)
 
-    out_Oxytocin_Magnesium_Sulphate = RHCommoditiesReport.objects \
-        .filter((Q(oxytocine=val) | Q(magnesium_sulfate=val)), period=period)
-    data.update({"out_Oxytocin_Magnesium_Sulphate":
-                  out_Oxytocin_Magnesium_Sulphate})
+    context.update({'fp_services': (fp_services.count(), fp_services),
+                    'delivery_services': (delivery_services.count(), 
+                                          delivery_services),
+                    'both_services': (both_services.count(), both_services),
+                    'fp_stockout': (fp_stockout.count(), fp_stockout),
+                    'atleast_3methods': (atleast_3methods,
+                                         atleast_3methods_percent),
+                    'otoxycin_magnesium_stockout': (
+                                            otoxycin_magnesium_stockout.count(),
+                                            otoxycin_magnesium_stockout)})
 
-    dic = {}
-    for entity in Entity.objects.all():
-        reports_children = []
-        for child in entity.children.all():
+    # districts
+    all_stock_outs = []
+    for district in unfpa_districts():
+        centers = district.children \
+                              .filter(type__slug__in=('cscom', 
+                                                      'csref', 'hospital'))
+        nb_centers = float(centers.count())
+
+        methods = ('male_condom', 'female_condom', 'oral_pills',
+                           'injectable', 'iud', 'implants', 
+                           'female_sterilization', 'male_sterilization',
+                           'magnesium_sulfate', 'oxytocine')
+        stock_outs = {}
+        for method in methods:
+            stock_outs[method] = [0, 0]
+
+        # /!\ validated
+        reports = RHCommoditiesReport.objects.filter(period=period, 
+                                                       entity__in=centers)
+        for report in reports:
+            for method in methods:
+                # increment counter of # of center with stockout.
+                if getattr(report, method, report.SUPPLIES_NOT_PROVIDED) == 0:
+                    stock_outs[method][0] += 1
+
+        # compute percentages
+        for key, method_so in stock_outs.items():
             try:
-                report = RHCommoditiesReport.objects.get(period=period,
-                                                         entity=child)
-                print report
-                reports_children.append(report)
-            except:
-                report = None
-        print reports_children
-        if reports_children:
-            dic['%s' % entity] = reports_children
+                stock_outs[key] = (method_so[0], method_so[0] / nb_centers)
+            except ZeroDivisionError:
+                pass
+        
+        all_stock_outs.append({'district': district,
+                               'stock_outs': stock_outs,
+                               'nb_centers': int(nb_centers),
+                               'reports': reports})
+        print(all_stock_outs)
 
-    context.update({"dic": dic})
-
-    context.update({'data': data})
+    context.update({'all_stock_outs': all_stock_outs})
 
     return render(request, 'monthly_commodities.html', context)
 

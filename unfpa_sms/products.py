@@ -10,7 +10,7 @@ from common import contact_for, resp_error, resp_error_provider
 
 
 YESNOAVAIL = {
-    '0': RHCommoditiesReport.NO,
+    '0': RHCommoditiesReport.SUPPLIES_NOT_PROVIDED,
     '1': RHCommoditiesReport.SUPPLIES_AVAILABLE,
     '2': RHCommoditiesReport.SUPPLIES_NOT_AVAILABLE,
 }
@@ -90,9 +90,9 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     report.iud = check_int(iud)
     report.implants = check_int(implants)
     report.female_sterilization = YESNOAVAIL.get(female_sterilization,
-                                                 RHCommoditiesReport.NO)
+                                                 RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
     report.male_sterilization = YESNOAVAIL.get(male_sterilization,
-                                               RHCommoditiesReport.NO)
+                                               RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
     report.amoxicillin_ij = check_int(amoxicillin_ij)
     report.amoxicillin_cap_gel = check_int(amoxicillin_cap_gel)
     report.amoxicillin_suspension = check_int(amoxicillin_suspension)

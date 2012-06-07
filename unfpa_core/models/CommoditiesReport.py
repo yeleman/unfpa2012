@@ -4,11 +4,26 @@
 
 import reversion
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from bolibana.models import EntityType, Report, MonthPeriod
+
+
+class FPMethodManager(models.Manager):
+
+    def get_query_set(self):
+        return super(FPMethodManager, self).get_query_set() \
+                                         .filter(Q(male_condom=0) | 
+                                         Q(female_condom=0) |
+                                         Q(oral_pills=0) |
+                                         Q(injectable=0) |
+                                         Q(iud=0) |
+                                         Q(implants=0) |
+                                         Q(female_sterilization=0) |
+                                         Q(male_sterilization=0))
 
 
 class RHCommoditiesReport(Report):
@@ -19,11 +34,12 @@ class RHCommoditiesReport(Report):
     NO = 'N'
     YESNO = ((YES, _(u"Yes")), (NO, _(u"No")))
     NOT_PROVIDED = -1
-    SUPPLIES_AVAILABLE = 'A'
-    SUPPLIES_NOT_AVAILABLE = 'T'
+    SUPPLIES_AVAILABLE = 1
+    SUPPLIES_NOT_AVAILABLE = 0
+    SUPPLIES_NOT_PROVIDED = -1
     YESNOAVAIL = ((SUPPLIES_AVAILABLE, _(u"Yes. Supplies available")),
                   (SUPPLIES_NOT_AVAILABLE, _(u"Yes. Supplies not available")),
-                  (NO, _(u"No")))
+                  (SUPPLIES_NOT_PROVIDED, _(u"No")))
 
     class Meta:
         app_label = 'unfpa_core'
@@ -48,13 +64,11 @@ class RHCommoditiesReport(Report):
                                 u"(unit) or -1."))
     implants = models.IntegerField(_(u"Implants. Quantity in hand "
                                      u"(unit) or -1."))
-    female_sterilization = models.CharField(max_length=20,
-                                            verbose_name=_(u"Female"
-                                                           u"sterilization"),
-                                            choices=YESNOAVAIL)
-    male_sterilization = models.CharField(max_length=20,
-                                         verbose_name=_(u"Male sterilization"),
-                                         choices=YESNOAVAIL)
+    female_sterilization = models.IntegerField(verbose_name=_(u"Female"
+                                               u"sterilization"),
+                                               choices=YESNOAVAIL)
+    male_sterilization = models.IntegerField(verbose_name=_(u"Male sterilization"),
+                                             choices=YESNOAVAIL)
 
     # Availability of live-saving maternal/RH medecine
     amoxicillin_ij = models.IntegerField(_(u"Amoxicillin (Injectable). "
@@ -110,6 +124,8 @@ class RHCommoditiesReport(Report):
     sources = models.ManyToManyField('RHCommoditiesReport', \
                                      verbose_name=_(u"Sources"), \
                                      blank=True, null=True)
+
+    fp_stockout = FPMethodManager()
 
     @property
     def mperiod(self):
@@ -220,6 +236,14 @@ class RHCommoditiesReport(Report):
 
         return agg_report
 
+    def fp_stockout_3methods(self):
+        w = 0
+        for f in ('male_condom', 'female_condom', 'oral_pills', 'injectable',
+                  'iud', 'implants',
+                  'female_sterilization', 'male_sterilization'):
+            if self.getattr(f) == 0:
+                w += 1
+        return w >= 3
 
 @receiver(pre_save, sender=RHCommoditiesReport)
 def pre_save_report(sender, instance, **kwargs):
