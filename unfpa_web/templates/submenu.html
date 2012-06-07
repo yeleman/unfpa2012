@@ -17,10 +17,20 @@
 </select> </p>
 {% endif %}
 
+{% if category = 'credos_dashboard' %} 
   <p  class="transmissionsub"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
-   <a  {% if category = 'pregnancy' %} class="hover"{% endif %} href="{% url pregnancy %}">Grossesse</a>
-     <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
+   <a href="{% url pregnancy %}">Grossesse</a>
+   <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
     </p>
+{% endif %}
+
+{% if category = 'unfpa_dashboard' %}
+    <p class="transmissionsub">
+        <a href="#"> Infantile</a>
+        <a href="#"> Maternelle</a>
+        <a href="#">Produits</a>
+    </p>
+{% endif %}
 
 </div>
 

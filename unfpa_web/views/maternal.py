@@ -11,7 +11,7 @@ from unfpa_core.models import MaternalMortalityReport
 
 
 def weekly_monthly_maternal(request, period, rtype):
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = MaternalMortalityReport.periods.within(period) \

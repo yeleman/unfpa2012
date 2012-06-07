@@ -15,7 +15,7 @@ from unfpa_core.models import RHCommoditiesReport
 @provider_required
 def monthly_commodities(request, period):
 
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     
     fp_services = RHCommoditiesReport.validated \
                                      .filter(period=period) \
@@ -106,7 +106,7 @@ def monthly_commodities(request, period):
 @provider_required
 def quarterly_commodities(request, period):
 
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = 0
@@ -120,7 +120,7 @@ def quarterly_commodities(request, period):
 @provider_required
 def annual_commodities(request, period):
 
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = 0

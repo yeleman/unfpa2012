@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^unfpa/(?P<report_type>maternal|children|commodities)/'
          '(?P<period_type>weekly|monthly|quarterly|annual)/'
          '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
-        views.reports.report_chooser, name='reports'),
+        views.reports.report_chooser, name='unfpa_reports'),
 
     # CREDOS
     url(r'^credos/dashboard/$', views.credos_dashboard.credos_dashboard,
@@ -39,9 +39,6 @@ urlpatterns = patterns('',
     # UNFPA
     url(r'^unfpa/dashboard/$', views.unfpa_dashboard.unfpa_dashboard,
         name='unfpa_dashboard'),
-    # url(r'^unfpa/maternal/$', views.pregnancy.pregnancy, name='pregnancy'),
-    # url(r'^unfpa/children/$', views.birth.birth, name='birth'),
-    # url(r'^unfpa/products/$', views.death.death, name='death'),
 
     # ANTIM : USERS
     url(r'^users/?$', \
