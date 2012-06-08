@@ -3,7 +3,6 @@
 # maintainer: rgaudin
 
 from django.shortcuts import render
-from django.db.models import Sum
 
 from bolibana.models import Entity
 from bolibana.web.decorators import provider_required
@@ -30,8 +29,8 @@ def monthly_commodities(request, period):
                                      .filter(delivery_services=True) \
                                      .filter(family_planning=True)
 
-    # filter on validated with chained manager
-    fp_stockout = RHCommoditiesReport.fp_stockout.filter(period=period)
+    fp_stockout = RHCommoditiesReport.objects.validated() \
+                                     .has_stockout().filter(period=period)
 
     atleast_3methods = sum([1 
                         for report 
@@ -76,8 +75,7 @@ def monthly_commodities(request, period):
         for method in methods:
             stock_outs[method] = [0, 0]
 
-        # /!\ validated
-        reports = RHCommoditiesReport.objects.filter(period=period, 
+        reports = RHCommoditiesReport.objects.validated().filter(period=period, 
                                                        entity__in=centers)
         for report in reports:
             for method in methods:
