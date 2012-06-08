@@ -5,26 +5,47 @@
 import reversion
 from django.db import models
 from django.db.models import Q
+from django.db.models.query import QuerySet
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from bolibana.models import EntityType, Report, MonthPeriod
+from bolibana.models.Report import ValidationMixin
 
 
 class FPMethodManager(models.Manager):
 
     def get_query_set(self):
         return super(FPMethodManager, self).get_query_set() \
-                                         .filter(Q(male_condom=0) | 
-                                         Q(female_condom=0) |
-                                         Q(oral_pills=0) |
-                                         Q(injectable=0) |
-                                         Q(iud=0) |
-                                         Q(implants=0) |
-                                         Q(female_sterilization=0) |
-                                         Q(male_sterilization=0))
+                                           .filter(Q(male_condom=0) | 
+                                                   Q(female_condom=0) |
+                                                   Q(oral_pills=0) |
+                                                   Q(injectable=0) |
+                                                   Q(iud=0) |
+                                                   Q(implants=0) |
+                                                   Q(female_sterilization=0) |
+                                                   Q(male_sterilization=0))
 
+
+class StockoutMixin(object):
+    def has_stockouts(self):
+        return self.filter(Q(male_condom=0) | 
+                           Q(female_condom=0) |
+                           Q(oral_pills=0) |
+                           Q(injectable=0) |
+                           Q(iud=0) |
+                           Q(implants=0) |
+                           Q(female_sterilization=0) |
+                           Q(male_sterilization=0))
+
+
+class StockoutQuerySet(QuerySet, ValidationMixin, StockoutMixin):
+    pass
+
+class StockoutManager(models.Manager, ValidationMixin, StockoutMixin):
+    def get_query_set(self):
+        return StockoutQuerySet(self.model, using=self._db)
 
 class RHCommoditiesReport(Report):
 
@@ -125,6 +146,7 @@ class RHCommoditiesReport(Report):
                                      verbose_name=_(u"Sources"), \
                                      blank=True, null=True)
 
+    objects = StockoutManager()
     fp_stockout = FPMethodManager()
 
     @property

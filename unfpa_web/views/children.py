@@ -11,7 +11,7 @@ from unfpa_core.models import ChildrenMortalityReport
 
 
 def weekly_monthly_children(request, period, rtype):
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = ChildrenMortalityReport.periods.within(period) \
@@ -35,7 +35,7 @@ def monthly_children(request, period):
 
 
 def quarterly_annual_children(request, period, rtype):
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa_dashboard'}
     data = []
     months = period.months
 
