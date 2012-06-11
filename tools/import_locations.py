@@ -19,7 +19,6 @@ def import_locations(csv_file, use_code=False):
         # explode CSV line
         name, code, type_code, \
         parent_slug = line.strip().split(',')
-        print "alou1"
         # convert name to unicode for django & .title()
         try:
             name = unicode(name, 'utf-8')
@@ -35,7 +34,6 @@ def import_locations(csv_file, use_code=False):
                 parent = Entity.objects.get(id=parent_id)
         except:
             parent = None
-        print "alou2"
         # retrieve type from code
         if type_code == 'N':
             type = EntityType.objects.get(slug='national')
@@ -60,12 +58,10 @@ def import_locations(csv_file, use_code=False):
         except:
             pass
 
-        print("%s: %s" % (entity.name, type))
     f.close()
 
 if __name__ == '__main__':
     if sys.argv.__len__() < 2:
-        print("No CSV file specified. exiting.")
         exit(1)
 
     import_locations(sys.argv[1])
