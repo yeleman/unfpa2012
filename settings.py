@@ -186,7 +186,9 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     "bolibana.web.context_processors.add_provider",
-    "bolibana.web.context_processors.add_level")
+    "bolibana.web.context_processors.add_level",
+    "unfpa_web.context_processors.add_last_period",
+    "unfpa_web.context_processors.add_all_periods")
 
 AUTH_PROFILE_MODULE = 'bolibana.Provider'
 

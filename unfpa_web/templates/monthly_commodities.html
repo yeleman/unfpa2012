@@ -3,10 +3,16 @@
 {% load bolibana %}
 {% load unfpa %}
 
+{% block jqueryonload %}
+addJQEventReportTypeChange();
+addJQEventReportPeriodChange("{% url unfpa_reports 'children' 'weekly' '01-2010' %}");
+{% endblock %}
+
 {% block title %}Rapport mensuel des produits{% endblock %}
-{% block submenu %}{% include "submenu.html" with content="data_browser" report=report period=period %}{% endblock %}
+{% block submenu %}{% include "submenu.html" with submenu="unfpa" %}{% endblock %}
 
 {% block content %}
+{% include "period_nav.html" %}
 
 <h2>Rapport mensuel de {{ period.middle|datefmt:"MMMM YYYY" }}.</h2>
 

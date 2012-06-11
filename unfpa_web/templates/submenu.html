@@ -1,46 +1,19 @@
-{% load bolibana %}
 <div id="submenu" style="padding-top:0; padding-bottom: 0;">
-{% if content = 'data_browserr' %}
-<p><label for="source">Sélectionnez une Periode</label><a class="toplevel" href="{{ base_url|index:":-1" }}">
 
-<select id ="type_periode">
-  <option selected="selected" value="week">Semaine</option>
-  <option value="month">Mois</option>
-  <option value="quarter">Trimestre</option>
-  <option value="annual">Année</option>
-</select> 
-<select id ="periodes">
-  <option>Volvo</option>
-  <option selected="selected">Saab</option>
-  <option value = "all" >Mercedes</option>
-  <option>Audi</option>
-</select> </p>
-{% endif %}
-
-{% if category = 'credos_dashboard' %} 
+{% if submenu = 'credos' %} 
   <p  class="transmissionsub"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
    <a href="{% url pregnancy %}">Grossesse</a>
    <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
     </p>
 {% endif %}
 
-{% if category = 'unfpa_dashboard' %}
+{% if submenu = 'unfpa' %}
     <p class="transmissionsub">
-        <a href="#"> Infantile</a>
-        <a href="#"> Maternelle</a>
-        <a href="#">Produits</a>
+        <a href="{% url unfpa_dashboard %}">Dashboard</a>
+        <a href="{% url unfpa_reports 'children' 'monthly' last_period %}">Mortialité infantile</a>
+        <a href="{% url unfpa_reports 'maternal' 'monthly' last_period %}">Mortalité maternelle</a>
+        <a href="{% url unfpa_reports 'commodities' 'monthly' last_period %}">Dispo. produits</a>
     </p>
 {% endif %}
 
 </div>
-
-<script>
-function truc()
-{
-a=document.getElementById("type_periode");
-b=document.getElementById("periodes");
-// b.selectedIndex=a.selectedIndex;
-
-b=new Option(["New 1st option"],["0"])
-}
-</script>

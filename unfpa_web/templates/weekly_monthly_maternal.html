@@ -2,9 +2,17 @@
 {% load babel %}
 {% load bolibana %}
 
+{% block jqueryonload %}
+addJQEventReportTypeChange();
+addJQEventReportPeriodChange("{% url unfpa_reports 'maternal' 'weekly' '01-2010' %}");
+{% endblock %}
+
+{% block submenu %}{% include "submenu.html" with submenu="unfpa" %}{% endblock %}
+
 {% block title %}Rapport de décès {% ifequal type "weekly" %}hebdomadaire{% else %}mensuel{% endifequal %} concernant les femmes enceintes{% endblock %}
 
 {% block content %}
+{% include "period_nav.html" %}
 
 <h2>Rapport {% ifequal type "weekly" %}hebdomadaire{% else %}mensuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
 

@@ -30,7 +30,7 @@ def monthly_commodities(request, period):
                                      .filter(family_planning=True)
 
     fp_stockout = RHCommoditiesReport.objects.validated() \
-                                     .has_stockout().filter(period=period)
+                                     .has_stockouts().filter(period=period)
 
     atleast_3methods = sum([1 
                         for report 

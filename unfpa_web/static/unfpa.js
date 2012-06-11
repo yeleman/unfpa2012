@@ -162,3 +162,26 @@ function addJQEventForHelpNavigation() {
         elem.addClass("helpon");
     });
 }
+
+function addJQEventReportTypeChange() {
+    $("#report_types").change(function (event) {
+        type = $("#report_types").val();
+        $("select.period_nav").each(function() {
+            $(this).hide();
+        });
+        if (type != '')
+            $("#period_"+ type).show();
+    });
+}
+
+function addJQEventReportPeriodChange(base_url) {
+    $("select.period_nav").change(function (event) {
+        period = $(this).val();
+        if (period == '')
+            return;
+
+        type = $("#report_types").val();
+        url = base_url.replace('weekly', type).replace('01-2010', period);
+        location.href = url;
+    });
+}

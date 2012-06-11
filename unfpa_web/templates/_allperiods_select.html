@@ -1,0 +1,26 @@
+{% load babel %}
+
+<select id="period_weekly" class="period_nav{% ifnotequal type 'weekly' %} hidden{% endifnotequal %}">
+    <option value=''> ----- </option>
+{% for week in allperiods.weeks %}
+	<option value="{{ week.strid }}" {% ifequal selected week.strid %}selected="selected" {% endifequal %}>{{ week.start_on|datefmt:'dd MMM' }} {{ week.end_on|datefmt:'dd MMM yyyy' }}</option>
+{% endfor %}
+</select>
+<select id="period_monthly" class="period_nav{% ifnotequal type 'monthly' %} hidden{% endifnotequal %}">
+    <option value=''> ----- </option>
+{% for month in allperiods.months %}
+    <option value="{{ month.strid }}" {% ifequal selected month.strid %}selected="selected" {% endifequal %}>{{ month.middle|datefmt:'MMMM yyyy' }}</option>
+{% endfor %}
+</select>
+<select id="period_quarterly" class="period_nav{% ifnotequal type 'quarterly' %} hidden{% endifnotequal %}">
+    <option value=''> ----- </option>
+{% for quarter in allperiods.quarters %}
+    <option value="{{ quarter.strid }}" {% ifequal selected quarter.strid %}selected="selected" {% endifequal %}>Q{{ quarter.quarter }} {{ quarter.middle|datefmt:'yyyy' }}</option>
+{% endfor %}
+</select>
+<select id="period_annual" class="period_nav{% ifnotequal type 'annual' %} hidden{% endifnotequal %}">
+    <option value=''> ----- </option>
+{% for year in allperiods.years %}
+    <option value="{{ year.strid }}" {% ifequal selected year.strid %}selected="selected" {% endifequal %}>{{ year.middle|datefmt:'yyyy' }}</option>
+{% endfor %}
+</select>
