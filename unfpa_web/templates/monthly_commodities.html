@@ -5,7 +5,7 @@
 
 {% block jqueryonload %}
 addJQEventReportTypeChange();
-addJQEventReportPeriodChange("{% url unfpa_reports 'children' 'weekly' '01-2010' %}");
+addJQEventReportPeriodChange("{% url unfpa_reports 'commodities' 'weekly' '01-2010' %}");
 {% endblock %}
 
 {% block title %}Rapport mensuel des produits{% endblock %}
@@ -27,8 +27,8 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'children' 'weekly' '01-2010'
     <tr><td>Centres en rupture d'Oxytocine et de sulphate de magnésium</td><td>{{ otoxycin_magnesium_stockout.0 }}</td></tr>
 </table>
 
+<h2>Centre en ruptures de stock de méthodes de planification familiale</h2>
 <table>
-    <tr><th colspan="17">Centre en ruptures de stock de méthodes de planification familiale</th></tr>
     <tr><th>Centre</th><th colspan="2">Préservatif masculin</th><th colspan="2">Préservatif féminin</th><th colspan="2">Contraceptifs oraux</th><th colspan="2">Injection</th><th colspan="2">D.I.U</th><th colspan="2">Implants</th><th colspan="2">Stérilisation féminine</th><th colspan="2">Stérilisation masculine</th></tr>
     {% for disdata in all_stock_outs %}
             <tr><td><strong>{{ disdata.district.name }}/{{ disdata.nb_centers }}</strong></td>
@@ -55,8 +55,8 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'children' 'weekly' '01-2010'
     {% endfor %}
 </table>
 
+<h2>Centre en ruptures de stock d'Oxytocine et de Magnesium</h2>
 <table>
-    <tr><th colspan="17">Centre en ruptures de stock d'Oxytocine et de Magnesium</th></tr>
     <tr><th>Centre</th><th colspan="2">Sulphate de Magnésium</th><th colspan="2">Oxytocine</th></tr>
     {% for disdata in all_stock_outs %}
             <tr>

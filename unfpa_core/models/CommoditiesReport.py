@@ -263,7 +263,7 @@ class RHCommoditiesReport(Report):
         for f in ('male_condom', 'female_condom', 'oral_pills', 'injectable',
                   'iud', 'implants',
                   'female_sterilization', 'male_sterilization'):
-            if self.getattr(f) == 0:
+            if getattr(self, f) == 0:
                 w += 1
         return w >= 3
 
