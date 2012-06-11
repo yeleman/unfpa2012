@@ -142,6 +142,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnant = pregnant
     report.pregnancy_weeks = pregnancy_weeks
     report.pregnancy_related_death = pregnancy_related_death
+
     try:
         report.save()
         report.created_on = reccord_date
@@ -221,6 +222,8 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.death_location = death_location
     report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
+    report._status = report.STATUS_VALIDATED
+
     try:
         report.save()
         report.created_on = reccord_date
