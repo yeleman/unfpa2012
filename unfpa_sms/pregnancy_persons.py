@@ -16,7 +16,7 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
             mother_name dob pregnancy_age expected_delivery_date
             pregnancy_result delivery_date
         example:
-           'fnuap gpw kid alou_dolo 20120509 tata_keita 45a 9 20120509 0
+           'fnuap gpw seg alou_dolo 20120509 tata_keita 45a 9 20120509 0
             20120509'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
