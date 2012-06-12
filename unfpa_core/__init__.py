@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from bolibana.models import Entity
-
-UNFPA_DISTRICTS = ['baro', 'kati', 'koul1', 'nion', 'ouel']
-CREDOS_DISTRICTS = ['baro', 'nion']
+from unfpa_core.models import UEntity
 
 
 def unfpa_districts():
-    return Entity.objects.filter(type__slug='district') \
-                         .filter(slug__in=UNFPA_DISTRICTS)
+    return UEntity.objects.filter(type__slug='district') \
+                         .filter(is_unfpa=True)
 
 
 def credos_districts():
-    return Entity.objects.filter(type__slug='district') \
-                         .filter(slug__in=CREDOS_DISTRICTS)
+    return UEntity.objects.filter(type__slug='district') \
+                         .filter(is_credos=True)

@@ -5,3 +5,4 @@ from CommoditiesReport import RHCommoditiesReport
 from ProvidedServices import ProvidedServicesReport
 from BirthReport import BirthReport
 from PregnancyReport import PregnancyReport
+from UEntity import UEntity

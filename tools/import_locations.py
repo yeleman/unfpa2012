@@ -4,10 +4,11 @@
 
 import sys
 
-from bolibana.models import Entity, EntityType
+from bolibana.models import EntityType
+from unfpa_core.models import UEntity
 
 
-def import_locations(csv_file, use_code=False):
+def import_locations(csv_file, use_code=False, is_unfpa=False, is_credos=False):
     """ creates Entity object off a CSV filename
 
     CSV FORMAT:
@@ -28,10 +29,10 @@ def import_locations(csv_file, use_code=False):
         # retrieve parent object if address is provided
         try:
             if use_code:
-                parent = Entity.objects.get(slug=parent_slug)
+                parent = UEntity.objects.get(slug=parent_slug)
             else:
                 parent_id = int(parent_slug[4:])
-                parent = Entity.objects.get(id=parent_id)
+                parent = UEntity.objects.get(id=parent_id)
         except:
             parent = None
         # retrieve type from code
@@ -52,8 +53,9 @@ def import_locations(csv_file, use_code=False):
 
         # create and save object
         try:
-            entity = Entity(name=name.title(), type=type, \
-                            slug=code.lower(), parent=parent)
+            entity = UEntity(name=name.title(), type=type, \
+                            slug=code.lower(), parent=parent,
+                            is_unfpa=is_unfpa, is_credos=is_credos)
             entity.save()
         except:
             pass
