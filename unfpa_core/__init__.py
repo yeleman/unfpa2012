@@ -4,8 +4,8 @@
 
 from bolibana.models import Entity
 
-UNFPA_DISTRICTS = ['mar', 'nio']
-CREDOS_DISTRICTS = ['mar', 'nio']
+UNFPA_DISTRICTS = ['baro', 'kati', 'koul1', 'nion', 'ouel']
+CREDOS_DISTRICTS = ['baro', 'nion']
 
 
 def unfpa_districts():
