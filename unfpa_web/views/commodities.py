@@ -4,7 +4,7 @@
 
 from django.shortcuts import render
 
-from bolibana.models import Entity
+from bolibana.models import Entity, MonthPeriod, QuarterPeriod, YearPeriod
 from bolibana.web.decorators import provider_required
 
 from unfpa_core import unfpa_districts
@@ -15,6 +15,10 @@ from unfpa_core.models import RHCommoditiesReport
 def monthly_commodities(request, period):
 
     context = {'period': period, 'category': 'unfpa_dashboard'}
+
+    rtypes = {MonthPeriod: 'monthly',
+              QuarterPeriod: 'quarterly',
+              YearPeriod: 'annual'}
     
     fp_services = RHCommoditiesReport.validated \
                                      .filter(period=period) \
@@ -96,7 +100,8 @@ def monthly_commodities(request, period):
                                'reports': reports})
         print(all_stock_outs)
 
-    context.update({'all_stock_outs': all_stock_outs})
+    context.update({'all_stock_outs': all_stock_outs,
+                    'type': rtypes.get(period.__class__, MonthPeriod)})
 
     return render(request, 'monthly_commodities.html', context)
 

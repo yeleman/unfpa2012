@@ -57,9 +57,13 @@ def quarterly_annual_maternal(request, period, rtype):
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
+        try:
+            percent = float(total) / all_deaths
+        except ZeroDivisionError:
+            percent = 0
         data.append({'district': district, 'mdeaths': mdeaths,
                      'total': total, 'all_deaths': all_deaths,
-                     'percent_of_all': float(total) / all_deaths})
+                     'percent_of_all': percent})
 
     context.update({'data': data, 'type': rtype, 'months': months})
 
