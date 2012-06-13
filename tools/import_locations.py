@@ -57,6 +57,7 @@ def import_locations(csv_file, use_code=False, is_unfpa=False, is_credos=False):
                             slug=code.lower(), parent=parent,
                             is_unfpa=is_unfpa, is_credos=is_credos)
             entity.save()
+            print("%s: %s" % (entity.name, type))
         except:
             pass
 

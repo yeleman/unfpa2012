@@ -93,12 +93,11 @@ def monthly_commodities(request, period):
                 stock_outs[key] = (method_so[0], method_so[0] / nb_centers)
             except ZeroDivisionError:
                 pass
-        
+
         all_stock_outs.append({'district': district,
                                'stock_outs': stock_outs,
                                'nb_centers': int(nb_centers),
                                'reports': reports})
-        print(all_stock_outs)
 
     context.update({'all_stock_outs': all_stock_outs,
                     'type': rtypes.get(period.__class__, MonthPeriod)})
