@@ -16,7 +16,7 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'maternal' 'weekly' '01-2010'
 
 <h2>Rapport {% ifequal type "weekly" %}hebdomadaire{% else %}mensuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
 
-<table>
+<table class="datatable">
 <tr><th>District</th><th>Nombre de décès</th></tr>
 {% for disdata in data %}
 <tr><td>{{ disdata.district }}</td><td>{{ disdata.deaths }}</td></tr>

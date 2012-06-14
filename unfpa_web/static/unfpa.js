@@ -185,3 +185,12 @@ function addJQEventReportPeriodChange(base_url) {
         location.href = url;
     });
 }
+
+function addJQEventReportElementsList() {
+    $("table.datatable tr td").click(function (event) {
+        var id = $(this).attr('id');
+        if (id == undefined || id == '')
+            return;
+        $("#show_"+id).toggle();
+    });
+}
