@@ -40,12 +40,7 @@ cp nosmsd.conf.py.exemple nosmsd.conf.py
 	./manage.py migrate
 
 * Importer les fixtures
-	./manage.py loaddata fixtures/site.json
-	./manage.py loaddata fixtures/entity_type.json
-	./manage.py loaddata fixtures/roles.json
-	./manage.py loaddata fixtures/permission.json
-	./manage.py loaddata fixtures/default_access.json
-	./manage.py loaddata fixtures_test/Period.json
+	./manage.py loaddata fixtures/*.json
 
 * Importer les fixtures de test 
 	./manage.py loaddata fixtures_test/*.json
@@ -61,8 +56,9 @@ installation de gammu
 _______________________
 
 sudo add-apt-repository ppa:nijel/ppa
-sudo apt-get update
-sudo apt-get install gammu
+sudo apt-get update && apt-get install gammu
+
+Merci 
 
 
 
