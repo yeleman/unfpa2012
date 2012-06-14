@@ -38,7 +38,7 @@ def sum_month(month):
 
 
 def birth(request):
-    context = {'category': 'credos_dashboard'}
+    context = {'category': 'credos','subcategory': 'birth'}
 
     indicators = []
     for month in MonthPeriod.objects.filter(start_on__lt=datetime.now) \

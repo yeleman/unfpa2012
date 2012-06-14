@@ -11,7 +11,8 @@ from unfpa_core.models import MaternalMortalityReport
 
 
 def weekly_monthly_maternal(request, period, rtype):
-    context = {'period': period, 'category': 'unfpa_dashboard'}
+    context = {'period': period, 'category': 'unfpa',
+               'subcategory': 'maternal'}
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = MaternalMortalityReport.periods.within(period) \
@@ -36,7 +37,8 @@ def monthly_maternal(request, period):
 
 
 def quarterly_annual_maternal(request, period, rtype):
-    context = {'period': period}
+    context = {'period': period, 'category': 'unfpa',
+               'subcategory': 'maternal'}
     data = []
     months = period.months
 

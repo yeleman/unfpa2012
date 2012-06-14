@@ -1,18 +1,20 @@
 <div id="submenu" style="padding-top:0; padding-bottom: 0;">
 
 {% if submenu = 'credos' %} 
-  <p  class="transmissionsub"> <a {% if category = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
-   <a href="{% url pregnancy %}">Grossesse</a>
-   <a {% if category = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
+  <p > 
+    <a {% if subcategory = 'credos_dashboard' %} class="hover"{% endif %} href="{% url credos_dashboard %}">Dashboard</a> 
+    <a {% if subcategory = 'birth' %} class="hover"{% endif %} href="{% url birth %}"> Naissance</a>
+    <a {% if subcategory = 'pregnancy' %} class="hover"{% endif %} href="{% url pregnancy %}">Grossesse</a>
+    <a {% if subcategory = 'death' %} class="hover"{% endif %}  href="{% url death %}">décès</a>
     </p>
 {% endif %}
 
 {% if submenu = 'unfpa' %}
-    <p class="transmissionsub">
-        <a href="{% url unfpa_dashboard %}">Dashboard</a>
-        <a href="{% url unfpa_reports 'children' 'monthly' last_period %}">Mortialité infantile</a>
-        <a href="{% url unfpa_reports 'maternal' 'monthly' last_period %}">Mortalité maternelle</a>
-        <a href="{% url unfpa_reports 'commodities' 'monthly' last_period %}">Dispo. produits</a>
+    <p >
+        <a {% if subcategory = 'unfpa_dashboard' %} class="hover"{% endif %} href="{% url unfpa_dashboard %}">Dashboard</a> 
+        <a {% if subcategory = 'children' %} class="hover"{% endif %} href="{% url unfpa_reports 'children' 'monthly' last_period %}">Mortialité infantile</a>
+        <a {% if subcategory = 'maternal' %} class="hover"{% endif %} href="{% url unfpa_reports 'maternal' 'monthly' last_period %}">Mortalité maternelle</a>
+        <a {% if subcategory = 'commodities' %} class="hover"{% endif %} href="{% url unfpa_reports 'commodities' 'monthly' last_period %}">Dispo. produits</a>
     </p>
 {% endif %}
 

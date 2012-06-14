@@ -9,6 +9,6 @@ from bolibana.web.decorators import provider_required
 
 @provider_required
 def unfpa_dashboard(request):
-    context = {'category': 'unfpa_dashboard'}
+    context = {'category': 'unfpa', 'subcategory': 'unfpa_dashboard'}
 
     return render(request, 'unfpa_dashboard.html', context)

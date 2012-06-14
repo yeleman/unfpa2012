@@ -9,6 +9,6 @@ from bolibana.web.decorators import provider_required
 
 @provider_required
 def credos_dashboard(request):
-    context = {'category': 'credos_dashboard'}
+    context = {'category': 'credos','subcategory': 'credos_dashboard'}
 
     return render(request, 'credos_dashboard.html', context)
