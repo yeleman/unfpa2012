@@ -6,6 +6,7 @@
 {% block jqueryonload %}
 addJQEventReportTypeChange();
 addJQEventReportPeriodChange("{% url unfpa_reports 'commodities' 'weekly' '01-2010' %}");
+addJQEventReportElementsList();
 {% endblock %}
 
 {% block title %}Rapport mensuel des produits{% endblock %}
@@ -13,43 +14,37 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'commodities' 'weekly' '01-20
 
 {% block content %}
 {% include "period_nav.html" %}
-<script type="text/javascript">
-function toggleme(ty) {
-    $('.show_' + ty).toggle();
-    alert(slug);
-}
-</script>
 
 <h2>Rapport mensuel de {{ period.middle|datefmt:"MMMM YYYY" }}.</h2>
 
-<table>
+<table class="datatable">
     <tr><th>Indicateur</th><th>Nombre de centres</th></tr>
 
-    <tr><td onclick="javascript:toggleme('fp_services');">Centres proposant le planning familial</td><td>{{ fp_services.0}}</td></tr>
+    <tr><td id="fp_services" >Centres proposant le planning familial</td><td>{{ fp_services.0}}</td></tr>
     {% for entity in fp_services.1 %}
-        <tr style="display: none;" class="show_fp_services"><td colspan="2">{{ entity.entity }}</td></tr>
+        <tr class="hidden" id="show_fp_services"><td colspan="2">{{ entity.entity }}</td></tr>
     {% endfor %}
-    <tr><td onclick="javascript:toggleme('delivery_services');">Centres pratiquant les accouchements</td><td>{{ delivery_services.0 }}</td></tr>
+    <tr><td id="delivery_services">Centres pratiquant les accouchements</td><td>{{ delivery_services.0 }}</td></tr>
     {% for entity in delivery_services.1 %}
-        <tr style="display: none;" class="show_delivery_services"><td colspan="2">{{ entity.entity }}</td></tr>
+        <tr class="hidden" id="show_delivery_services"><td colspan="2">{{ entity.entity }}</td></tr>
     {% endfor %}
-    <tr><td onclick="javascript:toggleme('both_services');">Centres proposant le P.F et les accouchements</td><td>{{ both_services.0 }}</td></tr>
+    <tr><td id="both_services">Centres proposant le P.F et les accouchements</td><td>{{ both_services.0 }}</td></tr>
     {% for entity in both_services.1 %}
-        <tr style="display: none;" class="show_both_services"><td colspan="2">{{ entity.entity }}</td></tr>
+        <tr class="hidden" id="show_both_services"><td colspan="2">{{ entity.entity }}</td></tr>
     {% endfor %}
-    <tr><td onclick="javascript:toggleme('fp_stockout');">Centres en rupture de méthodes de PF indiv.</td><td>{{ fp_stockout.0 }}</td></tr>
+    <tr><td id="fp_stockout">Centres en rupture de méthodes de PF indiv.</td><td>{{ fp_stockout.0 }}</td></tr>
     {% for entity in fp_stockout.1 %}
-        <tr style="display: none;" class="show_fp_stockout"><td colspan="2">{{ entity.entity }}</td></tr>
+        <tr class="hidden" id="show_fp_stockout"><td colspan="2">{{ entity.entity }}</td></tr>
     {% endfor %}
     <tr><td>Centres offrants au moins 3 méthodes de P.F</td><td>{{ atleast_3methods.0 }} ({{ atleast_3methods.1|percent }})</td></tr>
-    <tr><td onclick="javascript:toggleme('otoxycin_magnesium_stockout');">Centres en rupture d'Oxytocine et de sulphate de magnésium</td><td>{{ otoxycin_magnesium_stockout.0 }}</td></tr>
+    <tr><td id="otoxycin_magnesium_stockout">Centres en rupture d'Oxytocine et de sulphate de magnésium</td><td>{{ otoxycin_magnesium_stockout.0 }}</td></tr>
     {% for entity in otoxycin_magnesium_stockout.1 %}
-        <tr style="display: none;" class="show_otoxycin_magnesium_stockout"><td colspan="2">{{ entity.entity }}</td></tr>
+        <tr class="hidden" id="show_otoxycin_magnesium_stockout"><td colspan="2">{{ entity.entity }}</td></tr>
     {% endfor %}
 </table>
 
 <h2>Centre en ruptures de stock de méthodes de planification familiale</h2>
-<table>
+<table class="datatable">
     <tr><th>Centre</th><th colspan="2" title='Préservatif masculin'>P.M.</th><th colspan="2" title='Préservatif féminin'>P.F. </th><th colspan="2" title='Contraceptifs oraux'>C.O.</th><th colspan="2"title='Injection'>Injection</th><th colspan="2">D.I.U</th><th colspan="2" title='Implants'>Implants</th><th colspan="2"title='Stérilisation féminine'>S.F.</th><th colspan="2" title='Stérilisation masculine'>S.M.</th></tr>
     {% for disdata in all_stock_outs %}
             <tr><td><strong>{{ disdata.district.name }}/{{ disdata.nb_centers }}</strong></td>
@@ -77,7 +72,7 @@ function toggleme(ty) {
 </table>
 
 <h2>Centre en ruptures de stock d'Oxytocine et de Magnesium</h2>
-<table>
+<table class="datatable">
     <tr><th>Centre</th><th colspan="2">Sulphate de Magnésium</th><th colspan="2">Oxytocine</th></tr>
     {% for disdata in all_stock_outs %}
             <tr>
