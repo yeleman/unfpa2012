@@ -45,7 +45,7 @@ addJQEventReportElementsList();
 
 <h2>Centre en ruptures de stock de méthodes de planification familiale</h2>
 <table class="datatable">
-    <tr><th>Centre</th><th colspan="2" title='Préservatif masculin'>P.M.</th><th colspan="2" title='Préservatif féminin'>P.F. </th><th colspan="2" title='Contraceptifs oraux'>C.O.</th><th colspan="2"title='Injection'>Injection</th><th colspan="2">D.I.U</th><th colspan="2" title='Implants'>Implants</th><th colspan="2"title='Stérilisation féminine'>S.F.</th><th colspan="2" title='Stérilisation masculine'>S.M.</th></tr>
+    <tr><th>Centre</th><th colspan="2" title='Préservatif masculin'>P.M.</th><th colspan="2" title='Préservatif féminin'>P.F. </th><th colspan="2" title='Contraceptifs oraux'>C.O.</th><th colspan="2"title='Injection'>IJ</th><th colspan="2">D.I.U</th><th colspan="2" title='Implants'>Implants</th><th colspan="2"title='Stérilisation féminine'>S.F.</th><th colspan="2" title='Stérilisation masculine'>S.M.</th></tr>
     {% for disdata in all_stock_outs %}
             <tr><td><strong>{{ disdata.district.name }}/{{ disdata.nb_centers }}</strong></td>
             <td>{{ disdata.stock_outs.male_condom.0 }}</td><td>{{ disdata.stock_outs.male_condom.1|percent }}</td>
