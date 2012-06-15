@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load babel %}
+{% load bolibana %}
+{% load unfpa %}
+
+{% block jqueryonload %}
+addJQEventReportTypeChange();
+addJQEventReportPeriodChange("{% url unfpa_reports 'commodities' 'weekly' '01-2010' %}");
+addJQEventReportElementsList();
+{% endblock %}
+
+{% block title %}Rapport mensuel des produits{% endblock %}
+{% block submenu %}{% include "submenu.html" with submenu="unfpa" %}{% endblock %}
+
+{% block content %}
+{% include "period_nav.html" %}
+
+<h2>Rapport trimestriel de {{ period.strid }}.</h2>
+
+<table class="datatable">
+    <tr><th>Indicateur</th>{% for month in our_periods %}<th>{{ month.middle|datefmt:"MMM" }}</th>{% endfor %}</tr>
+    <tr><td>Centres proposant le planning familial</td>{% for monthvalue in fp_services %}<td>{{ monthvalue }}</td>{% endfor %}</tr>
+    <tr><td>Centres pratiquant les accouchements</td>{% for monthvalue in delivery_services %}<td>{{ monthvalue }}</td>{% endfor %}</tr>
+    <tr><td>Centres proposant le P.F et les accouchements</td>{% for monthvalue in both_services %}<td>{{ monthvalue }}</td>{% endfor %}</tr>
+    <tr><td>Centres en rupture de méthodes de PF indiv.</td>{% for monthvalue in fp_stockout %}<td>{{ monthvalue }}</td>{% endfor %}</tr>
+    <tr><td>Centres offrants au moins 3 méthodes de P.F</td>{% for monthvalue in atleast_3methods %}<td>{{ monthvalue.0 }} ({{ monthvalue.1|percent }})</td>{% endfor %}</tr>
+    <tr><td>Centres en rupture d'Oxytocine et de sulphate de magnésium</td>{% for monthvalue in otoxycin_magnesium_stockout %}<td>{{ monthvalue }}</td>{% endfor %}</tr>
+</table>
+
+<h2>Centre en ruptures de stock de méthodes de planification familiale</h2>
+<table class="datatable">
+    <tr><th>Centre</th><th colspan="2" title='Préservatif masculin'>P.M.</th><th colspan="2" title='Préservatif féminin'>P.F. </th><th colspan="2" title='Contraceptifs oraux'>C.O.</th><th colspan="2"title='Injection'>Injection</th><th colspan="2">D.I.U</th><th colspan="2" title='Implants'>Implants</th><th colspan="2"title='Stérilisation féminine'>S.F.</th><th colspan="2" title='Stérilisation masculine'>S.M.</th></tr>
+    {% for disdata in all_stock_outs %}
+            <tr><td colspan="17"><strong>{{ disdata.district.name }}/{{ disdata.nb_centers }}</strong></td></tr>
+            {% for so in disdata.stock_outs %}<tr><td>{{ so.month.middle|datefmt:"MMMM yyyy" }}</td>
+            <td>{{ so.male_condom.0 }}</td><td>{{ so.male_condom.1|percent }}</td>
+            <td>{{ so.female_condom.0 }}</td><td>{{ so.female_condom.1|percent }}</td>
+            <td>{{ so.oral_pills.0 }}</td><td>{{ so.oral_pills.1|percent }}</td>
+            <td>{{ so.injectable.0 }}</td><td>{{ so.injectable.1|percent }}</td>
+            <td>{{ so.iud.0 }}</td><td>{{ so.iud.1|percent }}</td>
+            <td>{{ so.implants.0 }}</td><td>{{ so.implants.1|percent }}</td>
+            <td>{{ so.female_sterilization.0 }}</td><td>{{ so.female_sterilization.1|percent }}</td>
+            <td>{{ so.male_sterilization.0 }}</td><td>{{ so.male_sterilization.1|percent }}</td></tr>
+            {% for report in disdata.reports %}
+            <tr><td>{{ report.entity.name }}<br />{{ report.entity.type }}</td>
+            <td colspan="2">{{ report.male_condom|yesnostock }}</td>
+            <td colspan="2">{{ report.female_condom|yesnostock }}</td>
+            <td colspan="2">{{ report.oral_pills|yesnostock }}</td>
+            <td colspan="2">{{ report.injectable|yesnostock }}</td>
+            <td colspan="2">{{ report.iud|yesnostock }}</td>
+            <td colspan="2">{{ report.implants|yesnostock }}</td>
+            <td colspan="2">{{ report.female_sterilization|yesnostock }}</td>
+            <td colspan="2">{{ report.male_sterilization|yesnostock }}</td>
+            </tr>{% endfor %}
+        </tr>
+            {% endfor %}
+    {% endfor %}
+</table>
+
+<h2>Centre en ruptures de stock d'Oxytocine et de Magnesium</h2>
+<table class="datatable">
+    <tr><th>Centre</th><th colspan="2">Sulphate de Magnésium</th><th colspan="2">Oxytocine</th></tr>
+    {% for disdata in all_stock_outs %}
+            <tr><td colspan="5"><strong>{{ disdata.district.name }}/{{ disdata.nb_centers }}</strong></td></tr>
+            {% for so in disdata.stock_outs %}<tr><td><em>{{ so.month.middle|datefmt:"MMMM yyyy" }}</em></td>
+            <td>{{ so.magnesium_sulfate.0 }}</td>
+            <td>{{ so.magnesium_sulfate.1|percent }}</td>
+            <td>{{ so.oxytocine.0 }}</td>
+            <td>{{ so.oxytocine.1|percent }}</td>
+            </tr>
+            {% for report in disdata.reports %}
+            <tr><td>{{ report.entity.name }}<br />{{ report.entity.type }}</td>
+            <td colspan="2">{{ report.magnesium_sulfate|yesnostock }}</td>
+            <td colspan="2">{{ report.oxytocine|yesnostock }}</td></tr>
+            {% endfor %}
+            </tr>{% endfor %}
+    {% endfor %}
+</table>
+{% endblock %}
