@@ -38,11 +38,12 @@ class Command(BaseCommand):
         except:
             preg = None
         try: 
-            bir = BirthReport.objects.all().order_by('creatd_on')[0].creatd_on
+            bir = BirthReport.objects.all().order_by('creatd_on')[0].created_on
         except:
             bir = None
         try: 
             commod = RHCommoditiesReport.objects.all().order_by('period')[0].period.start_on
+            commod = date(commod.year, commod.month, commod.day)
         except:
             commod = None
         if child:
