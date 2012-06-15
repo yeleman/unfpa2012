@@ -1,6 +1,6 @@
 <select id="report_types" name="report_type">
 <<option value=''> ----- </option>
-{%if type = "commodities" %}{%else%}<option value="weekly"  {% ifequal selected 'weekly' %}selected="selected"{% endifequal %}>Hebdomadaire</option>{%endif%}
+{%if subcategory = "commodities" %}{%else%}<option value="weekly"  {% ifequal selected 'weekly' %}selected="selected"{% endifequal %}>Hebdomadaire</option>{%endif%}
 <option value="monthly" {% ifequal selected 'monthly' %}selected="selected"{% endifequal %}>Mensuel</option>
 <option value="quarterly" {% ifequal selected 'quarterly' %}selected="selected"{% endifequal %}>Trimestriel</option>
 <option value="annual" {% ifequal selected 'annual' %}selected="selected"{% endifequal %}>Annuel</option>
