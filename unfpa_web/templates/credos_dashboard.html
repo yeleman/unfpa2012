@@ -10,9 +10,20 @@
 
 <div id="context">
 
-<h2>Tableau de bord credos</h2>
 <p>Bienvenue.</p>
 <p>Ce tableau de bord vous donne un aperçu de l'état d'avancement de la collecte et de la transmission des données.</p>
+
+<h2>Tableau de bord credos</h2>
+
+<table class="datatable">
+    <tr><th>Indicateur</th><th>Total</th><th>{{period.full_name}}</th></tr>
+
+    <tr><th>Nbre de Naissances</td><td>{{total_children}}</td><td>{{last_total_children}}</td></tr>
+    <tr><th>Nbre de Grossesses</td><td>{{total_pregnancy}}</td><td>{{last_total_pregnancy}}</td></tr>
+    <tr><th>Nbre de Décès</td><td>78</td><td>98</td></tr>
+    <tr><th>SMS reçus / envoyés</td><td>90 / 12</td><td>80 / 89</td></tr>
+
+</table>
 
 </div>
 
