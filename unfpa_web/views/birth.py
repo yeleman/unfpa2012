@@ -12,7 +12,9 @@ from datetime import datetime
 
 
 def sum_month(month):
-    reports = BirthReport.periods.within(month)
+    reports = BirthReport.periods.within(month) \
+                         .filter(source=BirthReport.CREDOS)
+    print reports, month, BirthReport.CREDOS
     indicator = {'month': month, 'birth': 0, 'residence': 0, 'center': 0,
                  'other': 0, 'male': 0, 'female': 0, 'alive': 0,
                  'stillborn': 0}

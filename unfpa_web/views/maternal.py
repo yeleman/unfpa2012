@@ -18,6 +18,7 @@ def weekly_monthly_maternal(request, period, rtype):
         nb_deaths = MaternalMortalityReport.periods.within(period) \
                        .filter(pregnancy_related_death=True) \
                        .filter(death_location__in=district.get_descendants()) \
+                       .filter(source=MaternalMortalityReport.UNFPA) \
                        .count()
         data.append({'district': district, 'deaths': nb_deaths})
 
@@ -46,6 +47,7 @@ def quarterly_annual_maternal(request, period, rtype):
     # /!\ UNFPA districts only
     all_deaths = MaternalMortalityReport.periods.within(period) \
                            .filter(pregnancy_related_death=True) \
+                           .filter(source=MaternalMortalityReport.UNFPA) \
                            .count()
 
     # for each district
@@ -56,6 +58,7 @@ def quarterly_annual_maternal(request, period, rtype):
                            .filter(pregnancy_related_death=True) \
                            .filter(death_location__in=district
                                    .get_descendants()) \
+                           .filter(source=MaternalMortalityReport.UNFPA) \
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
