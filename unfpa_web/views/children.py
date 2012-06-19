@@ -17,6 +17,7 @@ def weekly_monthly_children(request, period, rtype):
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = ChildrenMortalityReport.periods.within(period) \
                        .filter(death_location__in=district.get_descendants()) \
+                       .filter(source=ChildrenMortalityReport.UNFPA) \
                        .count()
         data.append({'district': district, 'deaths': nb_deaths})
 
@@ -43,7 +44,9 @@ def quarterly_annual_children(request, period, rtype):
 
     # total deaths for all districts
     # /!\ UNFPA districts only
-    all_deaths = ChildrenMortalityReport.periods.within(period).count()
+    all_deaths = ChildrenMortalityReport.periods.within(period) \
+                                .filter(source=ChildrenMortalityReport.UNFPA) \
+                                .count()
     print all_deaths
 
     # for each district
@@ -53,6 +56,7 @@ def quarterly_annual_children(request, period, rtype):
             nb_deaths = ChildrenMortalityReport.periods.within(month) \
                            .filter(death_location__in=district
                                    .get_descendants()) \
+                           .filter(source=ChildrenMortalityReport.UNFPA) \
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
