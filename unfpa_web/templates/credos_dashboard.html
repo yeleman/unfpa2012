@@ -17,12 +17,12 @@
 <h2>Tableau de bord credos</h2>
 
 <table class="datatable">
-    <tr><th>Indicateur</th><th>Total</th><th>{{period.full_name}}</th></tr>
-
-    <tr><th>Nbre de Naissances</td><td>{{total_birth}}</td><td>{{last_total_birth}}</td></tr>
-    <tr><th>Nbre de Grossesses</td><td>{{total_pregnancy}}</td><td>{{last_total_pregnancy}}</td></tr>
-    <tr><th>Nbre de Décès</td><td>{{total_children}}</td><td>{{last_total_children}}</td></tr>
-    <tr><th>SMS reçus / envoyés</td><td>{{received}} / {{sent}}</td><td>{{last_received}} / {{last_sent}}</td></tr>
+    <tr><th>Indicateur</th><th>Total</th><th>{{ period.full_name }}</th></tr>
+    <tr><th> Nombre total de structure </th><td colspan="2">{{ all_credos_center }}</td></tr>
+    <tr><th>SMS reçus / envoyés</th><td>{{ all_inbox }} / {{ all_sent }}</td><td>{{ last_inbox }} / {{last_sent}}</td></tr>
+    <tr><th>Nombre de naissance</th><td>{{ total_birth }}</td><td>{{ last_birth }}</td></tr>
+    <tr><th>Nombre de grossesse</th><td>{{ total_pregnancy }}</td><td>{{ last_pregnancy }}</td></tr>
+    <tr><th>Nombre de décès infantile</th><td>{{ total_children_death }}</td><td>{{ last_children_death }}</td></tr>
 
 </table>
 

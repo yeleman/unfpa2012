@@ -9,7 +9,7 @@ from bolibana.web.decorators import provider_required
 from bolibana.models import MonthPeriod
 from unfpa_core import all_periods
 from unfpa_core.models import (BirthReport, ChildrenMortalityReport,
-                               PregnancyReport)
+                               PregnancyReport, UEntity)
 
 from unfpa_web.views.data import current_period
 
@@ -18,26 +18,30 @@ from unfpa_web.views.data import current_period
 def credos_dashboard(request):
     context = {'category': 'credos','subcategory': 'credos_dashboard'}
 
+    periods = all_periods(MonthPeriod)
+
     period = current_period()
 
+    all_credos_center = UEntity.objects.filter(is_credos=True).all().count()
+
     # nb de decés infantile
-    total_children = ChildrenMortalityReport.objects.all().count()
-    last_total_children = ChildrenMortalityReport.periods \
+    total_children_death = ChildrenMortalityReport.objects.all().count()
+    last_children_death = ChildrenMortalityReport.periods \
                                                  .within(period).count()
 
     # nb de naissance
     total_birth = BirthReport.objects.all().count()
-    last_total_birth = BirthReport.periods.within(period).count()
+    last_birth = BirthReport.periods.within(period).count()
 
     # nb de grossesse
     total_pregnancy = PregnancyReport.objects.all().count()
-    last_total_pregnancy = PregnancyReport.periods \
+    last_pregnancy = PregnancyReport.periods \
                                           .within(period).count()
 
     # message
-    received = Inbox.objects.count()
-    sent = SentItems.objects.count()
-    last_received = Inbox.objects \
+    all_inbox = Inbox.objects.count()
+    all_sent = SentItems.objects.count()
+    last_inbox = Inbox.objects \
                          .filter(receivingdatetime__gte=period.start_on,
                                  receivingdatetime__lte=period.end_on) \
                          .count()
@@ -45,8 +49,6 @@ def credos_dashboard(request):
                          .filter(deliverydatetime__gte=period.start_on,
                                  deliverydatetime__lte=period.end_on) \
                          .count()
-
-    periods = all_periods(MonthPeriod)
 
     evol_data = {'children': {'label': u"Décès", 'values': {}},
                  'pregnancy': {'label': u"Grossesses", 'values': {}},
@@ -60,15 +62,17 @@ def credos_dashboard(request):
         evol_data['birth']['values'][period.pid] = {'value': nb_birth}
 
     context.update({'period': period,
+                    'all_credos_center': all_credos_center,
+                    'all_inbox': all_inbox,
+                    'all_sent': all_sent,
+                    'last_sent': last_sent,
+                    'last_inbox': last_inbox,
                     'total_birth': total_birth,
-                    'last_total_birth': last_total_birth,
-                    'total_children': total_children,
-                    'last_total_children': last_total_children,
+                    'last_birth': last_birth,
                     'total_pregnancy': total_pregnancy,
-                    'last_total_pregnancy': last_total_pregnancy,
-                    'received': received,
-                    'sent':sent, 'last_sent': last_sent,
-                    'last_received': last_received,
+                    'last_pregnancy': last_pregnancy,
+                    'total_children_death': total_children_death,
+                    'last_children_death': last_children_death,
                     'periods': periods,
                     'evol_data': evol_data.items()})
 
