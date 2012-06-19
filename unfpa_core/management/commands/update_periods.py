@@ -6,7 +6,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import ContentType
 
-from datetime import date
+from datetime import date, datetime
 
 from bolibana.models import MonthPeriod, YearPeriod
 
@@ -22,6 +22,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         current_period = MonthPeriod.find_create_by_date(date.today())
+
+        now = datetime.now()
 
         # find our date of first report (begining of activities)
         first_report = date.today()
@@ -67,16 +69,21 @@ class Command(BaseCommand):
 
             # create quarter
             for quarter in y.quarters_:
-                print(u"\t%s" % quarter)
+                if quarter.start_on > now:
+                    break
                 quarter.save()
                 print(u"\t%s" % quarter)
 
             # create months:
             for month in y.months:
+                if month.start_on > now:
+                    break
                 month.save()
                 print(u"\t\t%s" % month)
 
                 # create weeks
                 for week in month.weeks:
+                    if week.start_on > now:
+                       break
                     week.save()
                     print(u"\t\t\t%s" % week)
