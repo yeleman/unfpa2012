@@ -44,9 +44,9 @@ def credos_dashboard(request):
         nb_children = ChildrenMortalityReport.periods.within(period).count()
         nb_pregnancy = PregnancyReport.periods.within(period).count()
         nb_birth = BirthReport.periods.within(period).count()
-        evol_data['children']['values'][period] = {'value': nb_children}
-        evol_data['pregnancy']['values'][period] = {'value': nb_pregnancy}
-        evol_data['birth']['values'][period] = {'value': nb_birth}
+        evol_data['children']['values'][period.pid] = {'value': nb_children}
+        evol_data['pregnancy']['values'][period.pid] = {'value': nb_pregnancy}
+        evol_data['birth']['values'][period.pid] = {'value': nb_birth}
 
     print(evol_data.values())
     for line in evol_data.values():
