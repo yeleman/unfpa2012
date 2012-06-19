@@ -15,7 +15,7 @@
 <select id="period_quarterly" class="period_nav{% ifnotequal type 'quarterly' %} hidden{% endifnotequal %}">
     <option value=''> ----- </option>
 {% for quarter in allperiods.quarters %}
-    <option value="{{ quarter.strid }}" {% ifequal selected quarter.strid %}selected="selected" {% endifequal %}>Q{{ quarter.quarter }} {{ quarter.middle|datefmt:'yyyy' }}</option>
+    <option value="{{ quarter.strid }}" {% ifequal selected quarter.strid %}selected="selected" {% endifequal %}>T{{ quarter.quarter }} {{ quarter.middle|datefmt:'yyyy' }}</option>
 {% endfor %}
 </select>
 <select id="period_annual" class="period_nav{% ifnotequal type 'annual' %} hidden{% endifnotequal %}">

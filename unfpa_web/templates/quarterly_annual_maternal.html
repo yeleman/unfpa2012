@@ -17,7 +17,7 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'maternal' 'weekly' '01-2010'
 <h2>Rapport {% ifequal type "quarterly" %}trimestriel{% else %}annuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
 
 <table class="datatable">
-<tr><th>District</th>{% for month in months %}<th>{{ month.middle|datefmt:"MMM" }}</th>{% endfor %}<th>Total</th><th>Pourcentage</th></tr>
+<tr><th>District</th>{% for month in months %}<th>{{ month.middle|datefmt:"MMM" }}</th>{% endfor %}<th>Total</th><th>%</th></tr>
 {% for disdata in data %}
 <tr><td>{{ disdata.district }}</td>{% for mdeath in disdata.mdeaths %}<td>{{ mdeath }}</td>{% endfor %}<td>{{ disdata.total }}</td><td>{{ disdata.percent_of_all|percent }}</td></tr>
 {% endfor %}
