@@ -21,11 +21,15 @@ def credos_dashboard(request):
     total_children = ChildrenMortalityReport.objects.all().count()
     last_total_children = ChildrenMortalityReport.periods \
                                                  .within(period).count()
+    total_birth = BirthReport.objects.all().count()
+    last_total_birth = BirthReport.periods.within(period).count()
     total_pregnancy = PregnancyReport.objects.all().count()
     last_total_pregnancy = PregnancyReport.periods \
                                           .within(period).count()
 
-    context.update({'period': period, 
+    context.update({'period': period,
+                    'total_birth': total_birth,
+                    'last_total_birth': last_total_birth,
                     'total_children': total_children,
                     'last_total_children': last_total_children,
                     'total_pregnancy': total_pregnancy,
