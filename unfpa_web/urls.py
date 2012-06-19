@@ -14,7 +14,7 @@ from bolibana.web.decorators import provider_permission
 from settings import STATIC_ROOT, MEDIA_ROOT
 
 urlpatterns = patterns('',
-    url(r'^/?$', views.dashboard.dashboard, name='index'),
+    url(r'^/?$', views.unfpa_dashboard.unfpa_dashboard, name='index'),
     url(r'^profile/$', bviews.profile.edit_profile, name='profile'),
 
     # login

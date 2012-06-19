@@ -3,6 +3,7 @@
 # maintainer: fad
 
 from django.shortcuts import render
+from django.db.models import Q
 from nosmsd.models import Inbox, SentItems
 
 from bolibana.web.decorators import provider_permission
@@ -23,17 +24,24 @@ def unfpa_dashboard(request):
 
     all_unfpa_center = UEntity.objects.filter(is_unfpa=True).all().count()
 
-    all_inbox = Inbox.objects.count()
-    all_sent = SentItems.objects.count()
-
-    last_inbox = Inbox.objects.filter(receivingdatetime__gte=period.start_on,
-                                    receivingdatetime__lte=period.end_on) \
-                            .count()
-
-    last_sent = SentItems.objects \
-                           .filter(deliverydatetime__gte=period.start_on,
-                                deliverydatetime__lte=period.end_on) \
-                           .count()
+    all_inbox_qs = Inbox.objects.filter(
+                              Q(textdecoded__startswith=u"fnuap dpw") |
+                              Q(textdecoded__startswith=u"fnuap mps") |
+                              Q(textdecoded__startswith=u"fnuap du5 f"))
+    all_inbox = all_inbox_qs.count()
+    all_sent_qs = SentItems.objects.filter(
+                              Q(textdecoded__startswith=u"fnuap dpw") |
+                              Q(textdecoded__startswith=u"fnuap mps") |
+                              Q(textdecoded__startswith=u"fnuap du5 f"))
+    all_sent = all_sent_qs.count()
+    last_inbox = all_inbox_qs \
+                         .filter(receivingdatetime__gte=period.start_on,
+                                 receivingdatetime__lte=period.end_on) \
+                         .count()
+    last_sent = all_sent_qs \
+                         .filter(deliverydatetime__gte=period.start_on,
+                                 deliverydatetime__lte=period.end_on) \
+                         .count()
 
     total_children_death = ChildrenMortalityReport.objects \
                                 .filter(source=ChildrenMortalityReport.UNFPA) \

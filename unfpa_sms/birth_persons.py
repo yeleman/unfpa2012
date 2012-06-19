@@ -30,7 +30,7 @@ SOURCE = {
 
 def unfpa_birth(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap profile born reccord_date reporting_location family_name
+            fnuap born profile reccord_date reporting_location family_name
             name_mother name_child dob birth_location sex born_alive
         example:
            'fnuap born c 20120514 baga dolo assan mele 20120514 d m 1'
