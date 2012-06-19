@@ -24,6 +24,11 @@ class PeriodManager(models.Manager):
 
 class MaternalMortalityReport(IndividualReport):
 
+    UNFPA = 'U'
+    CREDOS = 'C'
+    SOURCES = ((UNFPA, u"UNFPA"),
+               (CREDOS, u"CREDOS"))
+
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Maternal Mortality Report")
@@ -53,6 +58,9 @@ class MaternalMortalityReport(IndividualReport):
     pregnancy_related_death = models.BooleanField(default=False,
                                                   verbose_name=_(u"Pregnancy "
                                                   u"related death"))
+
+    source = models.CharField(max_length=1, null=True,
+                              blank=True, choices=SOURCES)
 
     # django manager first
     objects = models.Manager()
