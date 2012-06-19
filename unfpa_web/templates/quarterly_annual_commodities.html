@@ -76,4 +76,15 @@ addJQEventReportElementsList();
             </tr>{% endfor %}
     {% endfor %}
 </table>
+
+<h2>Centres en rupture de longue durée (min. 3 mois)</h2>
+{% if long_stockouts %}
+<table class="datatable">
+    {% for entity in long_stockouts %}
+    <tr><td>{{ entity.name }}</td></tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>Aucun.</p>
+{% endif %}
 {% endblock %}

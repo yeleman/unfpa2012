@@ -168,6 +168,7 @@ def quarterly_annual_commodities(request, period, rtype):
 
 
     # districts
+    long_stockouts = []
     all_stock_outs = []
     for district in unfpa_districts():
         centers = district.children \
@@ -179,6 +180,21 @@ def quarterly_annual_commodities(request, period, rtype):
                            'injectable', 'iud', 'implants',
                            'female_sterilization', 'male_sterilization',
                            'magnesium_sulfate', 'oxytocine')
+
+        # List entities with stockouts for 3 months.
+        #    list all entitites with stockouts
+        #    count duplicates
+        #    keep 3+
+        _entities_counts = {}
+        for entity in [report.entity for report in
+                       RHCommoditiesReport.objects
+                                    .validated()
+                                    .filter(period__in=our_periods) 
+                                    if report.has_stockouts()]:
+            setattr(_entities_counts, entity, getattr(_entities_counts, entity.id, 0) + 1)
+        for entity, count in _entities_counts.items():
+            if count >= 3:
+                long_stockouts.append(entity)
 
         month_stock_outs = []
         for month in our_periods:
@@ -210,7 +226,8 @@ def quarterly_annual_commodities(request, period, rtype):
                                'nb_centers': int(nb_centers),
                                'reports': reports})
 
-    context.update({'all_stock_outs': all_stock_outs,})
+    context.update({'all_stock_outs': all_stock_outs,
+                    'long_stockouts': long_stockouts})
 
     context.update({'type': rtypes.get(period.__class__, MonthPeriod),
                     'our_periods': our_periods})
