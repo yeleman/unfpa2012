@@ -5,7 +5,7 @@
 from django.shortcuts import render
 
 from bolibana.models import Entity
-from bolibana.web.decorators import provider_required
+from bolibana.web.decorators import provider_permission
 
 from unfpa_core.models import MaternalMortalityReport
 
@@ -26,12 +26,12 @@ def weekly_monthly_maternal(request, period, rtype):
     return render(request, 'weekly_monthly_maternal.html', context)
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def weekly_maternal(request, period):
     return weekly_monthly_maternal(request, period, 'weekly')
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def monthly_maternal(request, period):
     return weekly_monthly_maternal(request, period, 'monthly')
 
@@ -72,11 +72,11 @@ def quarterly_annual_maternal(request, period, rtype):
     return render(request, 'quarterly_annual_maternal.html', context)
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def quarterly_maternal(request, period):
     return quarterly_annual_maternal(request, period, 'quarterly')
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def annual_maternal(request, period):
     return quarterly_annual_maternal(request, period, 'annual')

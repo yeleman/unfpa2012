@@ -5,7 +5,7 @@
 from django.shortcuts import render
 from nosmsd.models import Inbox, SentItems
 
-from bolibana.web.decorators import provider_required
+from bolibana.web.decorators import provider_permission
 from bolibana.models import MonthPeriod
 from unfpa_core import all_periods
 from unfpa_core.models import (BirthReport, ChildrenMortalityReport,
@@ -14,7 +14,7 @@ from unfpa_core.models import (BirthReport, ChildrenMortalityReport,
 from unfpa_web.views.data import current_period
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def credos_dashboard(request):
     context = {'category': 'credos','subcategory': 'credos_dashboard'}
 

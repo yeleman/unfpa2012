@@ -7,13 +7,13 @@ from datetime import datetime
 from django.shortcuts import render
 
 from bolibana.models import MonthPeriod, QuarterPeriod, YearPeriod
-from bolibana.web.decorators import provider_required
+from bolibana.web.decorators import provider_permission
 
 from unfpa_core import unfpa_districts
 from unfpa_core.models import RHCommoditiesReport
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def monthly_commodities(request, period):
 
     context = {'period': period, 'category': 'unfpa',
@@ -22,7 +22,7 @@ def monthly_commodities(request, period):
     rtypes = {MonthPeriod: 'monthly',
               QuarterPeriod: 'quarterly',
               YearPeriod: 'annual'}
-    
+
     fp_services = RHCommoditiesReport.validated \
                                      .filter(period=period) \
                                      .filter(family_planning=True)
@@ -39,8 +39,8 @@ def monthly_commodities(request, period):
     fp_stockout = RHCommoditiesReport.objects.validated() \
                                      .has_stockouts().filter(period=period)
 
-    atleast_3methods = sum([1 
-                        for report 
+    atleast_3methods = sum([1
+                        for report
                         in RHCommoditiesReport.validated.filter(period=period)
                         if report.fp_stockout_3methods()])
     try:
@@ -56,7 +56,7 @@ def monthly_commodities(request, period):
                                      .filter(oxytocine=0)
 
     context.update({'fp_services': (fp_services.count(), fp_services),
-                    'delivery_services': (delivery_services.count(), 
+                    'delivery_services': (delivery_services.count(),
                                           delivery_services),
                     'both_services': (both_services.count(), both_services),
                     'fp_stockout': (fp_stockout.count(), fp_stockout),
@@ -70,19 +70,19 @@ def monthly_commodities(request, period):
     all_stock_outs = []
     for district in unfpa_districts():
         centers = district.children \
-                              .filter(type__slug__in=('cscom', 
+                              .filter(type__slug__in=('cscom',
                                                       'csref', 'hospital'))
         nb_centers = float(centers.count())
 
         methods = ('male_condom', 'female_condom', 'oral_pills',
-                           'injectable', 'iud', 'implants', 
+                           'injectable', 'iud', 'implants',
                            'female_sterilization', 'male_sterilization',
                            'magnesium_sulfate', 'oxytocine')
         stock_outs = {}
         for method in methods:
             stock_outs[method] = [0, 0]
 
-        reports = RHCommoditiesReport.objects.validated().filter(period=period, 
+        reports = RHCommoditiesReport.objects.validated().filter(period=period,
                                                        entity__in=centers)
         for report in reports:
             for method in methods:
@@ -117,10 +117,10 @@ def quarterly_annual_commodities(request, period, rtype):
               YearPeriod: 'annual'}
 
     our_periods = [month for month in period.months if month.end_on < datetime.now()]
-    
+
     fp_services = [RHCommoditiesReport.validated \
                                       .filter(period=month) \
-                                      .filter(family_planning=True).count() 
+                                      .filter(family_planning=True).count()
                    for month in our_periods]
 
     delivery_services = [RHCommoditiesReport.validated \
@@ -141,8 +141,8 @@ def quarterly_annual_commodities(request, period, rtype):
 
     atleast_3methods_t = []
     for month in our_periods:
-        atleast_3methods = sum([1 
-                            for report 
+        atleast_3methods = sum([1
+                            for report
                             in RHCommoditiesReport.validated.filter(period=period)
                             if report.fp_stockout_3methods()])
         try:
@@ -171,12 +171,12 @@ def quarterly_annual_commodities(request, period, rtype):
     all_stock_outs = []
     for district in unfpa_districts():
         centers = district.children \
-                          .filter(type__slug__in=('cscom', 
+                          .filter(type__slug__in=('cscom',
                                                   'csref', 'hospital'))
         nb_centers = float(centers.count())
 
         methods = ('male_condom', 'female_condom', 'oral_pills',
-                           'injectable', 'iud', 'implants', 
+                           'injectable', 'iud', 'implants',
                            'female_sterilization', 'male_sterilization',
                            'magnesium_sulfate', 'oxytocine')
 
@@ -187,7 +187,7 @@ def quarterly_annual_commodities(request, period, rtype):
             for method in methods:
                 stock_outs[method] = [0, 0]
 
-            reports = RHCommoditiesReport.objects.validated().filter(period=month, 
+            reports = RHCommoditiesReport.objects.validated().filter(period=month,
                                                                  entity__in=centers)
             for report in reports:
                 for method in methods:
@@ -219,11 +219,11 @@ def quarterly_annual_commodities(request, period, rtype):
 
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def quarterly_commodities(request, period):
     return quarterly_annual_commodities(request, period, 'quarterly')
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def annual_commodities(request, period):
     return quarterly_annual_commodities(request, period, 'annual')

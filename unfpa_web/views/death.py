@@ -4,6 +4,7 @@
 
 from django.shortcuts import render
 from bolibana.models import MonthPeriod
+from bolibana.web.decorators import provider_permission
 from unfpa_core.models import ChildrenMortalityReport
 from unfpa_web.views.data import rate_cal
 from datetime import datetime
@@ -31,6 +32,7 @@ def sum_month(month):
     return indicator
 
 
+@provider_permission('can_view_indicator_data')
 def death(request):
     context = {'category': 'credos', 'subcategory': 'death'}
 

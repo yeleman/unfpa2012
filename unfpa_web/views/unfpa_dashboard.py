@@ -5,16 +5,15 @@
 from django.shortcuts import render
 from nosmsd.models import Inbox, SentItems
 
-from bolibana.web.decorators import provider_required
+from bolibana.web.decorators import provider_permission
 from bolibana.models import MonthPeriod
-from unfpa_core.models import (RHCommoditiesReport, MaternalMortalityReport, 
+from unfpa_core.models import (RHCommoditiesReport, MaternalMortalityReport,
                                ChildrenMortalityReport, UEntity)
 from unfpa_web.views.data import current_period
 from unfpa_core import all_periods
 
 
-
-@provider_required
+@provider_permission('can_view_indicator_data')
 def unfpa_dashboard(request):
     context = {'category': 'unfpa', 'subcategory': 'unfpa_dashboard'}
 
@@ -35,20 +34,20 @@ def unfpa_dashboard(request):
                            .filter(deliverydatetime__gte=period.start_on,
                                 deliverydatetime__lte=period.end_on) \
                            .count()
-    
+
     total_children_death = ChildrenMortalityReport.objects.all().count()
     last_children_death = ChildrenMortalityReport.periods \
                                                  .within(period).count()
     total_maternal_death = MaternalMortalityReport.objects.all().count()
     last_maternal_death = MaternalMortalityReport.periods.within(period).count()
 
-    total_3methods_out = sum([1 
-                        for report 
+    total_3methods_out = sum([1
+                        for report
                         in RHCommoditiesReport.validated.all()
                         if report.fp_stockout_3methods()])
 
-    last_3methods_out = sum([1 
-                        for report 
+    last_3methods_out = sum([1
+                        for report
                         in RHCommoditiesReport.validated.filter(period=period)
                         if report.fp_stockout_3methods()])
 

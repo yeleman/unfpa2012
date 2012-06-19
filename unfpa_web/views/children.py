@@ -5,7 +5,7 @@
 from django.shortcuts import render
 
 from bolibana.models import Entity
-from bolibana.web.decorators import provider_required
+from bolibana.web.decorators import provider_permission
 
 from unfpa_core.models import ChildrenMortalityReport
 
@@ -25,12 +25,12 @@ def weekly_monthly_children(request, period, rtype):
     return render(request, 'weekly_monthly_children.html', context)
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def weekly_children(request, period):
     return weekly_monthly_children(request, period, 'weekly')
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def monthly_children(request, period):
     return weekly_monthly_children(request, period, 'monthly')
 
@@ -70,11 +70,11 @@ def quarterly_annual_children(request, period, rtype):
     return render(request, 'quarterly_annual_children.html', context)
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def quarterly_children(request, period):
     return quarterly_annual_children(request, period, 'quarterly')
 
 
-@provider_required
+@provider_permission('can_view_indicator_data')
 def annual_children(request, period):
     return quarterly_annual_children(request, period, 'annual')
