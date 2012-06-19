@@ -19,6 +19,11 @@ DEATHPLACE = {
     'a': ChildrenMortalityReport.OTHER,
 }
 
+SOURCE = {
+    'f': MaternalMortalityReport.UNFPA,
+    'c': MaternalMortalityReport.CREDOS
+}
+
 
 def resp_error_reporting_location(message, code):
     message.respond(u"[ERREUR] Le Lieu de rapportage %s n'existe pas."
@@ -50,7 +55,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
                       living_children_text dead_children_text pregnant_text
                       pregnancy_weeks_text pregnancy_related_death_text
             exemple: 'fnuap dpw f 20120524 bana kona_diarra 20120524 20120524
-                      bana 1 0 0 - 0'
+                       bana 1 0 0 - 0'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
@@ -142,7 +147,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnant = pregnant
     report.pregnancy_weeks = pregnancy_weeks
     report.pregnancy_related_death = pregnancy_related_death
-
+    report.source = SOURCE.get(profile, MaternalMortalityReport.UNFPA)
     try:
         report.save()
         report.created_on = reccord_date
@@ -222,6 +227,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.death_location = death_location
     report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
+    report.source = SOURCE.get(profile, MaternalMortalityReport.UNFPA)
 
     try:
         report.save()

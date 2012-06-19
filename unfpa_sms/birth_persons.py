@@ -21,6 +21,12 @@ SEX = {
     'f': BirthReport.FEMALE
 }
 
+SOURCE = {
+    'f': BirthReport.UNFPA,
+    'c': BirthReport.CREDOS
+}
+
+
 
 def unfpa_birth(message, args, sub_cmd, **kwargs):
     """  Incomming:
@@ -63,6 +69,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
 
     birth_location = BIRTHPLACE.get(birth_location, BirthReport.OTHER)
     sex = SEX.get(sex, BirthReport.FEMALE)
+
     born_alive = bool(int(born_alive))
 
     # if no name of the mother
@@ -90,6 +97,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     report.dob_auto = dob_auto
     report.birth_location = birth_location
     report.born_alive = born_alive
+    report.source = SOURCE.get(profile, BirthReport.UNFPA)
 
     try:
         report.save()
@@ -99,6 +107,7 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
                         u"%(full_name_dob)s a ete enregistre." \
                         % {'full_name_dob': report.full_name_dob()})
     except:
+        raise
         message.respond(u"[ERREUR] Le rapport de naissance "
                         u"n'a pas ete enregistre.")
 
