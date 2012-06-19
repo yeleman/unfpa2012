@@ -9,6 +9,19 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from bolibana.models import Entity, IndividualReport
 
 
+class PeriodManager(models.Manager):
+
+    def get_query_set(self):
+        return super(PeriodManager, self).get_query_set()
+
+    def within(self, period=None):
+        if not period:
+            return self.get_query_set()
+        else:
+            return self.get_query_set().filter(created_on__gte=period.start_on,
+                                               created_on__lte=period.end_on)
+
+
 class PregnancyReport(IndividualReport):
 
     NONE = 0
@@ -45,6 +58,10 @@ class PregnancyReport(IndividualReport):
     pregnancy_result = models.IntegerField(max_length=1, choices=RESULT,
                                         verbose_name=_(u"Pregnancy result"))
 
+    # django manager first
+    objects = models.Manager()
+    periods = PeriodManager()
+    
     def __unicode__(self):
         return ugettext(u"%(mother_name)s/%(dob)s"
                 % {'mother_name': self.mother_name.title(),

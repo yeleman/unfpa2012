@@ -6,6 +6,10 @@
 {% block title %}Accueil credos{% endblock %}
 
 
+{% block jqueryonload %}
+{% include "indicator_graph.js" with id='evolution' graph_type='spline' periods=periods data=evol_data %}
+{% endblock %}
+
 {% block content %}
 
 <div id="context">
@@ -24,6 +28,10 @@
     <tr><th>SMS reçus / envoyés</td><td>90 / 12</td><td>80 / 89</td></tr>
 
 </table>
+
+<h3 class="caption"><strong>Évolution des naissances, grossesses et décès.</strong></h3>
+<div id="evolution"></div>
+
 
 </div>
 

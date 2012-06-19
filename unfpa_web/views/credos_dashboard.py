@@ -5,7 +5,10 @@
 from django.shortcuts import render
 
 from bolibana.web.decorators import provider_required
-from unfpa_core.models import ChildrenMortalityReport, PregnancyReport
+from bolibana.models import MonthPeriod
+from unfpa_core import all_periods
+from unfpa_core.models import (BirthReport, ChildrenMortalityReport,
+                               PregnancyReport)
 
 from unfpa_web.views.data import current_period
 
@@ -16,22 +19,35 @@ def credos_dashboard(request):
 
     period = current_period()
     total_children = ChildrenMortalityReport.objects.all().count()
-    last_total_children = ChildrenMortalityReport.objects \
-                                .filter(created_on__gte=period.start_on,
-                                        created_on__lte=period.end_on) \
-                                .count()    
+    last_total_children = ChildrenMortalityReport.periods \
+                                                 .within(period).count()
     total_pregnancy = PregnancyReport.objects.all().count()
-    last_total_pregnancy = PregnancyReport.objects \
-                                .filter(created_on__gte=period.start_on,
-                                        created_on__lte=period.end_on) \
-                                .count()
-    print last_total_pregnancy, 'alou'
+    last_total_pregnancy = PregnancyReport.periods \
+                                          .within(period).count()
+
     context.update({'period': period, 
                     'total_children': total_children,
                     'last_total_children': last_total_children,
                     'total_pregnancy': total_pregnancy,
                     'last_total_pregnancy': last_total_pregnancy})
-    print total_children, last_total_children
 
+    periods = all_periods(MonthPeriod)
+
+    evol_data = {'children': {'label': u"Décès", 'values': {}},
+                 'pregnancy': {'label': u"Grossesses", 'values': {}},
+                 'birth': {'label': u"Naissances", 'values': {}}}
+    for period in periods:
+        nb_children = ChildrenMortalityReport.periods.within(period).count()
+        nb_pregnancy = PregnancyReport.periods.within(period).count()
+        nb_birth = BirthReport.periods.within(period).count()
+        evol_data['children']['values'][period] = {'value': nb_children}
+        evol_data['pregnancy']['values'][period] = {'value': nb_pregnancy}
+        evol_data['birth']['values'][period] = {'value': nb_birth}
+
+    print(evol_data.values())
+    for line in evol_data.values():
+        print(line)
+    context.update({'periods': periods,
+                    'evol_data': evol_data.items()})
 
     return render(request, 'credos_dashboard.html', context)
