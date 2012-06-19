@@ -45,21 +45,21 @@ def resp_success(message, name):
 
 def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap dpw reccord_date reporting_location_code name age_or_dob
-                      dod_text death_location_code living_children_text
-                      dead_children_text pregnant_text pregnancy_weeks_text
-                      pregnancy_related_death_text
-            exemple: 'fnuap dpw 20120524 110 kona_diarra 20120524 20120524 110
-                      1 0 0 - 0'
+            fnuap dpw profile reccord_date reporting_location_code
+                      name age_or_dob dod_text death_location_code
+                      living_children_text dead_children_text pregnant_text
+                      pregnancy_weeks_text pregnancy_related_death_text
+            exemple: 'fnuap dpw f 20120524 bana kona_diarra 20120524 20120524
+                      bana 1 0 0 - 0'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reccord_date, reporting_location_code, name, age_or_dob, dod_text, \
-        death_location_code, living_children_text, dead_children_text, \
-        pregnant_text, pregnancy_weeks_text, \
+        profile, reccord_date, reporting_location_code, name, age_or_dob, \
+        dod_text, death_location_code, living_children_text, \
+        dead_children_text, pregnant_text, pregnancy_weeks_text, \
         pregnancy_related_death_text = args.split()
     except:
         return resp_error(message, u"le rapport")
@@ -156,17 +156,17 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
 
 def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap du5 reccord_date reporting_location_code name sex
+            fnuap du5 profile reccord_date reporting_location_code name sex
             age_or_dob dod_text death_location_code place_death
-         exemple: 'fnuap du5 20120502 1488 nom F 20100502 20120502 1488 D'
+         exemple: 'fnuap du5 f 20120502 wolo nom F 20100502 20120502 wolo D'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reccord_date, reporting_location_code, name, sex, age_or_dob, \
-        dod_text, death_location_code, place_death = args.split()
+        profile, reccord_date, reporting_location_code, name, sex, \
+        age_or_dob, dod_text, death_location_code, place_death = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "
                                    u" des moins de 5ans")
@@ -222,7 +222,6 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.death_location = death_location
     report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
-    report._status = report.STATUS_VALIDATED
 
     try:
         report.save()

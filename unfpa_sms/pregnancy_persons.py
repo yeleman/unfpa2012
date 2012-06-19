@@ -12,20 +12,20 @@ from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap gpw reporting_location householder_name reccord_date
+            fnuap gpw profile reporting_location householder_name reccord_date
             mother_name dob pregnancy_age expected_delivery_date
             pregnancy_result delivery_date
         example:
-           'fnuap gpw seg alou_dolo 20120509 tata_keita 45a 9 20120509 0
-            20120509'
+           'fnuap gpw f wolo alou_dolo 20120109 fola_keita 45a 9 20110509 0
+            20120109'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reporting_location, householder_name, reccord_date, mother_name, dob, \
-        pregnancy_age, expected_delivery_date, pregnancy_result, \
-        delivery_date = args.split()
+        profile, reporting_location, householder_name, reccord_date, \
+        mother_name, dob, pregnancy_age, expected_delivery_date, \
+        pregnancy_result, delivery_date = args.split()
     except:
         return resp_error(message, u"l'enregistrement de la grossesse.")
 

@@ -24,16 +24,16 @@ SEX = {
 
 def unfpa_birth(message, args, sub_cmd, **kwargs):
     """  Incomming:
-            fnuap born reccord_date reporting_location family_name
+            fnuap profile born reccord_date reporting_location family_name
             name_mother name_child dob birth_location sex born_alive
         example:
-           'fnuap born 20120514 kid dolo assan mele 20120514 d m 1'
+           'fnuap born c 20120514 baga dolo assan mele 20120514 d m 1'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
 
     try:
-        reccord_date, reporting_location, family_name, name_mother,\
+        profile, reccord_date, reporting_location, family_name, name_mother,\
         name_child, dob, birth_location, sex, born_alive = args.split()
     except:
         return resp_error(message, u"l'enregistrement de la naissance.")
