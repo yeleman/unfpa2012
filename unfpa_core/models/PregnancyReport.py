@@ -62,6 +62,7 @@ class PregnancyReport(IndividualReport):
     objects = models.Manager()
     periods = PeriodManager()
     
+
     def __unicode__(self):
         return ugettext(u"%(mother_name)s/%(dob)s"
                 % {'mother_name': self.mother_name.title(),

@@ -11,8 +11,7 @@ from datetime import datetime
 
 
 def sum_month(month):
-    reports = BirthReport.objects.filter(created_on__gte=month.start_on,
-                                             created_on__lte=month.end_on)
+    reports = BirthReport.periods.within(month)
     indicator = {'month': month, 'birth': 0, 'residence': 0, 'center': 0,
                  'other': 0, 'male': 0, 'female': 0, 'alive': 0,
                  'stillborn': 0}

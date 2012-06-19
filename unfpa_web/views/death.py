@@ -10,9 +10,7 @@ from datetime import datetime
 
 
 def sum_month(month):
-    child_reports = ChildrenMortalityReport.objects\
-                                     .filter(created_on__gte=month.start_on,
-                                             created_on__lte=month.end_on)
+    child_reports = ChildrenMortalityReport.periods.within(month)
 
     indicator = {'month': month, 'ntd': 0, 'dd': 0, 'dc': 0, 'da': 0, 'sm': 0,
                  'sf': 0}
