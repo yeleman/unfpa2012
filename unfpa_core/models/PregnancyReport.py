@@ -34,6 +34,11 @@ class PregnancyReport(IndividualReport):
               (STILLBORN, "Mort-né"),
               (ABORTION, "Avortement"))
 
+    UNFPA = 'U'
+    CREDOS = 'C'
+    SOURCES = ((UNFPA, u"UNFPA"),
+               (CREDOS, u"CREDOS"))
+
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Pregnancy Report")
@@ -57,6 +62,9 @@ class PregnancyReport(IndividualReport):
                                      verbose_name=_(u"Delivery date"))
     pregnancy_result = models.IntegerField(max_length=1, choices=RESULT,
                                         verbose_name=_(u"Pregnancy result"))
+
+    source = models.CharField(max_length=1, null=True,
+                              blank=True, choices=SOURCES)
 
     # django manager first
     objects = models.Manager()

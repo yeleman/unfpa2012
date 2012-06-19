@@ -9,12 +9,12 @@ from unfpa_core.models import UEntity
 
 def unfpa_districts():
     return UEntity.objects.filter(type__slug='district') \
-                         .filter(is_unfpa=True)
+                          .filter(is_unfpa=True)
 
 
 def credos_districts():
     return UEntity.objects.filter(type__slug='district') \
-                         .filter(is_credos=True)
+                          .filter(is_credos=True)
 
 
 def all_periods(period_type):

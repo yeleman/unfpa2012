@@ -35,6 +35,11 @@ class BirthReport(IndividualReport):
     FEMALE = 'F'
     SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
 
+    UNFPA = 'U'
+    CREDOS = 'C'
+    SOURCES = ((UNFPA, u"UNFPA"),
+               (CREDOS, u"CREDOS"))
+
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Birth Report")
@@ -59,6 +64,8 @@ class BirthReport(IndividualReport):
     birth_location = models.CharField(max_length=1,
                                      choices=BIRTHPLACE,
                                      verbose_name=_(u"Place of birth"))
+    source = models.CharField(max_length=1, null=True,
+                              blank=True, choices=SOURCES)
 
     # django manager first
     objects = models.Manager()

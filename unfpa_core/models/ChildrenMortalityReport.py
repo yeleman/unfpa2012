@@ -31,6 +31,11 @@ class ChildrenMortalityReport(IndividualReport):
                   (CENTER, _(u"Centre")),
                   (OTHER, _(u"Autre")))
 
+    UNFPA = 'U'
+    CREDOS = 'C'
+    SOURCES = ((UNFPA, u"UNFPA"),
+               (CREDOS, u"CREDOS"))
+
     MALE = 'M'
     FEMALE = 'F'
     SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
@@ -58,6 +63,9 @@ class ChildrenMortalityReport(IndividualReport):
     death_place = models.CharField(max_length=1,
                                    choices=DEATHPLACE,
                                    verbose_name=_(u"Place of death"))
+
+    source = models.CharField(max_length=1, null=True,
+                              blank=True, choices=SOURCES)
 
     # django manager first
     objects = models.Manager()
