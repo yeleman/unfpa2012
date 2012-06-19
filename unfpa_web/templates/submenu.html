@@ -12,7 +12,7 @@
 {% if submenu = 'unfpa' %}
     <p >
         <a {% if subcategory = 'unfpa_dashboard' %} class="hover"{% endif %} href="{% url unfpa_dashboard %}">Dashboard</a> 
-        <a {% if subcategory = 'children' %} class="hover"{% endif %} href="{% url unfpa_reports 'children' 'monthly' last_period %}">Mortialité infantile</a>
+        <a {% if subcategory = 'children' %} class="hover"{% endif %} href="{% url unfpa_reports 'children' 'monthly' last_period %}">Mortalité infantile</a>
         <a {% if subcategory = 'maternal' %} class="hover"{% endif %} href="{% url unfpa_reports 'maternal' 'monthly' last_period %}">Mortalité maternelle</a>
         <a {% if subcategory = 'commodities' %} class="hover"{% endif %} href="{% url unfpa_reports 'commodities' 'monthly' last_period %}">Dispo. produits</a>
     </p>

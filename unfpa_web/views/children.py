@@ -44,6 +44,7 @@ def quarterly_annual_children(request, period, rtype):
     # total deaths for all districts
     # /!\ UNFPA districts only
     all_deaths = ChildrenMortalityReport.periods.within(period).count()
+    print all_deaths
 
     # for each district
     for district in Entity.objects.filter(type__slug='district'):
@@ -55,9 +56,14 @@ def quarterly_annual_children(request, period, rtype):
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
+        print total
+        try:
+            percent_of_all = float(total) / all_deaths
+        except ZeroDivisionError:
+            percent_of_all = 0
         data.append({'district': district, 'mdeaths': mdeaths,
                      'total': total, 'all_deaths': all_deaths,
-                     'percent_of_all': float(total) / all_deaths})
+                     'percent_of_all': percent_of_all})
 
     context.update({'data': data, 'type': rtype, 'months': months})
 
