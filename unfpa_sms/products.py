@@ -28,7 +28,7 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
             folate iron_folate magnesium_sulfate metronidazole
             oxytocine sources
         example:
-           'fnuap mps 2012 05 seg 0 0 20 - - - - - 0 0 - - - - - - - - - - - -
+           'fnuap mps 2012 05 wolo 0 0 20 - - - - - 0 0 - - - - - - - - - - - -
              - - - -'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.

@@ -9,6 +9,11 @@ from common import (contact_for, resp_error, conv_str_int, resp_error_dob,
                     resp_error_provider, parse_age_dob,
                     resp_error_date)
 
+SOURCE = {
+    'f': PregnancyReport.UNFPA,
+    'c': PregnancyReport.CREDOS
+}
+
 
 def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
     """  Incomming:
@@ -90,6 +95,8 @@ def unfpa_pregnancy(message, args, sub_cmd, **kwargs):
 
     report.expected_delivery_date = expected_delivery_date
     report.delivery_date = delivery_date
+
+    report.source = SOURCE.get(profile, PregnancyReport.UNFPA)
 
     if not pregnancy_result:
         report.pregnancy_result = pregnancy_result
