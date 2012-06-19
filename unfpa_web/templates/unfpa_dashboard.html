@@ -5,23 +5,28 @@
 
 {% block title %}Accueil unfpa{% endblock %}
 
+{% block jqueryonload %}
+{% include "indicator_graph.js" with id='evolution' graph_type='spline' periods=periods data=evol_data %}
+{% endblock %}
 
 {% block content %}
 
 <div id="context">
 
 <h2>Tableau de bord FNUAP</h2>
-<p>Bienvenue.</p>
-<p>Ce tableau de bord vous donne un aperçu de l'état d'avancement de la collecte et de la transmission des données.</p>
-    <table class="datatable">
-        <tr><th>Indicateurs</th><th>Total</th><th>Juin</th></tr>
-        <tr><td> Nombre total de structure </td><td>220</td><td>22</td></tr>
-        <tr><td>TOTAL SMS REÇUS / ENVOYÉS</td><td>25 / 200</td><td>22 / 200</td></tr>
-        <tr><td>SMS REÇUS / ENVOYÉS EN JUIN 2012</td><td>40 / 512</td><td>25 / 510</td></tr>
-        <tr><td>Nombre decès enfant </td><td>63</td><td>60</td><tr>
-        <tr><td>Nombre decès femme enceints</td><td>88</td><td>88</td></tr>
-        <tr><td>Nombre de centre en rupture d'au moins trois produits</td><td>50</td><td>20</td></tr>
-    </table>
+
+<table class="datatable">
+    <tr><th>Indicateurs</th><th>Total</th><th>{{ period.full_name }}</th></tr>
+    <tr><td> Nombre total de structure </td><td colspan="2">{{ all_unfpa_center }}</td></tr>
+    <tr><td>SMS reçus/envoyés</td><td>{{ all_inbox }} / {{ all_sent }}</td><td>{{ last_inbox }} / {{ last_sent }}</td></tr>
+    <tr><td>Nombre decès enfant</td><td>{{ total_children_death }}</td><td>{{ last_children_death }}</td><tr>
+    <tr><td>Nombre decès femme enceints</td><td>{{ total_maternal_death }}</td><td>{{ last_maternal_death }}</td></tr>
+    <tr><td>Nombre de centre en rupture d'au moins trois produits</td><td>{{ total_3methods_out }}</td><td>{{ last_3methods_out }}</td></tr>
+</table>
+
+<h3 class="caption"><strong>Évolution de la mortalité.</strong></h3>
+<div id="evolution"></div>
+
 </div>
 
 {% endblock %}

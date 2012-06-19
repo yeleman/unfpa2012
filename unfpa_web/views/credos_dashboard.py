@@ -48,9 +48,6 @@ def credos_dashboard(request):
         evol_data['pregnancy']['values'][period.pid] = {'value': nb_pregnancy}
         evol_data['birth']['values'][period.pid] = {'value': nb_birth}
 
-    print(evol_data.values())
-    for line in evol_data.values():
-        print(line)
     context.update({'periods': periods,
                     'evol_data': evol_data.items()})
 
