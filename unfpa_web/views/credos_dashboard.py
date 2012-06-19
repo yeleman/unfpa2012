@@ -3,6 +3,7 @@
 # maintainer: alou
 
 from django.shortcuts import render
+from django.db.models import Q
 from nosmsd.models import Inbox, SentItems
 
 from bolibana.web.decorators import provider_permission
@@ -39,13 +40,21 @@ def credos_dashboard(request):
                                           .within(period).count()
 
     # message
-    all_inbox = Inbox.objects.count()
-    all_sent = SentItems.objects.count()
-    last_inbox = Inbox.objects \
+    all_inbox_qs = Inbox.objects.filter(
+                              Q(textdecoded__startswith=u"fnuap born") |
+                              Q(textdecoded__startswith=u"fnuap gpw") |
+                              Q(textdecoded__startswith=u"fnuap du5 c"))
+    all_inbox = all_inbox_qs.count()
+    all_sent_qs = SentItems.objects.filter(
+                              Q(textdecoded__startswith=u"fnuap born") |
+                              Q(textdecoded__startswith=u"fnuap gpw") |
+                              Q(textdecoded__startswith=u"fnuap du5 c"))
+    all_sent = all_sent_qs.count()
+    last_inbox = all_inbox_qs \
                          .filter(receivingdatetime__gte=period.start_on,
                                  receivingdatetime__lte=period.end_on) \
                          .count()
-    last_sent = SentItems.objects \
+    last_sent = all_sent_qs \
                          .filter(deliverydatetime__gte=period.start_on,
                                  deliverydatetime__lte=period.end_on) \
                          .count()
