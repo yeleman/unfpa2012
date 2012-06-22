@@ -5,6 +5,7 @@
 from django.db import IntegrityError
 
 from unfpa_core.models import RHCommoditiesReport
+from unfpa_web.views.data import current_period
 from bolibana.models import Entity, MonthPeriod
 from common import contact_for, resp_error, resp_error_provider
 
@@ -55,6 +56,13 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         message.respond(u"La periode (%s %s) n'est pas valide" %
                         (reporting_month, reporting_year))
         return True
+
+    if period != current_period().previous():
+        message.respond(u"La periode (%s %s) n'est pas valide, elle doit etre %s" %
+                        (reporting_month, reporting_year,
+                         current_period().previous()))
+        return True
+
 
     # Entity code
     try:
