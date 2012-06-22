@@ -5,6 +5,9 @@
 {% block title %}Rapports mensuels de décès{% endblock %}
 {% block submenu %}{% include "submenu.html" with submenu="credos" %}{% endblock %}
 
+{% block jqueryonload %}
+{% include "indicator_graph.js" with id='evolution' graph_type='spline' periods=periods data=evol_data %}
+{% endblock %}
 
 {% block content %}
 
@@ -44,6 +47,12 @@
         </tr>
         {% endfor %}
     </table>
+</div>
+
+<h3 class="caption"><strong>Évolution des décès.</strong></h3>
+<div id="evolution"></div>
+
+
 </div>
 
 

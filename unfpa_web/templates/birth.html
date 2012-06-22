@@ -5,6 +5,10 @@
 {% block title %}Rapports mensuels de naissances{% endblock %}
 {% block submenu %}{% include "submenu.html" with submenu="credos" %}{% endblock %}
 
+{% block jqueryonload %}
+{% include "indicator_graph.js" with id='evolution' graph_type='spline' periods=periods data=evol_data %}
+{% endblock %}
+
 {% block content %}
 
 <div id="context">
@@ -49,6 +53,12 @@
     </tr>
     {% endfor %}
 </table>
+</div>
+
+<h3 class="caption"><strong>Évolution des naissances.</strong></h3>
+<div id="evolution"></div>
+
+
 </div>
 
 {% endblock %}

@@ -3,11 +3,12 @@
 # maintainer:
 
 from django.shortcuts import render
+
 from bolibana.models import MonthPeriod
 from bolibana.web.decorators import provider_permission
 from unfpa_core.models import ChildrenMortalityReport
 from unfpa_web.views.data import rate_cal
-from datetime import datetime
+from unfpa_core import all_periods
 
 
 def sum_month(month):
@@ -38,8 +39,16 @@ def death(request):
     context = {'category': 'credos', 'subcategory': 'death'}
 
     indicators = []
-    for month in MonthPeriod.objects.filter(start_on__lt=datetime.now) \
-                                    .order_by('start_on'):
+    periods = all_periods(MonthPeriod)
+
+    evol_data = {'ntd': {'label': u"Total décès", 'values': {}},
+                 'dd': {'label': u"Domicile", 'values': {}},
+                 'dc': {'label': u"Centre", 'values': {}},
+                 'da': {'label': u"Ailleurs", 'values': {}},
+                 'sm': {'label': u"Sexe masculin", 'values': {}},
+                 'sf': {'label': u"Sexe feminin", 'values': {}}}
+
+    for month in periods:
         indicator = sum_month(month)
         indicators.append(indicator)
         indicator['rate_ntd'] = rate_cal(indicator['ntd'], indicator['ntd'])
@@ -49,6 +58,15 @@ def death(request):
         indicator['rate_sm'] = rate_cal(indicator['sm'], indicator['ntd'])
         indicator['rate_sf'] = rate_cal(indicator['sf'], indicator['ntd'])
 
-    context.update({'indicators': indicators})
+        evol_data['ntd']['values'][month.pid] = {'value': indicator['ntd']}
+        evol_data['dd']['values'][month.pid] = {'value': indicator['dd']}
+        evol_data['dc']['values'][month.pid] = {'value': indicator['dc']}
+        evol_data['da']['values'][month.pid] = {'value': indicator['da']}
+        evol_data['sm']['values'][month.pid] = {'value': indicator['sm']}
+        evol_data['sf']['values'][month.pid] = {'value': indicator['sf']}
+
+    context.update({'indicators': indicators,
+                    'evol_data': evol_data.items(),
+                    'periods': periods})
 
     return render(request, 'death.html', context)

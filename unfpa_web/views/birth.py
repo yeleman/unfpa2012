@@ -4,11 +4,12 @@
 
 
 from django.shortcuts import render
+
 from bolibana.models import MonthPeriod
 from bolibana.web.decorators import provider_permission
 from unfpa_core.models import BirthReport
 from unfpa_web.views.data import rate_cal
-from datetime import datetime
+from unfpa_core import all_periods
 
 
 def sum_month(month):
@@ -44,8 +45,19 @@ def birth(request):
     context = {'category': 'credos','subcategory': 'birth'}
 
     indicators = []
-    for month in MonthPeriod.objects.filter(start_on__lt=datetime.now) \
-                                    .order_by('start_on'):
+    periods = all_periods(MonthPeriod)
+
+    evol_data = {'birth': {'label': u"Total naissance", 'values': {}},
+                 'residence': {'label': u"Domicile", 'values': {}},
+                 'center': {'label': u"Centre", 'values': {}},
+                 'other': {'label': u"Ailleurs", 'values': {}},
+                 'male': {'label': u"Sexe masculin", 'values': {}},
+                 'female': {'label': u"Sexe feminin", 'values': {}},
+                 'alive': {'label': u"Né vivant",
+                        'values': {}},
+                 'stillborn': {'label': u"Mort-né", 'values': {}}}
+
+    for month in periods:
         indicator = sum_month(month)
 
         indicator['rate_birth'] = rate_cal(indicator['birth'],
@@ -65,8 +77,26 @@ def birth(request):
         indicator['rate_stillborn'] = rate_cal(indicator['stillborn'],
                                            indicator['birth'])
 
+        evol_data['birth']['values'][month.pid] = {'value': indicator['birth']}
+        evol_data['residence']['values'][month.pid] = \
+                                            {'value': indicator['residence']}
+        evol_data['center']['values'][month.pid] = \
+                                            {'value': indicator['center']}
+        evol_data['other']['values'][month.pid] = \
+                                            {'value': indicator['other']}
+        evol_data['male']['values'][month.pid] = \
+                                            {'value': indicator['male']}
+        evol_data['female']['values'][month.pid] = \
+                                            {'value': indicator['female']}
+        evol_data['alive']['values'][month.pid] = \
+                                            {'value': indicator['alive']}
+        evol_data['stillborn']['values'][month.pid] = \
+                                            {'value': indicator['stillborn']}
+
         indicators.append(indicator)
 
-    context.update({'indicators': indicators})
+    context.update({'indicators': indicators,
+                    'evol_data': evol_data.items(),
+                    'periods': periods})
 
     return render(request, 'birth.html', context)
