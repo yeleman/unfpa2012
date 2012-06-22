@@ -189,8 +189,8 @@ def quarterly_annual_commodities(request, period, rtype):
         for entity in [report.entity for report in
                        RHCommoditiesReport.objects
                                     .validated()
-                                    .filter(period__in=our_periods) 
-                                    if report.has_stockouts()]:
+                                    .has_stockouts()
+                                    .filter(period__in=our_periods)]:
             setattr(_entities_counts, entity, getattr(_entities_counts, entity.id, 0) + 1)
         for entity, count in _entities_counts.items():
             if count >= 3:
