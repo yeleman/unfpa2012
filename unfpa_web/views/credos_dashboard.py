@@ -26,18 +26,30 @@ def credos_dashboard(request):
     all_credos_center = UEntity.objects.filter(is_credos=True).all().count()
 
     # nb de decés infantile
-    total_children_death = ChildrenMortalityReport.objects.all().count()
+    total_children_death = ChildrenMortalityReport.objects \
+                            .filter(source=ChildrenMortalityReport.CREDOS) \
+                            .count()
     last_children_death = ChildrenMortalityReport.periods \
-                                                 .within(period).count()
+                                                 .within(period) \
+                         .filter(source=ChildrenMortalityReport.CREDOS) \
+                         .count()
 
     # nb de naissance
-    total_birth = BirthReport.objects.all().count()
-    last_birth = BirthReport.periods.within(period).count()
+    total_birth = BirthReport.objects \
+                         .filter(source=BirthReport.CREDOS) \
+                         .count()
+    last_birth = BirthReport.periods.within(period) \
+                         .filter(source=BirthReport.CREDOS) \
+                         .count()
 
     # nb de grossesse
-    total_pregnancy = PregnancyReport.objects.all().count()
+    total_pregnancy = PregnancyReport.objects \
+                         .filter(source=PregnancyReport.CREDOS) \
+                         .count()
     last_pregnancy = PregnancyReport.periods \
-                                          .within(period).count()
+                                    .within(period) \
+                                    .filter(source=PregnancyReport.CREDOS) \
+                                    .count()
 
     # message
     all_inbox_qs = Inbox.objects.filter(
@@ -63,9 +75,15 @@ def credos_dashboard(request):
                  'pregnancy': {'label': u"Grossesses", 'values': {}},
                  'birth': {'label': u"Naissances", 'values': {}}}
     for period in periods:
-        nb_children = ChildrenMortalityReport.periods.within(period).count()
-        nb_pregnancy = PregnancyReport.periods.within(period).count()
-        nb_birth = BirthReport.periods.within(period).count()
+        nb_children = ChildrenMortalityReport.periods.within(period) \
+                                    .filter(source=PregnancyReport.CREDOS) \
+                                    .count()
+        nb_pregnancy = PregnancyReport.periods.within(period) \
+                                    .filter(source=PregnancyReport.CREDOS) \
+                                    .count()
+        nb_birth = BirthReport.periods.within(period) \
+                                    .filter(source=PregnancyReport.CREDOS) \
+                                    .count()
         evol_data['children']['values'][period.pid] = {'value': nb_children}
         evol_data['pregnancy']['values'][period.pid] = {'value': nb_pregnancy}
         evol_data['birth']['values'][period.pid] = {'value': nb_birth}

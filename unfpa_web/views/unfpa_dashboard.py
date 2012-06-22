@@ -43,11 +43,19 @@ def unfpa_dashboard(request):
                                  deliverydatetime__lte=period.end_on) \
                          .count()
 
-    total_children_death = ChildrenMortalityReport.objects.all().count()
+    total_children_death = ChildrenMortalityReport.objects \
+                                .filter(source=ChildrenMortalityReport.UNFPA) \
+                                .count()
     last_children_death = ChildrenMortalityReport.periods \
-                                                 .within(period).count()
-    total_maternal_death = MaternalMortalityReport.objects.all().count()
-    last_maternal_death = MaternalMortalityReport.periods.within(period).count()
+                            .within(period) \
+                            .filter(source=ChildrenMortalityReport.UNFPA) \
+                            .count()
+    total_maternal_death = MaternalMortalityReport.objects \
+                            .filter(source=MaternalMortalityReport.UNFPA) \
+                            .count()
+    last_maternal_death = MaternalMortalityReport.periods.within(period) \
+                            .filter(source=MaternalMortalityReport.UNFPA) \
+                            .count()
 
     total_3methods_out = sum([1
                         for report
@@ -76,8 +84,12 @@ def unfpa_dashboard(request):
                  'maternal': {'label': u"Mortalité maternelle", 'values': {}}}
 
     for period in periods:
-        nb_children = ChildrenMortalityReport.periods.within(period).count()
-        nb_maternal = MaternalMortalityReport.periods.within(period).count()
+        nb_children = ChildrenMortalityReport.periods.within(period) \
+                            .filter(source=ChildrenMortalityReport.UNFPA) \
+                            .count()
+        nb_maternal = MaternalMortalityReport.periods.within(period) \
+                            .filter(source=MaternalMortalityReport.UNFPA) \
+                            .count()
         evol_data['children']['values'][period.pid] = {'value': nb_children}
         evol_data['maternal']['values'][period.pid] = {'value': nb_maternal}
 
