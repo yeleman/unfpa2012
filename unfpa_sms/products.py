@@ -58,11 +58,11 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         return True
 
     if period != current_period().previous():
-        message.respond(u"La periode (%s %s) n'est pas valide, elle doit etre %s" %
-                        (reporting_month, reporting_year,
-                         current_period().previous()))
+        message.respond(u"La periode (%s %s) n'est pas valide, "
+                        u"elle doit etre %s" % (reporting_month,
+                                                reporting_year,
+                                                current_period().previous()))
         return True
-
 
     # Entity code
     try:
@@ -98,9 +98,9 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     report.iud = check_int(iud)
     report.implants = check_int(implants)
     report.female_sterilization = YESNOAVAIL.get(female_sterilization,
-                                                 RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
+                                    RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
     report.male_sterilization = YESNOAVAIL.get(male_sterilization,
-                                               RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
+                                    RHCommoditiesReport.SUPPLIES_NOT_PROVIDED)
     report.amoxicillin_ij = check_int(amoxicillin_ij)
     report.amoxicillin_cap_gel = check_int(amoxicillin_cap_gel)
     report.amoxicillin_suspension = check_int(amoxicillin_suspension)

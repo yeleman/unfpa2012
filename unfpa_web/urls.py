@@ -35,6 +35,13 @@ urlpatterns = patterns('',
     url(r'^credos/pregnancy/$', views.pregnancy.pregnancy, name='pregnancy'),
     url(r'^credos/birth/$', views.birth.birth, name='birth'),
     url(r'^credos/death/$', views.death.death, name='death'),
+    # Export xls
+    url(r'^export_xls_pregnancy/$', views.pregnancy.excel_export,
+                                                 name='export_xls_pregnancy'),
+    url(r'^export_xls_birth/$', views.birth.excel_export,
+                                                     name='export_xls_birth'),
+    url(r'^export_xls_death/$', views.death.excel_export,
+                                                     name='export_xls_death'),
 
     # UNFPA
     url(r'^unfpa/dashboard/$', views.unfpa_dashboard.unfpa_dashboard,
@@ -74,7 +81,6 @@ urlpatterns = patterns('',
          {'template': 'about.html'}, name='about'),
 
      url(r'^annuaire/$', bviews.addressbook.addressbook, name='addressbook'),
-
     # development only
     url(r'^static/admin/(?P<path>.*)$',
              'django.views.static.serve',

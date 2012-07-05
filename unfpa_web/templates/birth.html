@@ -11,13 +11,16 @@
 
 {% block content %}
 
+<div class="rightbuttons"><a href="{% url export_xls_birth %}">
+    <button class="formbutt download">Télécharger une version Excel du rapport</button></a>
+</div>
 <div id="context">
 
 <h2>Rapports mensuels de naissances</h2>
-<table style="text-align:center">
+<table class="datatable_all">
     <tr>
         <th rowspan="2"> Mois </th>
-        <th colspan="8" style="text-align:center">INDICATEURS</th>
+        <th colspan="8">INDICATEURS</th>
     </tr>
     <tr>
         <td><strong>Total naissance</strong></td>

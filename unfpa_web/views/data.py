@@ -5,11 +5,13 @@
 from datetime import date
 from bolibana.models import MonthPeriod
 
+
 def rate_cal(*args):
     try:
         return (args[0] * 100) / args[1]
     except:
         return 0
+
 
 def current_period():
     """ Period of current date """

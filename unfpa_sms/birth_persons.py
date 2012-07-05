@@ -27,7 +27,6 @@ SOURCE = {
 }
 
 
-
 def unfpa_birth(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap born profile reccord_date reporting_location family_name

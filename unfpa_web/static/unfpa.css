@@ -609,6 +609,9 @@ table.datatable tr td, table.datatable tr th {
 table.datatable tr td:first-child, table.datatable tr th:first-child {
   text-align: left;
 }
+table.datatable_all tr td, th {
+  text-align: center;
+}
 button.formbutt {
   background-color: white;
   color: #2c3238;

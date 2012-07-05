@@ -45,8 +45,8 @@ def monthly_commodities(request, period):
                         if report.fp_stockout_3methods()])
     try:
         atleast_3methods_percent = float(atleast_3methods) / \
-                               RHCommoditiesReport.validated \
-                                                  .filter(period=period).count()
+                           RHCommoditiesReport.validated \
+                                              .filter(period=period).count()
     except ZeroDivisionError:
         atleast_3methods_percent = 0
 
@@ -63,8 +63,8 @@ def monthly_commodities(request, period):
                     'atleast_3methods': (atleast_3methods,
                                          atleast_3methods_percent),
                     'otoxycin_magnesium_stockout': (
-                                            otoxycin_magnesium_stockout.count(),
-                                            otoxycin_magnesium_stockout)})
+                                        otoxycin_magnesium_stockout.count(),
+                                        otoxycin_magnesium_stockout)})
 
     # districts
     all_stock_outs = []
@@ -116,7 +116,8 @@ def quarterly_annual_commodities(request, period, rtype):
               QuarterPeriod: 'quarterly',
               YearPeriod: 'annual'}
 
-    our_periods = [month for month in period.months if month.end_on < datetime.now()]
+    our_periods = [month for month in period.months if month.end_on <
+                                                                datetime.now()]
 
     fp_services = [RHCommoditiesReport.validated \
                                       .filter(period=month) \
@@ -125,13 +126,14 @@ def quarterly_annual_commodities(request, period, rtype):
 
     delivery_services = [RHCommoditiesReport.validated \
                                             .filter(period=month) \
-                                            .filter(delivery_services=True).count()
+                                            .filter(delivery_services=True) \
+                                            .count()
                          for month in our_periods]
 
     both_services = [RHCommoditiesReport.validated \
-                                     .filter(period=month) \
-                                     .filter(delivery_services=True) \
-                                     .filter(family_planning=True).count()
+                                        .filter(period=month) \
+                                        .filter(delivery_services=True) \
+                                        .filter(family_planning=True).count()
                      for month in our_periods]
 
     fp_stockout = [RHCommoditiesReport.objects.validated() \
@@ -141,14 +143,14 @@ def quarterly_annual_commodities(request, period, rtype):
 
     atleast_3methods_t = []
     for month in our_periods:
-        atleast_3methods = sum([1
-                            for report
-                            in RHCommoditiesReport.validated.filter(period=period)
-                            if report.fp_stockout_3methods()])
+        atleast_3methods = sum([1 for report in RHCommoditiesReport \
+                                            .validated.filter(period=period)
+                                            if report.fp_stockout_3methods()])
         try:
             atleast_3methods_percent = float(atleast_3methods) / \
-                                   RHCommoditiesReport.validated \
-                                                      .filter(period=period).count()
+                                             RHCommoditiesReport.validated \
+                                                    .filter(period=period) \
+                                                    .count()
         except ZeroDivisionError:
             atleast_3methods_percent = 0
         atleast_3methods_t.append((atleast_3methods, atleast_3methods_percent))
@@ -164,8 +166,8 @@ def quarterly_annual_commodities(request, period, rtype):
                     'both_services': both_services,
                     'fp_stockout': fp_stockout,
                     'atleast_3methods': atleast_3methods_t,
-                    'otoxycin_magnesium_stockout':otoxycin_magnesium_stockout})
-
+                    'otoxycin_magnesium_stockout': \
+                                                  otoxycin_magnesium_stockout})
 
     # districts
     long_stockouts = []
@@ -191,7 +193,8 @@ def quarterly_annual_commodities(request, period, rtype):
                                     .validated()
                                     .has_stockouts()
                                     .filter(period__in=our_periods)]:
-            setattr(_entities_counts, entity, getattr(_entities_counts, entity.id, 0) + 1)
+            setattr(_entities_counts, entity, getattr(_entities_counts,
+                                                       entity.id, 0) + 1)
         for entity, count in _entities_counts.items():
             if count >= 3:
                 long_stockouts.append(entity)
@@ -203,12 +206,14 @@ def quarterly_annual_commodities(request, period, rtype):
             for method in methods:
                 stock_outs[method] = [0, 0]
 
-            reports = RHCommoditiesReport.objects.validated().filter(period=month,
-                                                                 entity__in=centers)
+            reports = RHCommoditiesReport.objects.validated() \
+                                                 .filter(period=month,
+                                                         entity__in=centers)
             for report in reports:
                 for method in methods:
                     # increment counter of # of center with stockout.
-                    if getattr(report, method, report.SUPPLIES_NOT_PROVIDED) == 0:
+                    if getattr(report, method,
+                                            report.SUPPLIES_NOT_PROVIDED) == 0:
                         stock_outs[method][0] += 1
 
             # compute percentages
@@ -233,7 +238,6 @@ def quarterly_annual_commodities(request, period, rtype):
                     'our_periods': our_periods})
 
     return render(request, 'quarterly_annual_commodities.html', context)
-
 
 
 @provider_permission('can_view_indicator_data')

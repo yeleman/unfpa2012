@@ -3,12 +3,14 @@
 # maintainer:
 
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from bolibana.models import MonthPeriod
 from bolibana.web.decorators import provider_permission
 from unfpa_core.models import ChildrenMortalityReport
 from unfpa_web.views.data import rate_cal
 from unfpa_core import all_periods
+from unfpa_core.exports import death_as_excel
 
 
 def sum_month(month):
@@ -70,3 +72,45 @@ def death(request):
                     'periods': periods})
 
     return render(request, 'death.html', context)
+
+
+@provider_permission('can_view_indicator_data')
+def excel_export(request):
+
+    indicators = []
+    periods = all_periods(MonthPeriod)
+
+    evol_data = {'ntd': {'label': u"Total décès", 'values': {}},
+                 'dd': {'label': u"Domicile", 'values': {}},
+                 'dc': {'label': u"Centre", 'values': {}},
+                 'da': {'label': u"Ailleurs", 'values': {}},
+                 'sm': {'label': u"Sexe masculin", 'values': {}},
+                 'sf': {'label': u"Sexe feminin", 'values': {}}}
+
+    for month in periods:
+        indicator = sum_month(month)
+        indicators.append(indicator)
+        indicator['rate_ntd'] = rate_cal(indicator['ntd'], indicator['ntd'])
+        indicator['rate_dd'] = rate_cal(indicator['dd'], indicator['ntd'])
+        indicator['rate_dc'] = rate_cal(indicator['dc'], indicator['ntd'])
+        indicator['rate_da'] = rate_cal(indicator['da'], indicator['ntd'])
+        indicator['rate_sm'] = rate_cal(indicator['sm'], indicator['ntd'])
+        indicator['rate_sf'] = rate_cal(indicator['sf'], indicator['ntd'])
+
+        evol_data['ntd']['values'][month.pid] = {'value': indicator['ntd']}
+        evol_data['dd']['values'][month.pid] = {'value': indicator['dd']}
+        evol_data['dc']['values'][month.pid] = {'value': indicator['dc']}
+        evol_data['da']['values'][month.pid] = {'value': indicator['da']}
+        evol_data['sm']['values'][month.pid] = {'value': indicator['sm']}
+        evol_data['sf']['values'][month.pid] = {'value': indicator['sf']}
+
+    file_content = death_as_excel(indicators).getvalue()
+
+    file_name = 'Rapports mensuels de décès infantile.xls'
+
+    response = HttpResponse(file_content, \
+                            content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+    response['Content-Length'] = len(file_content)
+
+    return response

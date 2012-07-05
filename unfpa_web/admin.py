@@ -45,4 +45,3 @@ admin.site.register(ProvidedServicesReport)
 admin.site.register(BirthReport)
 admin.site.register(PregnancyReport)
 admin.site.register(UEntity)
-

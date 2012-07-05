@@ -17,7 +17,7 @@ from unfpa_web.views.data import current_period
 
 @provider_permission('can_view_indicator_data')
 def credos_dashboard(request):
-    context = {'category': 'credos','subcategory': 'credos_dashboard'}
+    context = {'category': 'credos', 'subcategory': 'credos_dashboard'}
 
     periods = all_periods(MonthPeriod)
 

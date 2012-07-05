@@ -4,12 +4,14 @@
 
 
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from bolibana.models import MonthPeriod
 from bolibana.web.decorators import provider_permission
 from unfpa_core import all_periods
 from unfpa_core.models import PregnancyReport
 from unfpa_web.views.data import rate_cal
+from unfpa_core.exports import pregnancy_as_excel
 
 
 def sum_month(month):
@@ -60,8 +62,47 @@ def pregnancy(request):
         evol_data['av']['values'][month.pid] = {'value': indicator['av']}
         evol_data['mn']['values'][month.pid] = {'value': indicator['mn']}
 
-    context.update({'indicators': indicators,
-                    'evol_data': evol_data.items(),
-                    'periods': periods})
+    context.update({'indicators': indicators, 'evol_data': evol_data.items(),
+                                                         'periods': periods})
 
     return render(request, 'pregnancy.html', context)
+
+
+@provider_permission('can_view_indicator_data')
+def excel_export(request):
+
+    periods = all_periods(MonthPeriod)
+
+    indicators = []
+
+    evol_data = {'fe': {'label': u"Total femmes enceintes", 'values': {}},
+                 'ae': {'label': u"Accouchement enregistrés", 'values': {}},
+                 'gi': {'label': u"Grossesses interrompues", 'values': {}},
+                 'av': {'label': u"Grossesses avec enfants vivants",
+                        'values': {}},
+                 'mn': {'label': u"Grossesses avec morts nées", 'values': {}}}
+
+    for month in periods:
+        indicator = sum_month(month)
+        indicators.append(indicator)
+        indicator['rate_fe'] = rate_cal(indicator['fe'], indicator['fe'])
+        indicator['rate_ae'] = rate_cal(indicator['ae'], indicator['fe'])
+        indicator['rate_gi'] = rate_cal(indicator['gi'], indicator['fe'])
+        indicator['rate_av'] = rate_cal(indicator['av'], indicator['fe'])
+        indicator['rate_mn'] = rate_cal(indicator['mn'], indicator['fe'])
+        evol_data['fe']['values'][month.pid] = {'value': indicator['fe']}
+        evol_data['ae']['values'][month.pid] = {'value': indicator['ae']}
+        evol_data['gi']['values'][month.pid] = {'value': indicator['gi']}
+        evol_data['av']['values'][month.pid] = {'value': indicator['av']}
+        evol_data['mn']['values'][month.pid] = {'value': indicator['mn']}
+
+    file_name = 'Rapports mensuels de grossesses.xls'
+
+    file_content = pregnancy_as_excel(indicators).getvalue()
+
+    response = HttpResponse(file_content, \
+                            content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+    response['Content-Length'] = len(file_content)
+
+    return response

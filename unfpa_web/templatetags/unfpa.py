@@ -6,6 +6,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter(name='yesnostock')
 def yesnostock(value):
     return u"Yes" if value == 0 else u"No"
