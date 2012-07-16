@@ -16,7 +16,7 @@ from unfpa_core.exports import pregnancy_as_excel
 
 def sum_month(month):
     reports = PregnancyReport.periods.within(month) \
-                         .filter(source=PregnancyReport.CREDOS)
+                             .filter(source=PregnancyReport.CREDOS)
     indicator = {'month': month, 'fe': 0, 'ae': 0, 'gi': 0, 'av': 0, 'mn': 0}
 
     for report in reports:

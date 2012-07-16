@@ -47,7 +47,6 @@ def quarterly_annual_children(request, period, rtype):
     all_deaths = ChildrenMortalityReport.periods.within(period) \
                                 .filter(source=ChildrenMortalityReport.UNFPA) \
                                 .count()
-    print all_deaths
 
     # for each district
     for district in Entity.objects.filter(type__slug='district'):
@@ -60,7 +59,7 @@ def quarterly_annual_children(request, period, rtype):
                            .count()
             mdeaths.append(nb_deaths)
         total = sum(mdeaths)
-        print total
+
         try:
             percent_of_all = float(total) / all_deaths
         except ZeroDivisionError:
