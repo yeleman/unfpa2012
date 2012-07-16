@@ -5,10 +5,6 @@
 import xlwt
 import StringIO
 
-font_gras = xlwt.Font()
-font_gras.bold = True
-font_gras.height = 10 * 0x14
-
 font = xlwt.Font()
 font.name = 'Verdana'
 font.bold = True
@@ -29,47 +25,42 @@ left_align.vert = xlwt.Alignment.HORZ_LEFT
 
 grey44_color = xlwt.Pattern()
 grey44_color.pattern = xlwt.Pattern.SOLID_PATTERN
-grey44_color.pattern_fore_colour = 23
+grey44_color.pattern_fore_colour = 44
 
-style_title = xlwt.XFStyle()
+odd_color = xlwt.Pattern()
+odd_color.pattern = xlwt.Pattern.SOLID_PATTERN
+odd_color.pattern_fore_colour = 195
+
+style_title = xlwt.easyxf('font: name Times New Roman, height 60, bold on')
 style_title.font = font
 style_title.alignment = center_align
 
-styleheader = xlwt.XFStyle()
+styleheader = xlwt.easyxf('font: name Times New Roman, height 260, '
+                          ' color-index white, bold on')
 styleheader.borders = borders
 styleheader.alignment = center_align
-styleheader.font = font_gras
+styleheader.pattern = grey44_color
 
-styleheader_ = xlwt.XFStyle()
-styleheader_.borders = borders
-styleheader_.alignment = center_align
+style = xlwt.easyxf('font: name Times New Roman, bold on')
+style.borders = borders
+style.alignment = center_align
 
-styleheader_left = xlwt.XFStyle()
-styleheader_left.borders = borders
-
-style_without_border = xlwt.XFStyle()
-
-style_value = xlwt.XFStyle()
-style_value.borders = borders
-style_value.alignment = center_align
-
-styleblack = xlwt.XFStyle()
-styleblack.pattern = grey44_color
-styleblack.borders = borders
-
-styleheader_left_g = xlwt.XFStyle()
-styleheader_left_g.borders = borders
-styleheader_left_g.font = font_gras
-styleheader_left_g.alignment = left_align
+style_odd = xlwt.easyxf('font: name Times New Roman, bold on')
+style_odd.borders = borders
+style_odd.alignment = center_align
+style_odd.pattern = odd_color
 
 
 def add_rate(val):
     return "%s %s" % (val, "%")
 
 
+def is_odd(value):
+    return (value % 2) == 0
+
+
 def pregnancy_as_excel(report):
     """ Export les données d'un rapport en xls """
-
 
     indicators = report
 
@@ -97,8 +88,8 @@ def pregnancy_as_excel(report):
     # à merger, (nbre de colonne - 1), (nbre de colonne - 1) + nbre
     # de colonne à merger, u"contenu", style(optionnel)).
     row_ = 0
-    sheet.write_merge(row_, row_, 0, 5, u"Rapports mensuels de grossesses",
-                                                                    style_title)
+    sheet.write_merge(row_, row_, 0, 5,
+                      u"Rapports mensuels de grossesses", style_title)
     row_ += 2
     sheet.write_merge(row_, row_, 1, 5, u"INDICATEURS", styleheader)
     sheet.write_merge(row_, row_ + 2, 0, 0, u"Mois", styleheader)
@@ -109,25 +100,30 @@ def pregnancy_as_excel(report):
                {"Grossesses \n avec enfants vivants": [row_, row_ + 1, 4, 4]},
                {"Grossesses \n avec morts nées": [row_, row_ + 1, 5, 5]}]
 
-    write_merge_p(hheader, styleheader)
-
+    write_merge_p(hheader, style)
+    n = 0
     for ind in indicators:
         month = ind["month"].full_name()
         row_ += 2
         row_rate = row_ + 1
-        list_indicators = [{month: [row_, row_rate, 0, 0 ]},
-                           {ind["fe"]: [row_, row_, 1, 1 ]},
-                           {add_rate(ind["rate_fe"]): [row_rate, row_rate, 1, 1 ]},
-                           {ind["ae"]: [row_, row_, 2, 2 ]},
-                           {add_rate(ind["rate_ae"]): [row_rate, row_rate, 2, 2 ]},
-                           {ind["gi"]: [row_, row_, 3, 3 ]},
-                           {add_rate(ind["rate_gi"]): [row_rate, row_rate, 3, 3 ]},
-                           {ind["av"]: [row_, row_, 4, 4 ]},
-                           {add_rate(ind["rate_av"]): [row_rate, row_rate, 4, 4 ]},
-                           {ind["mn"]: [row_, row_, 5, 5 ]},
-                           {add_rate(ind["rate_mn"]): [row_rate, row_rate, 5, 5 ]},
-                          ]
-        write_merge_p(list_indicators, styleheader)
+        list_indicators = [{month: [row_, row_rate, 0, 0]},
+                   {ind["fe"]: [row_, row_, 1, 1]},
+                   {add_rate(ind["rate_fe"]): [row_rate, row_rate, 1, 1]},
+                   {ind["ae"]: [row_, row_, 2, 2]},
+                   {add_rate(ind["rate_ae"]): [row_rate, row_rate, 2, 2]},
+                   {ind["gi"]: [row_, row_, 3, 3]},
+                   {add_rate(ind["rate_gi"]): [row_rate, row_rate, 3, 3]},
+                   {ind["av"]: [row_, row_, 4, 4]},
+                   {add_rate(ind["rate_av"]): [row_rate, row_rate, 4, 4]},
+                   {ind["mn"]: [row_, row_, 5, 5]},
+                   {add_rate(ind["rate_mn"]): [row_rate, row_rate, 5, 5]}]
+
+        n += 1
+        if is_odd(n):
+            style_ = style_odd
+        else:
+            style_ = style
+        write_merge_p(list_indicators, style_)
 
     stream = StringIO.StringIO()
     book.save(stream)
@@ -164,8 +160,8 @@ def birth_as_excel(report):
     # à merger, (nbre de colonne - 1), (nbre de colonne - 1) + nbre
     # de colonne à merger, u"contenu", style(optionnel)).
     row_ = 0
-    sheet.write_merge(row_, row_, 0, 8, u"Rapports mensuels de naissances",
-                                                                    style_title)
+    sheet.write_merge(row_, row_, 0, 8,
+                      u"Rapports mensuels de naissances", style_title)
     row_ += 2
     sheet.write_merge(row_, row_, 1, 8, u"INDICATEURS", styleheader)
     sheet.write_merge(row_, row_ + 2, 0, 0, u"Mois", styleheader)
@@ -179,33 +175,37 @@ def birth_as_excel(report):
                {u"Né vivant": [row_, row_ + 1, 7, 7]},
                {u"Mort-né": [row_, row_ + 1, 8, 8]}]
 
-    write_merge_p(hheader, styleheader)
+    write_merge_p(hheader, style)
 
-
+    n = 0
     for ind in indicators:
         month = ind["month"].full_name()
         row_ += 2
         row_rate = row_ + 1
-        list_indicators = [{month: [row_, row_rate, 0, 0 ]},
-                           {ind["birth"]: [row_, row_, 1, 1 ]},
-                           {add_rate(ind["rate_birth"]): [row_rate, row_rate, 1, 1 ]},
-                           {ind["residence"]: [row_, row_, 2, 2 ]},
-                           {add_rate(ind["rate_residence"]): [row_rate, row_rate, 2, 2 ]},
-                           {ind["center"]: [row_, row_, 3, 3 ]},
-                           {add_rate(ind["rate_center"]): [row_rate, row_rate, 3, 3 ]},
-                           {ind["other"]: [row_, row_, 4, 4 ]},
-                           {add_rate(ind["rate_other"]): [row_rate, row_rate, 4, 4 ]},
-                           {ind["male"]: [row_, row_, 5, 5 ]},
-                           {add_rate(ind["rate_male"]): [row_rate, row_rate, 5, 5 ]},
-                           {ind["female"]: [row_, row_, 6, 6 ]},
-                           {add_rate(ind["rate_female"]): [row_rate, row_rate, 6, 6 ]},
-                           {ind["alive"]: [row_, row_, 7, 7 ]},
-                           {add_rate(ind["rate_alive"]): [row_rate, row_rate, 7, 7 ]},
-                           {ind["stillborn"]: [row_, row_, 8, 8 ]},
-                           {add_rate(ind["rate_stillborn"]): [row_rate, row_rate, 8, 8 ]},
-                          ]
-        write_merge_p(list_indicators, styleheader)
-    # write_merge_p(list_indicators, styleheader)
+        list_indicators = [{month: [row_, row_rate, 0, 0]},
+               {ind["birth"]: [row_, row_, 1, 1]},
+               {add_rate(ind["rate_birth"]): [row_rate, row_rate, 1, 1]},
+               {ind["residence"]: [row_, row_, 2, 2]},
+               {add_rate(ind["rate_residence"]): [row_rate, row_rate, 2, 2]},
+               {ind["center"]: [row_, row_, 3, 3]},
+               {add_rate(ind["rate_center"]): [row_rate, row_rate, 3, 3]},
+               {ind["other"]: [row_, row_, 4, 4]},
+               {add_rate(ind["rate_other"]): [row_rate, row_rate, 4, 4]},
+               {ind["male"]: [row_, row_, 5, 5]},
+               {add_rate(ind["rate_male"]): [row_rate, row_rate, 5, 5]},
+               {ind["female"]: [row_, row_, 6, 6]},
+               {add_rate(ind["rate_female"]): [row_rate, row_rate, 6, 6]},
+               {ind["alive"]: [row_, row_, 7, 7]},
+               {add_rate(ind["rate_alive"]): [row_rate, row_rate, 7, 7]},
+               {ind["stillborn"]: [row_, row_, 8, 8]},
+               {add_rate(ind["rate_stillborn"]): [row_rate, row_rate, 8, 8]}]
+
+        n += 1
+        if is_odd(n):
+            style_ = style_odd
+        else:
+            style_ = style
+        write_merge_p(list_indicators, style_)
 
     stream = StringIO.StringIO()
     book.save(stream)
@@ -242,8 +242,8 @@ def death_as_excel(report):
     # à merger, (nbre de colonne - 1), (nbre de colonne - 1) + nbre
     # de colonne à merger, u"contenu", style(optionnel)).
     row_ = 0
-    sheet.write_merge(row_, row_, 0, 6, u"Rapports mensuels de décès infantile",
-                                                                    style_title)
+    sheet.write_merge(row_, row_, 0, 6,
+                      u"Rapports mensuels de décès infantile", style_title)
     row_ += 2
     sheet.write_merge(row_, row_, 1, 6, u"INDICATEURS", styleheader)
     sheet.write_merge(row_, row_ + 2, 0, 0, u"Mois", styleheader)
@@ -255,29 +255,32 @@ def death_as_excel(report):
                {u"Sexe masculin": [row_, row_ + 1, 5, 5]},
                {u"Sexe feminin": [row_, row_ + 1, 6, 6]}]
 
-    write_merge_p(hheader, styleheader)
+    write_merge_p(hheader, style)
 
-
+    n = 0
     for ind in indicators:
         month = ind["month"].full_name()
         row_ += 2
         row_rate = row_ + 1
-        list_indicators = [{month: [row_, row_rate, 0, 0 ]},
-                           {ind["ntd"]: [row_, row_, 1, 1 ]},
-                           {add_rate(ind["rate_ntd"]): [row_rate, row_rate, 1, 1 ]},
-                           {ind["dd"]: [row_, row_, 2, 2 ]},
-                           {add_rate(ind["rate_dd"]): [row_rate, row_rate, 2, 2 ]},
-                           {ind["dc"]: [row_, row_, 3, 3 ]},
-                           {add_rate(ind["rate_dc"]): [row_rate, row_rate, 3, 3 ]},
-                           {ind["da"]: [row_, row_, 4, 4 ]},
-                           {add_rate(ind["rate_da"]): [row_rate, row_rate, 4, 4 ]},
-                           {ind["sm"]: [row_, row_, 5, 5 ]},
-                           {add_rate(ind["rate_sm"]): [row_rate, row_rate, 5, 5 ]},
-                           {ind["sf"]: [row_, row_, 6, 6 ]},
-                           {add_rate(ind["rate_sf"]): [row_rate, row_rate, 6, 6 ]}]
+        list_indicators = [{month: [row_, row_rate, 0, 0]},
+                   {ind["ntd"]: [row_, row_, 1, 1]},
+                   {add_rate(ind["rate_ntd"]): [row_rate, row_rate, 1, 1]},
+                   {ind["dd"]: [row_, row_, 2, 2]},
+                   {add_rate(ind["rate_dd"]): [row_rate, row_rate, 2, 2]},
+                   {ind["dc"]: [row_, row_, 3, 3]},
+                   {add_rate(ind["rate_dc"]): [row_rate, row_rate, 3, 3]},
+                   {ind["da"]: [row_, row_, 4, 4]},
+                   {add_rate(ind["rate_da"]): [row_rate, row_rate, 4, 4]},
+                   {ind["sm"]: [row_, row_, 5, 5]},
+                   {add_rate(ind["rate_sm"]): [row_rate, row_rate, 5, 5]},
+                   {ind["sf"]: [row_, row_, 6, 6]},
+                   {add_rate(ind["rate_sf"]): [row_rate, row_rate, 6, 6]}]
 
-        write_merge_p(list_indicators, styleheader)
-    # write_merge_p(list_indicators, styleheader)
+        style_ = style
+        n += 1
+        if is_odd(n):
+            style_ = style_odd
+        write_merge_p(list_indicators, style_)
 
     stream = StringIO.StringIO()
     book.save(stream)
