@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     url(r'^credos/pregnancy/$', views.pregnancy.pregnancy, name='pregnancy'),
     url(r'^credos/birth/$', views.birth.birth, name='birth'),
     url(r'^credos/death/$', views.death.death, name='death'),
-    # Export xls
+    # Export xls credos
     url(r'^export_xls_pregnancy/$', views.pregnancy.excel_export,
                                                  name='export_xls_pregnancy'),
     url(r'^export_xls_birth/$', views.birth.excel_export,
@@ -46,7 +46,12 @@ urlpatterns = patterns('',
     # UNFPA
     url(r'^unfpa/dashboard/$', views.unfpa_dashboard.unfpa_dashboard,
         name='unfpa_dashboard'),
-    # Export xls
+    # Export xls unfpa
+    url(r'^unfpa/export/(?P<report_type>maternal|children|commodities)/'
+         '(?P<period_type>weekly|monthly|quarterly|annual)/'
+         '(?P<period_str>[0-9]{4}|[0-9]{2}\-[0-9]{4}|[0-9]{1,2}\-[0-9]{4})/?$',
+          views.reports.report_chooser, {'export': True}, name='export_xls'),
+
 
     # ANTIM : USERS
     url(r'^users/?$', \

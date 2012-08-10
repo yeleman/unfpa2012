@@ -15,6 +15,9 @@ addJQEventReportElementsList();
 {% block content %}
 {% include "period_nav.html" %}
 
+<div class="rightbuttons"><a href="#">
+    <button class="formbutt download">Télécharger une version Excel du rapport</button></a>
+</div>
 <h2>Rapport trimestriel de {{ period.strid }}.</h2>
 
 <table class="datatable">

@@ -5,6 +5,7 @@
 from datetime import date
 
 from django.http import Http404
+from django.http import HttpResponse
 
 from bolibana.models import (MonthPeriod, WeekPeriod,
                              QuarterPeriod, YearPeriod)
@@ -22,7 +23,8 @@ def import_path(name):
 
 
 @provider_required
-def report_chooser(request, report_type, period_type, period_str=None):
+def report_chooser(request, report_type, period_type,
+                   period_str=None, export=False):
 
     if not report_type in ('children', 'maternal', 'commodities'):
         raise Http404(u"Invalid report type")
@@ -31,13 +33,17 @@ def report_chooser(request, report_type, period_type, period_str=None):
         or (report_type == 'commodities' and period_type == 'weekly')):
         raise Http404(u"Invalid period type")
 
+    # web views and export views are named the same.
+    # difference is the _export suffix.
+    func_suffix = '_export' if export else ''
+
     try:
         view = import_path('unfpa_web.views.%(report_type)s.'
-                           '%(period_type)s_%(report_type)s'
+                           '%(period_type)s_%(report_type)s%(suffix)s'
                            % {'report_type': report_type,
-                              'period_type': period_type})
+                              'period_type': period_type,
+                              'suffix': func_suffix})
     except:
-        raise
         raise Http404(u"Incorrect URL.")
 
     try:
