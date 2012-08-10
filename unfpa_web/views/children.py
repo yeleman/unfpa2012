@@ -89,8 +89,7 @@ def annual_children(request, period):
 
 
 def weekly_monthly_children_export(request, period, rtype):
-    context = {'period': period, 'category': 'unfpa',
-               'subcategory': 'children'}
+
     data = []
     for district in Entity.objects.filter(type__slug='district'):
         nb_deaths = ChildrenMortalityReport.periods.within(period) \
@@ -99,11 +98,7 @@ def weekly_monthly_children_export(request, period, rtype):
                        .count()
         data.append({'district': district, 'deaths': nb_deaths})
 
-    context.update({'data': data, 'type': rtype})
-
-    #return render(request, 'weekly_monthly_children.html', context)
-
-    file_name = 'Rapports mensuels de children.xls'
+    file_name = 'Rapports de children.xls'
 
     file_content = children_as_excel(data, period).getvalue()
 
@@ -126,8 +121,7 @@ def monthly_children_export(request, period):
 
 
 def quarterly_annual_children_export(request, period, rtype):
-    context = {'period': period, 'category': 'unfpa',
-               'subcategory': 'children'}
+
     data = []
     months = period.months
 
@@ -157,9 +151,7 @@ def quarterly_annual_children_export(request, period, rtype):
                      'total': total, 'all_deaths': all_deaths,
                      'percent_of_all': percent_of_all})
 
-    context.update({'data': data, 'type': rtype, 'months': months})
-
-    file_name = 'Rapports mensuels de children.xls'
+    file_name = 'Rapports de children.xls'
 
     file_content = children_as_excel(data, period).getvalue()
 

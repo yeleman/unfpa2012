@@ -308,7 +308,6 @@ def children_as_excel(report, period):
     sheet = book.add_sheet(u"Mortalite infantiles")
 
     sheet.col(0).width = 0x0d00 * 3
-    sheet.col(1).width = 0x0d00 * 3
 
     def write_merge_p(liste, style):
 
@@ -326,6 +325,87 @@ def children_as_excel(report, period):
     row_ += 3
 
     if period.type() == "week" or period.type() == "month":
+        sheet.col(1).width = 0x0d00 * 3
+        hheader = [{u"DISTRICT": [row_, row_ + 1, 0, 0]},
+                   {u"NOMBRE DE DÉCÈS INFANTILES": [row_, row_ + 1, 1, 1]}]
+
+        write_merge_p(hheader, styleheader)
+        row_ += 1
+        for disdata in report:
+            row_ += 1
+            sheet.write(row_, 0, "%s" % (disdata["district"]), style)
+            sheet.write(row_, 1, int(disdata["deaths"]), style)
+
+    if period.type() == "quarter" or period.type() == "year":
+        col = 0
+        for month in period.months:
+            col += 1
+            sheet.write(row_, col, "%s" % (month), styleheader)
+
+        hheader = [{u"DISTRICT": [row_, row_, 0, 0]},
+                   {u"Total": [row_, row_, col + 1, col + 1]},
+                   {u"%": [row_, row_, col + 2, col + 2]}]
+
+        write_merge_p(hheader, styleheader)
+        row_ += 1
+
+        for disdata in report:
+            col = 0
+            sheet.write(row_, col, "%s" % (disdata["district"]), style)
+            for mdeath in disdata["mdeaths"]:
+                col += 1
+                sheet.write(row_, col, int(mdeath), style)
+
+            sheet.write(row_, col + 1, "%s" % (disdata["total"]), style)
+            sheet.write(row_, col + 2, "%s" % (disdata["percent_of_all"]),
+                                                                   style)
+            row_ += 1
+
+    stream = StringIO.StringIO()
+    book.save(stream)
+
+    return stream
+
+
+def maternal_as_excel(report, period):
+    """ Export les données d'un rapport en xls """
+
+    # On crée le doc xls
+    book = xlwt.Workbook(encoding='utf-8')
+    period_type = period.type()
+
+    if period_type == "week":
+        type_ = u"HEBDOMADAIRE"
+    if period_type == "month":
+        type_ = u"MENSUEL"
+    if period_type == "quarter":
+        type_ = u"TRIMESTRIEL"
+    else:
+        type_ = u"ANNUEL"
+
+    # On crée une feuille nommé Report
+    sheet = book.add_sheet(u"Mortalite maternelle")
+
+    sheet.col(0).width = 0x0d00 * 3
+
+    def write_merge_p(liste, style):
+
+        for index in liste:
+            label = index.keys()[0]
+            row, row1, col, col1 = index.values()[0]
+            sheet.write_merge(row, row1, col, col1, label, style)
+
+    row_ = 0
+    title = u"RAPPORT %s DU %s AU %s" % (type_,
+                                        period.start_on.strftime(u"%x"),
+                                        period.end_on.strftime(u"%x"))
+
+    sheet.write_merge(0, 0, 0, 2, unicode(title), style)
+    row_ += 3
+
+    if period.type() == "week" or period.type() == "month":
+
+        sheet.col(1).width = 0x0d00 * 3
         hheader = [{u"DISTRICT": [row_, row_ + 1, 0, 0]},
                    {u"NOMBRE DE DÉCÈS INFANTILES": [row_, row_ + 1, 1, 1]}]
 
