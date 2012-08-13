@@ -15,7 +15,7 @@ addJQEventReportElementsList();
 {% block content %}
 {% include "period_nav.html" %}
 
-<div class="rightbuttons"><a href="{% url export_xls 'children' type period.strid %}">
+<div class="rightbuttons"><a href="{% url export_xls 'commodities' type period.strid %}">
     <button class="formbutt download">Télécharger une version Excel du rapport</button></a>
 </div>
 <h2>Rapport mensuel de {{ period.middle|datefmt:"MMMM YYYY" }}.</h2>

@@ -365,3 +365,166 @@ def children_as_excel(report, period):
     book.save(stream)
 
     return stream
+
+
+def commodities_as_excel(report, period):
+    """ Export les données d'un rapport en xls """
+
+    # On crée le doc xls
+    book = xlwt.Workbook(encoding='utf-8')
+    period_type = period.type()
+
+    if period_type == "month":
+        type_ = u"MENSUEL"
+    elif period_type == "quarter":
+        type_ = u"TRIMESTRIEL"
+    else:
+        type_ = u"ANNUEL"
+
+
+    # On crée une feuille nommé Report
+    sheet = book.add_sheet(u"Produits dispo")
+
+    sheet.col(0).width = 0x0d00 * 4
+    sheet.col(1).width = 0x0d00 * 3
+
+    def write_merge_p(liste, style):
+
+        for index in liste:
+            label = index.keys()[0]
+            row, row1, col, col1 = index.values()[0]
+            sheet.write_merge(row, row1, col, col1, label, style)
+
+
+    if period.type() == "month":
+        row_ = 0
+        title = u"RAPPORT %s DU %s AU %s" % (type_,
+                                        period.start_on.strftime(u"%x"),
+                                        period.end_on.strftime(u"%x"))
+
+        sheet.write_merge(0, 0, 0, 2, unicode(title), style)
+        row_ += 3
+
+        hheader = [{u"INDICATEURS": [row_, row_ + 1, 0, 0]},
+                   {u"NOMBRE DE CENTRES": [row_, row_ + 1, 1, 1]}]
+
+        write_merge_p(hheader, styleheader)
+        row_ += 1
+
+        fp_services = report["fp_services"]
+        delivery_services = report["delivery_services"]
+        both_services = report["both_services"]
+        fp_stockout = report["fp_stockout"]
+        atleast_3methods = report["atleast_3methods"]
+        # atleast_3methods_percent = report["atleast_3methods_percent"]
+        otoxycin_magnesium_stockout = report["otoxycin_magnesium_stockout"]
+
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres proposant le planning familial" , style)
+        sheet.write(row_, 1, "%s" % (fp_services[0]) , style)
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres pratiquant les accouchements" , style)
+        sheet.write(row_, 1, "%s" % (delivery_services[0]) , style)
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres proposant le P.F et les accouchements" , style)
+        sheet.write(row_, 1, "%s" % (both_services[0]) , style)
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres en rupture de méthodes de PF indiv." , style)
+        sheet.write(row_, 1, "%s" % (fp_stockout[0]) , style)
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres offrants au moins 3 méthodes de P.F" , style)
+        sheet.write(row_, 1, "%s" % (atleast_3methods[0]) , style)
+        row_ += 1
+
+        sheet.write(row_, 0, "Centres en rupture d'Oxytocine et de sulphate de magnésium" , style)
+        sheet.write(row_, 1, "%s" % (otoxycin_magnesium_stockout[0]) , style)
+
+        row_ += 3
+        title1 = u"Centre en ruptures de stock de méthodes de planification familiale"
+        sheet.write(row_, 0, unicode(title1), style)
+        row_ += 1
+        hheader = [{u"Centre": [row_, row_ + 1, 0, 0]},
+                   {u"P.M.": [row_, row_ + 1, 1, 1]},
+                   {u"P.F.": [row_, row_ + 1, 2, 2]},
+                   {u"C.O.": [row_, row_ + 1, 3, 3]},
+                   {u"IJ": [row_, row_ + 1, 4, 4]},
+                   {u"D.I.U.": [row_, row_ + 1, 5, 5]},
+                   {u"Implants": [row_, row_ + 1, 6, 6]},
+                   {u"S.F.": [row_, row_ + 1, 7, 7]},
+                   {u"S.M.": [row_, row_ + 1, 8, 8]}]
+
+        write_merge_p(hheader, styleheader)
+        row_ += 2
+        for disdata in report['all_stock_outs']:
+
+
+            sheet.write(row_, 0, '%s/%s' % (disdata['district'].name,
+                                            disdata['nb_centers']),
+                        style)
+            sheet.write(row_, 1,
+                        u'%s/%s' % (disdata['stock_outs']['male_condom'][0],
+                        str(disdata['stock_outs']['male_condom'][1]) + '%'),
+                        style)
+            sheet.write(row_, 2,
+                        u'%s/%s' % (disdata['stock_outs']['female_condom'][0],
+                        str(disdata['stock_outs']['female_condom'][1]) + '%'),
+                        style)
+            sheet.write(row_, 3,
+                        u'%s/%s' % (disdata['stock_outs']['oral_pills'][0],
+                        str(disdata['stock_outs']['oral_pills'][1]) + '%'),
+                        style)
+            sheet.write(row_, 4,
+                        u'%s/%s' % (disdata['stock_outs']['injectable'][0],
+                        str(disdata['stock_outs']['injectable'][1]) + '%'),
+                        style)
+            sheet.write(row_, 5,
+                        u'%s/%s' % (disdata['stock_outs']['iud'][0],
+                        str(disdata['stock_outs']['iud'][1]) + '%'), style)
+            sheet.write(row_, 6,
+                        u'%s/%s' % (disdata['stock_outs']['implants'][0],
+                        str(disdata['stock_outs']['implants'][1]) + '%'),
+                        style)
+            sheet.write(row_, 7,
+                u'%s/%s' % (disdata['stock_outs']['female_sterilization'][0],
+                str(disdata['stock_outs']['female_sterilization'][1]) + '%'),
+                style)
+            sheet.write(row_, 8,
+                u'%s/%s' % (disdata['stock_outs']['male_sterilization'][0],
+                str(disdata['stock_outs']['male_sterilization'][1]) + '%'),
+                style)
+            row_ += 1
+
+    if period.type() == "quarter" or period.type() == "year":
+        col = 0
+        for month in period.months:
+            col += 1
+            sheet.write(row_, col, "%s" % (month), styleheader)
+
+        hheader = [{u"DISTRICT": [row_, row_, 0, 0]},
+                   {u"Total": [row_, row_, col + 1, col + 1]},
+                   {u"%": [row_, row_, col + 2, col + 2]}]
+
+        write_merge_p(hheader, styleheader)
+        row_ += 1
+
+        for disdata in report:
+            col = 0
+            sheet.write(row_, col, "%s" % (disdata["district"]), style)
+            for mdeath in disdata["mdeaths"]:
+                col += 1
+                sheet.write(row_, col, int(mdeath), style)
+
+            sheet.write(row_, col + 1, "%s" % (disdata["total"]), style)
+            sheet.write(row_, col + 2, "%s" % (disdata["percent_of_all"]),
+                                                                   style)
+            row_ += 1
+
+    stream = StringIO.StringIO()
+    book.save(stream)
+
+    return stream

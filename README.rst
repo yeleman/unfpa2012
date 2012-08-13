@@ -12,6 +12,8 @@ Deployment Installation
     mkvirtualenv --system-site-packages unfpa
     sudo apt-get install libmysqlclient-dev
     pip install -r pip_requirements.txt
+    si il ya erreur pymemcompat.h:10:20: erreur fatale: Python.h : Aucun fichier ou dossier de ce type:
+        sudo aptitude install python-dev
 
 * Clone projet    
     git clone git://github.com/yeleman/bolibana.git
