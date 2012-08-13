@@ -14,7 +14,7 @@ addJQEventReportPeriodChange("{% url unfpa_reports 'maternal' 'weekly' '01-2010'
 {% block content %}
 {% include "period_nav.html" %}
 
-<div class="rightbuttons"><a href="#">
+<div class="rightbuttons"><a href="{% url export_xls 'maternal' type period.strid %}">
     <button class="formbutt download">Télécharger une version Excel du rapport</button></a>
 </div>
 <h2>Rapport {% ifequal type "weekly" %}hebdomadaire{% else %}mensuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
