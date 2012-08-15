@@ -349,7 +349,7 @@ def monthly_commodities_export(request, period):
                     'type': rtypes.get(period.__class__, MonthPeriod)})
 
     # return render(request, 'monthly_commodities.html', context)
-    file_name = 'Rapports mensuels de produits.xls'
+    file_name = 'Rapport_mensuel_de_produits.xls'
 
     file_content = commodities_as_excel(context, period).getvalue()
 
@@ -361,8 +361,7 @@ def monthly_commodities_export(request, period):
     return response
 
 def quarterly_annual_commodities_export(request, period, rtype):
-    context = {'period': period, 'category': 'unfpa',
-               'subcategory': 'commodities'}
+    context = {'period': period}
 
     rtypes = {MonthPeriod: 'monthly',
               QuarterPeriod: 'quarterly',
@@ -489,7 +488,22 @@ def quarterly_annual_commodities_export(request, period, rtype):
     context.update({'type': rtypes.get(period.__class__, MonthPeriod),
                     'our_periods': our_periods})
 
-    return render(request, 'quarterly_annual_commodities.html', context)
+    # return render(request, 'quarterly_annual_commodities.html', context)
+    if rtype == 'quarterly':
+        file_name = 'Rapport_trimestriel_de_produits.xls'
+    elif rtype == 'annual':
+        file_name = 'Rapport_annuel_de_produits.xls'
+    else:
+        file_name = 'Rapport_de_produits.xls'
+
+    file_content = commodities_as_excel(context, period).getvalue()
+
+    response = HttpResponse(file_content, \
+                            content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+    response['Content-Length'] = len(file_content)
+
+    return response
 
 
 @provider_permission('can_view_indicator_data')

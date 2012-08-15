@@ -475,6 +475,9 @@ def commodities_as_excel(report, period):
             row, row1, col, col1 = index.values()[0]
             sheet.write_merge(row, row1, col, col1, label, style)
 
+    def yesnostock(value):
+        return u"Oui" if value == 0 else u"Non"
+
 
     if period.type() == "month":
         row_ = 0
@@ -539,6 +542,7 @@ def commodities_as_excel(report, period):
                    {u"S.M.": [row_, row_ + 1, 8, 8]}]
 
         write_merge_p(hheader, styleheader)
+
         row_ += 2
         for disdata in report['all_stock_outs']:
 
@@ -578,31 +582,99 @@ def commodities_as_excel(report, period):
                 str(disdata['stock_outs']['male_sterilization'][1]) + '%'),
                 style)
             row_ += 1
+            for rep in disdata['reports']:
+                sheet.write(row_, 0, '%s/%s' % (rep.entity.name,
+                                            rep.entity.type), style)
+                sheet.write(row_, 1, yesnostock(rep.male_condom), style)
+                sheet.write(row_, 2, yesnostock(rep.female_condom), style)
+                sheet.write(row_, 3, yesnostock(rep.oral_pills), style)
+                sheet.write(row_, 4, yesnostock(rep.injectable), style)
+                sheet.write(row_, 5, yesnostock(rep.iud), style)
+                sheet.write(row_, 6, yesnostock(rep.implants), style)
+                sheet.write(row_, 7, yesnostock(rep.female_sterilization),
+                                                style)
+                sheet.write(row_, 8, yesnostock(rep.male_sterilization),
+                                                style)
+                row_ += 1
+
+        row_ += 3
+        title1 = u"Centre en ruptures de stock d'Oxytocine et de Magnesium"
+        sheet.write(row_, 0, unicode(title1), style)
+
+        row_ += 1
+        hheader = [{u"Centre": [row_, row_ + 1, 0, 0]},
+                   {u"Sulphate de Magnésium": [row_, row_ + 1, 1, 1]},
+                   {u"Oxytocine": [row_, row_ + 1, 2, 2]}]
+        write_merge_p(hheader, styleheader)
+
+        row_ += 2
+        for disdata in report['all_stock_outs']:
+            sheet.write(row_, 0, '%s/%s' % (disdata['district'].name,
+                                            disdata['nb_centers']),
+                        style)
+            sheet.write(row_, 1,
+                        u'%s/%s' % (disdata['stock_outs']['magnesium_sulfate'][0],
+                        str(disdata['stock_outs']['magnesium_sulfate'][1]) + '%'),
+                        style)
+            sheet.write(row_, 2,
+                        u'%s/%s' % (disdata['stock_outs']['oxytocine'][0],
+                        str(disdata['stock_outs']['oxytocine'][1]) + '%'),
+                        style)
+            row_ += 1
+            for rep in disdata['reports']:
+                sheet.write(row_, 0, '%s/%s' % (rep.entity.name,
+                                            rep.entity.type), style)
+                sheet.write(row_, 1, yesnostock(rep.magnesium_sulfate), style)
+                sheet.write(row_, 2, yesnostock(rep.oxytocine), style)
+                row_ += 1
+
 
     if period.type() == "quarter" or period.type() == "year":
+        row_ = 0
         col = 0
-        for month in period.months:
-            col += 1
-            sheet.write(row_, col, "%s" % (month), styleheader)
+        title = u"RAPPORT TRIMESTRIEL %s DU %s AU %s" % (type_,
+                                        period.start_on.strftime(u"%x"),
+                                        period.end_on.strftime(u"%x"))
 
-        hheader = [{u"DISTRICT": [row_, row_, 0, 0]},
-                   {u"Total": [row_, row_, col + 1, col + 1]},
-                   {u"%": [row_, row_, col + 2, col + 2]}]
+        sheet.write_merge(0, 0, 0, 2, unicode(title), style)
+        row_ += 3
+
+        hheader = [{u"Centre": [row_, row_, 0, 0]},
+                   {u"P.M.": [row_, row_, col + 1, col + 1]},
+                   {u"P.F.": [row_, row_, col + 2, col + 2]},
+                   {u"C.O.": [row_, row_, col + 3, col + 3]},
+                   {u"Injection": [row_, row_, col + 4, col + 4]},
+                   {u"D.I.U": [row_, row_, col + 5, col + 5]},
+                   {u"Implants": [row_, row_, col + 6, col + 6]},
+                   {u"S.F.": [row_, row_, col + 7, col + 7]},
+                   {u"S.M.": [row_, row_, col + 8, col + 8]}]
 
         write_merge_p(hheader, styleheader)
         row_ += 1
-
-        for disdata in report:
-            col = 0
-            sheet.write(row_, col, "%s" % (disdata["district"]), style)
-            for mdeath in disdata["mdeaths"]:
-                col += 1
-                sheet.write(row_, col, int(mdeath), style)
-
-            sheet.write(row_, col + 1, "%s" % (disdata["total"]), style)
-            sheet.write(row_, col + 2, "%s" % (disdata["percent_of_all"]),
-                                                                   style)
+        for disdata in report['all_stock_outs']:
             row_ += 1
+
+            sheet.write(row_, col, "%s" % (disdata["district"].name), style)
+            row_ += 1
+            for mdeath in disdata["stock_outs"]:
+                sheet.write(row_, col, "%s" % (mdeath['month']), style)
+                sheet.write(row_, col + 1, "%s" % (mdeath["male_condom"][0]),
+                                                   style)
+                sheet.write(row_, col + 2, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 3, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 4, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 5, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 6, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 7, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                sheet.write(row_, col + 8, "%s" % (mdeath["female_condom"][0]),
+                                                                       style)
+                row_ += 1
 
     stream = StringIO.StringIO()
     book.save(stream)
