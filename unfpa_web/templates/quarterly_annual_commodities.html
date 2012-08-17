@@ -18,7 +18,7 @@ addJQEventReportElementsList();
 <div class="rightbuttons"><a href="{% url export_xls 'commodities' type period.strid %}">
     <button class="formbutt download">Télécharger une version Excel du rapport</button></a>
 </div>
-<h2>Rapport trimestriel de {{ period.strid }}.</h2>
+<h2>Rapport {% ifequal type "quarterly" %}trimestriel{% else %}annuel{% endifequal %} du {{ period.start_on|datefmt:"dd MMMM" }} au {{ period.end_on|datefmt:"dd MMMM yyyy" }}.</h2>
 
 <table class="datatable">
     <tr><th>Indicateur</th>{% for month in our_periods %}<th>{{ month.middle|datefmt:"MMM" }}</th>{% endfor %}</tr>
