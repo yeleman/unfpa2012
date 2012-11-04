@@ -18,7 +18,7 @@ class FPMethodManager(models.Manager):
 
     def get_query_set(self):
         return super(FPMethodManager, self).get_query_set() \
-                                           .filter(Q(male_condom=0) | 
+                                           .filter(Q(male_condom=0) |
                                                    Q(female_condom=0) |
                                                    Q(oral_pills=0) |
                                                    Q(injectable=0) |
@@ -30,7 +30,7 @@ class FPMethodManager(models.Manager):
 
 class StockoutMixin(object):
     def has_stockouts(self):
-        return self.filter(Q(male_condom=0) | 
+        return self.filter(Q(male_condom=0) |
                            Q(female_condom=0) |
                            Q(oral_pills=0) |
                            Q(injectable=0) |
@@ -141,6 +141,14 @@ class RHCommoditiesReport(Report):
     oxytocine = models.IntegerField(_(u"Oxytocine. "
                                       u"Quantity in hand "
                                       u"(vials) or -1."))
+
+    ceftriaxone_500 = models.IntegerField(_(u"Ceftriaxone 500mg. "
+                                      u"Quantity in hand "
+                                      u"(tablets) or -1."))
+
+    ceftriaxone_1000 = models.IntegerField(_(u"Ceftriaxone 1g. "
+                                      u"Quantity in hand "
+                                      u"(tablets) or -1."))
 
     sources = models.ManyToManyField('RHCommoditiesReport', \
                                      verbose_name=_(u"Sources"), \

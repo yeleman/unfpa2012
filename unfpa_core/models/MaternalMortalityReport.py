@@ -29,6 +29,32 @@ class MaternalMortalityReport(IndividualReport):
     SOURCES = ((UNFPA, u"UNFPA"),
                (CREDOS, u"CREDOS"))
 
+    CAUSE_BLEEDING = 'b'
+    CAUSE_FEVER = 'f'
+    CAUSE_HTN = 'h'
+    CAUSE_DIARRHEA = 'd'
+    CAUSE_CRISIS = 'c'
+    CAUSE_MISCARRIAGE = 'm'
+    CAUSE_ABORTION = 'a'
+    CAUSE_OTHER = 'o'
+    DEATH_CAUSES_t = ((CAUSE_BLEEDING, u"Bleeding"),
+                    (CAUSE_FEVER, u"Fever"),
+                    (CAUSE_HTN, u"High Blood Pressure"),
+                    (CAUSE_DIARRHEA, u"Diarrhea"),
+                    (CAUSE_CRISIS, u"Crisis"),
+                    (CAUSE_MISCARRIAGE, u"Miscarriage"),
+                    (CAUSE_ABORTION, u"Abortion"),
+                    (CAUSE_OTHER, u"Other"))
+    DEATH_CAUSES = {
+                    CAUSE_BLEEDING: u"Bleeding",
+                    CAUSE_FEVER: u"Fever",
+                    CAUSE_HTN: u"High Blood Pressure",
+                    CAUSE_DIARRHEA: u"Diarrhea",
+                    CAUSE_CRISIS: u"Crisis",
+                    CAUSE_MISCARRIAGE: u"Miscarriage",
+                    CAUSE_ABORTION: u"Abortion",
+                    CAUSE_OTHER: u"Other"}
+
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Maternal Mortality Report")
@@ -58,6 +84,8 @@ class MaternalMortalityReport(IndividualReport):
     pregnancy_related_death = models.BooleanField(default=False,
                                                   verbose_name=_(u"Pregnancy "
                                                   u"related death"))
+
+    cause_of_death = models.CharField(max_length=1, choices=DEATH_CAUSES_t)
 
     source = models.CharField(max_length=1, null=True,
                               blank=True, choices=SOURCES)

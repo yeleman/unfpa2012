@@ -40,6 +40,31 @@ class ChildrenMortalityReport(IndividualReport):
     FEMALE = 'F'
     SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
 
+    CAUSE_FEVER = 'f'
+    CAUSE_DIARRHEA = 'd'
+    CAUSE_DYSPNEA = 'b'
+    CAUSE_ANEMIA = 'a'
+    CAUSE_RASH = 'r'
+    CAUSE_COUGH = 'c'
+    CAUSE_VOMITING = 'v'
+    CAUSE_NUCHAL_RIGIDITY = 'n'
+    CAUSE_RED_EYE = 'e'
+    CAUSE_EAT_REFUSAL = 't'
+    CAUSE_OTHER = 'o'
+    DEATH_CAUSES_t = (
+                      (CAUSE_FEVER, u"Fever"),
+                      (CAUSE_DIARRHEA, u"Diarrhea"),
+                      (CAUSE_DYSPNEA, u"Dyspnea"),
+                      (CAUSE_ANEMIA, u"Anemia"),
+                      (CAUSE_RASH, u"Rash"),
+                      (CAUSE_COUGH, u"Cough"),
+                      (CAUSE_VOMITING, u"Vomiting"),
+                      (CAUSE_NUCHAL_RIGIDITY, u"Nuchal Rigidity"),
+                      (CAUSE_RED_EYE, u"Red Eye"),
+                      (CAUSE_EAT_REFUSAL, u"Eat Refusal"),
+                      (CAUSE_OTHER, u"Other")
+        )
+
     class Meta:
         app_label = 'unfpa_core'
         verbose_name = _(u"Children Mortality Report")
@@ -63,6 +88,8 @@ class ChildrenMortalityReport(IndividualReport):
     death_place = models.CharField(max_length=1,
                                    choices=DEATHPLACE,
                                    verbose_name=_(u"Place of death"))
+
+    cause_of_death = models.CharField(max_length=1, choices=DEATH_CAUSES_t)
 
     source = models.CharField(max_length=1, null=True,
                               blank=True, choices=SOURCES)

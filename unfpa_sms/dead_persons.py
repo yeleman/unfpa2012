@@ -24,6 +24,31 @@ SOURCE = {
     'c': MaternalMortalityReport.CREDOS
 }
 
+DEATH_CAUSES_MAT = {
+    'b': MaternalMortalityReport.CAUSE_BLEEDING,
+    'f': MaternalMortalityReport.CAUSE_FEVER,
+    'h': MaternalMortalityReport.CAUSE_HTN,
+    'd': MaternalMortalityReport.CAUSE_DIARRHEA,
+    'c': MaternalMortalityReport.CAUSE_CRISIS,
+    'm': MaternalMortalityReport.CAUSE_MISCARRIAGE,
+    'a': MaternalMortalityReport.CAUSE_ABORTION,
+    'o': MaternalMortalityReport.CAUSE_OTHER,
+}
+
+DEATH_CAUSES_U5 = {
+    'f': ChildrenMortalityReport.CAUSE_FEVER,
+    'd': ChildrenMortalityReport.CAUSE_DIARRHEA,
+    'b': ChildrenMortalityReport.CAUSE_DYSPNEA,
+    'a': ChildrenMortalityReport.CAUSE_ANEMIA,
+    'r': ChildrenMortalityReport.CAUSE_RASH,
+    'c': ChildrenMortalityReport.CAUSE_COUGH,
+    'v': ChildrenMortalityReport.CAUSE_VOMITING,
+    'n': ChildrenMortalityReport.CAUSE_NUCHAL_RIGIDITY,
+    'e': ChildrenMortalityReport.CAUSE_RED_EYE,
+    't': ChildrenMortalityReport.CAUSE_EAT_REFUSAL,
+    'o': ChildrenMortalityReport.CAUSE_OTHER,
+}
+
 
 def resp_error_reporting_location(message, code):
     message.respond(u"[ERREUR] Le Lieu de rapportage %s n'existe pas."
@@ -55,7 +80,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
                       living_children_text dead_children_text pregnant_text
                       pregnancy_weeks_text pregnancy_related_death_text
             exemple: 'fnuap dpw f 20120524 bana kona_diarra 20120524 20120524
-                       bana 1 0 0 - 0'
+                       bana 1 0 0 - 0 m'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
@@ -65,7 +90,7 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
         profile, reccord_date, reporting_location_code, name, age_or_dob, \
         dod_text, death_location_code, living_children_text, \
         dead_children_text, pregnant_text, pregnancy_weeks_text, \
-        pregnancy_related_death_text = args.split()
+        pregnancy_related_death_text, cause_of_death_text = args.split()
     except:
         return resp_error(message, u"le rapport")
 
@@ -147,6 +172,8 @@ def unfpa_dead_pregnant_woman(message, args, sub_cmd, **kwargs):
     report.pregnant = pregnant
     report.pregnancy_weeks = pregnancy_weeks
     report.pregnancy_related_death = pregnancy_related_death
+    report.cause_of_death = DEATH_CAUSES_MAT.get(cause_of_death_text,
+                                        MaternalMortalityReport.CAUSE_OTHER)
     report.source = SOURCE.get(profile, MaternalMortalityReport.UNFPA)
     try:
         report.save()
@@ -163,7 +190,7 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     """  Incomming:
             fnuap du5 profile reccord_date reporting_location_code name sex
             age_or_dob dod_text death_location_code place_death
-         exemple: 'fnuap du5 f 20120502 wolo nom F 20100502 20120502 wolo D'
+         exemple: 'fnuap du5 f 20120502 wolo nom F 20100502 20120502 wolo D o'
 
          Outgoing:
             [SUCCES] Le rapport de deces name a ete enregistre.
@@ -171,7 +198,8 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
 
     try:
         profile, reccord_date, reporting_location_code, name, sex, \
-        age_or_dob, dod_text, death_location_code, place_death = args.split()
+        age_or_dob, dod_text, death_location_code, \
+        place_death, cause_of_death_text = args.split()
     except:
         return resp_error(message, u"l'enregistrement de rapport "
                                    u" des moins de 5ans")
@@ -227,7 +255,9 @@ def unfpa_dead_children_under5(message, args, sub_cmd, **kwargs):
     report.death_location = death_location
     report.death_place = DEATHPLACE.get(place_death,
                                         ChildrenMortalityReport.OTHER)
-    report.source = SOURCE.get(profile, MaternalMortalityReport.UNFPA)
+    report.cause_of_death = DEATH_CAUSES_U5.get(cause_of_death_text,
+                                        ChildrenMortalityReport.CAUSE_OTHER)
+    report.source = SOURCE.get(profile, ChildrenMortalityReport.UNFPA)
 
     try:
         report.save()

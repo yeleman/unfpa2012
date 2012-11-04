@@ -4,6 +4,8 @@
 
 import reversion
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from bolibana.models import Entity
@@ -27,6 +29,8 @@ class UEntity(Entity):
             l.append('unfpa')
         if self.is_credos:
             l.append('credos')
+        if not l:
+            return self.name.title()
         if len(l) <= 1:
             project = l[0]
         else:
@@ -35,6 +39,13 @@ class UEntity(Entity):
         return ugettext(u"%(name)s/%(projet)s"
                 % {'name': self.name.title(),
                     'projet': project})
+
+
+@receiver(pre_save, sender=UEntity)
+def pre_save_entity(sender, instance, **kwargs):
+    """ mark phone_number as None is not filled """
+    if instance.phone_number == u'':
+        instance.phone_number = None
 
 
 reversion.register(UEntity)

@@ -27,10 +27,10 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
             azithromycine_suspension benzathine_penicillin cefexime
             clotrimazole ergometrine_tab ergometrine_vials iron
             folate iron_folate magnesium_sulfate metronidazole
-            oxytocine sources
+            oxytocine ceftriaxone_500 ceftriaxone_1000 comment
         example:
            'fnuap mps 2012 05 wolo 0 0 20 - - - - - 0 0 - - - - - - - - - - - -
-             - - - -'
+             - - - - - - -'
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
@@ -45,7 +45,8 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
         amoxicillin_suspension, azithromycine_tab, azithromycine_suspension, \
         benzathine_penicillin, cefexime, clotrimazole, ergometrine_tab, \
         ergometrine_vials, iron, folate, iron_folate, magnesium_sulfate, \
-        metronidazole, oxytocine = args.split()
+        metronidazole, oxytocine, ceftriaxone_500, ceftriaxone_1000, \
+        comment = args.split()
     except:
         return resp_error(message, u"le rapport")
 
@@ -76,6 +77,11 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
             return int(val)
         except:
             return -1
+
+    try:
+        comment = comment.replace(u"_", u" ")
+    except:
+        comment = u""
 
     contact = contact_for(message.identity)
 
@@ -117,6 +123,10 @@ def unfpa_monthly_product_stockouts(message, args, sub_cmd, **kwargs):
     report.magnesium_sulfate = check_int(magnesium_sulfate)
     report.metronidazole = check_int(metronidazole)
     report.oxytocine = check_int(oxytocine)
+
+    report.ceftriaxone_500 = check_int(ceftriaxone_500)
+    report.ceftriaxone_1000 = check_int(ceftriaxone_1000)
+    report.comment = check_int(comment)
     report._status = report.STATUS_VALIDATED
 
     try:
