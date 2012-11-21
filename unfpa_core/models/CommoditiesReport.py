@@ -43,9 +43,11 @@ class StockoutMixin(object):
 class StockoutQuerySet(QuerySet, ValidationMixin, StockoutMixin):
     pass
 
+
 class StockoutManager(models.Manager, ValidationMixin, StockoutMixin):
     def get_query_set(self):
         return StockoutQuerySet(self.model, using=self._db)
+
 
 class RHCommoditiesReport(Report):
 
@@ -274,6 +276,7 @@ class RHCommoditiesReport(Report):
             if getattr(self, f) == 0:
                 w += 1
         return w >= 3
+
 
 @receiver(pre_save, sender=RHCommoditiesReport)
 def pre_save_report(sender, instance, **kwargs):
