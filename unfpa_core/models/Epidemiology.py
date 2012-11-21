@@ -57,6 +57,11 @@ class EpidemiologyReport(Report):
         wp.__class__ = WeekPeriod
         return wp
 
+    def __unicode__(self):
+        return ugettext(u"%(year)d/%(week)d"
+            % {'year': self.other_notifiable_disease_case,
+               'week': self.other_notifiable_disease_death})
+
     @classmethod
     def start(cls, period, entity, author, \
                type=Report.TYPE_SOURCE, *args, **kwargs):
@@ -176,12 +181,5 @@ def post_save_report(sender, instance, **kwargs):
     if instance.receipt == 'NO_RECEIPT':
         instance.receipt = sender.generate_receipt(instance)
         instance.save()
-
-reversion.register(EpidemiologyReport)
-
-    def __unicode__(self):
-        return ugettext(u"%(year)d/%(week)d"
-                % {'year': self.other_notifiable_disease_case,
-                   'week': self.other_notifiable_disease_death})
 
 reversion.register(EpidemiologyReport)
