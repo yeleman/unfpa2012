@@ -2,13 +2,10 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from datetime import datetime
-
+from django.db import IntegrityError
 from unfpa_core.models import EpidemiologyReport
 from bolibana.models import Entity, WeekPeriod
-from unfpa_sms.common import (contact_for, resp_error, resp_error_dob,
-                             resp_error_provider, parse_age_dob,
-                             resp_error_date)
+from unfpa_sms.common import (contact_for, resp_error, resp_error_provider)
 
 
 def unfpa_epidemiology(message, args, sub_cmd, **kwargs):
@@ -21,6 +18,14 @@ def unfpa_epidemiology(message, args, sub_cmd, **kwargs):
         Outgoing:
             [SUCCES] Le rapport de name a ete enregistre.
             or [ERREUR] message """
+
+    # def comparecasedeath(case, death):
+    #     if case < death:
+    #         message.respond(u"le cas de decès (%s) ne peut pas etre supeieur"
+    #                         u" au cas d'epidemie (%s)" %
+    #                         (death, case))
+    #         return True
+    #     return False
 
     try:
         profile, reporting_year, reporting_week, reporting_location, \
@@ -44,13 +49,47 @@ def unfpa_epidemiology(message, args, sub_cmd, **kwargs):
         return True
 
     try:
-        print reporting_year, reporting_week
         period = WeekPeriod.find_create_by_weeknum(int(reporting_year),
                                     int(reporting_week))
     except:
         message.respond(u"La periode (%s %s) n'est pas valide" %
                         (reporting_week, reporting_year))
         return True
+
+    # liste = args.split()[4:]
+
+    # comp = 0
+    # for u in range(0, len(liste) / 2):
+    #     print liste[comp], "?",  liste[comp + 1]
+    #     if liste[comp] < liste[comp + 1]:
+    #         print liste[comp], "<",  liste[comp + 1]
+    #     else:
+    #         print "cool"
+    #     comp += 2
+
+    # print acute_flaccid_paralysis_case, acute_flaccid_paralysis_death
+
+    # comparecasedeath(acute_flaccid_paralysis_case,
+    #                  acute_flaccid_paralysis_death)
+    # comparecasedeath(influenza_a_h1n1_case, influenza_a_h1n1_death)
+    # comparecasedeath(cholera_case, cholera_death)
+    # comparecasedeath(red_diarrhea_case, red_diarrhea_death)
+    # comparecasedeath(measles_case, measles_death)
+    # comparecasedeath(yellow_fever_case, yellow_fever_death)
+    # comparecasedeath(neonatal_tetanus_case, neonatal_tetanus_death)
+    # comparecasedeath(meningitis_case, meningitis_death)
+    # comparecasedeath(rabies_case, rabies_death)
+    # comparecasedeath(acute_measles_diarrhea_case, acute_measles_diarrhea_death)
+    # comparecasedeath(other_notifiable_disease_case,
+    #                  other_notifiable_disease_death)
+
+    try:
+        EpidemiologyReport.objects.get(entity=entity, period=period)
+        message.respond(u"Il existe un rapport pour cette periode (%s %s) " %
+                        (reporting_week, reporting_year))
+        return True
+    except:
+        pass
 
     report = EpidemiologyReport()
     report.type = 0
@@ -89,14 +128,15 @@ def unfpa_epidemiology(message, args, sub_cmd, **kwargs):
 
     try:
         report.save()
-        report.created_on = datetime.today()
-        report.save()
-        message.respond(u"[SUCCES] Le rapport de naissance de" \
-                        u"%(full_name_dob)s a ete enregistre." \
-                        % {'full_name_dob': report.full_name_dob()})
+        message.respond(u"[SUCCES] Le rapport de %(cscom)s pour %(period)s "
+                        u"a ete enregistre. "
+                        u"Le No de recu est #%(receipt)s."
+                        % {'cscom': report.entity.display_full_name(),
+                           'period': report.period,
+                           'receipt': report.receipt})
+    except IntegrityError:
+        message.respond(u"[ERREUR] il ya deja un rapport pour cette periode")
     except:
-        raise
-        message.respond(u"[ERREUR] Le rapport de naissance "
-                        u"n'a pas ete enregistre.")
+        message.respond(u"[ERREUR] Le rapport n est pas enregiste")
 
     return True

@@ -4,10 +4,12 @@
 
 import reversion
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 
-from bolibana.models import Report, WeekPeriod
+from bolibana.models import Report, WeekPeriod, EntityType
 
 
 class EpidemiologyReport(Report):
@@ -49,7 +51,7 @@ class EpidemiologyReport(Report):
 
     other_notifiable_disease_case = models.IntegerField(_(u"Autres MADOS cas"))
     other_notifiable_disease_death = models.IntegerField(_(u"Autres MADOS décès"))
-    
+
     @property
     def mperiod(self):
         """ casted period to MonthPeriod """
@@ -58,9 +60,10 @@ class EpidemiologyReport(Report):
         return wp
 
     def __unicode__(self):
-        return ugettext(u"%(year)d/%(week)d"
-            % {'year': self.other_notifiable_disease_case,
-               'week': self.other_notifiable_disease_death})
+        return ugettext(u"%(cscom)s / %(period)s / %(receipt)s"
+            % {'cscom': self.entity.display_full_name(),
+               'period': self.period,
+               'receipt': self.receipt})
 
     @classmethod
     def start(cls, period, entity, author, \
