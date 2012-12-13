@@ -18,7 +18,7 @@ from unfpa_core import all_periods
 def unfpa_dashboard(request):
     context = {'category': 'unfpa', 'subcategory': 'unfpa_dashboard'}
 
-    periods = all_periods(MonthPeriod)
+    periods = list(all_periods(MonthPeriod))[-15:]
 
     period = current_period()
 

@@ -14,7 +14,7 @@ from bolibana.admin import (RoleAdmin, PermissionAdmin, \
 from unfpa_core.models import (MaternalMortalityReport, BirthReport,
                                RHCommoditiesReport, ProvidedServicesReport,
                                ChildrenMortalityReport, PregnancyReport,
-                               UEntity)
+                               UEntity, EpidemiologyReport)
 
 
 class ProviderUserStacked(admin.StackedInline):
@@ -45,3 +45,4 @@ admin.site.register(ProvidedServicesReport)
 admin.site.register(BirthReport)
 admin.site.register(PregnancyReport)
 admin.site.register(UEntity)
+admin.site.register(EpidemiologyReport)

@@ -7,7 +7,7 @@ from unfpa_core.models import BirthReport
 from bolibana.models import Entity, MonthPeriod
 from unfpa_sms.common import (contact_for, resp_error, resp_error_dob,
                              resp_error_provider, parse_age_dob,
-                             resp_error_date)
+                             resp_error_date, date_is_old)
 
 
 BIRTHPLACE = {
@@ -60,7 +60,13 @@ def unfpa_birth(message, args, sub_cmd, **kwargs):
     try:
         reccord_date, _reccord_date = parse_age_dob(reccord_date)
     except:
-        return resp_error_date(message, reccord_date)
+        return resp_error_date(message)
+
+    try:
+        date_is_old(reccord_date)
+    except ValueError, e:
+        message.respond(u"[ERREUR] %s" % e)
+        return True
 
     MonthPeriod.find_create_from(year=reccord_date.year,
                                  month=reccord_date.month)

@@ -4,8 +4,9 @@
 
 import re
 
-from bolibana.models import Provider
 from datetime import date, timedelta
+
+from bolibana.models import Provider
 
 
 def contact_for(identity):
@@ -69,3 +70,9 @@ def parse_age_dob(age_or_dob, only_date=False):
         return parsed_date
     else:
         return (parsed_date, auto)
+
+
+def date_is_old(reporting_date):
+
+    if (date.today() - reporting_date).days > 30:
+        raise ValueError(u"Le %s est passé il y a plus 30 jours" % reporting_date)
