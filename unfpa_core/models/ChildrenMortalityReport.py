@@ -31,11 +31,6 @@ class ChildrenMortalityReport(IndividualReport):
                   (CENTER, _(u"Centre")),
                   (OTHER, _(u"Autre")))
 
-    UNFPA = 'U'
-    CREDOS = 'C'
-    SOURCES = ((UNFPA, u"UNFPA"),
-               (CREDOS, u"CREDOS"))
-
     MALE = 'M'
     FEMALE = 'F'
     SEX = ((FEMALE, _(u"F")), (MALE, _(u"M")))
@@ -90,9 +85,6 @@ class ChildrenMortalityReport(IndividualReport):
                                    verbose_name=_(u"Place of death"))
 
     cause_of_death = models.CharField(max_length=1, choices=DEATH_CAUSES_t)
-
-    source = models.CharField(max_length=1, null=True,
-                              blank=True, choices=SOURCES)
 
     # django manager first
     objects = models.Manager()
@@ -196,7 +188,7 @@ class AggregatedChildrenMortalityReport(Report):
     def create_from(cls, period, entity, author):
 
         # create empty
-        agg_report = cls.init_empty(entity, period, author)
+        agg_report = cls.start(entity, period, author)
 
         # find list of sources
         indiv_sources = ChildrenMortalityReport \
@@ -271,7 +263,7 @@ class AggregatedChildrenMortalityReport(Report):
             report.cause_death_other += 1
 
         # age
-        age_days = (instance.dod - instance.dod).days
+        age_days = (instance.dod - instance.dob).days
         if age_days < 7:
             report.age_under_1w += 1
         if age_days < 14:

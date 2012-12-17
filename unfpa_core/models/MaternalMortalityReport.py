@@ -24,11 +24,6 @@ class PeriodManager(models.Manager):
 
 class MaternalMortalityReport(IndividualReport):
 
-    UNFPA = 'U'
-    CREDOS = 'C'
-    SOURCES = ((UNFPA, u"UNFPA"),
-               (CREDOS, u"CREDOS"))
-
     CAUSE_BLEEDING = 'b'
     CAUSE_FEVER = 'f'
     CAUSE_HTN = 'h'
@@ -87,9 +82,6 @@ class MaternalMortalityReport(IndividualReport):
 
     cause_of_death = models.CharField(max_length=1, choices=DEATH_CAUSES_t)
 
-    source = models.CharField(max_length=1, null=True,
-                              blank=True, choices=SOURCES)
-
     # django manager first
     objects = models.Manager()
     periods = PeriodManager()
@@ -122,11 +114,56 @@ class AggregatedMaternalMortalityReport(Report):
     age_over_50 = models.IntegerField()
 
     have_living_children = models.IntegerField()
+    have_one_living_children = models.IntegerField()
+    have_two_living_children = models.IntegerField()
+    have_two_plus_living_children = models.IntegerField()
     have_dead_children = models.IntegerField()
+    have_one_dead_children = models.IntegerField()
+    have_two_dead_children = models.IntegerField()
+    have_two_plus_dead_children = models.IntegerField()
 
     is_pregnant = models.IntegerField()
-    is_pregnant_1month = models.IntegerField()
-    is_pregnant_2month = models.IntegerField()
+    is_pregnant_1week = models.IntegerField()
+    is_pregnant_2weeks = models.IntegerField()
+    is_pregnant_3weeks = models.IntegerField()
+    is_pregnant_4weeks = models.IntegerField()
+    is_pregnant_5weeks = models.IntegerField()
+    is_pregnant_6weeks = models.IntegerField()
+    is_pregnant_7weeks = models.IntegerField()
+    is_pregnant_8weeks = models.IntegerField()
+    is_pregnant_9weeks = models.IntegerField()
+    is_pregnant_10weeks = models.IntegerField()
+    is_pregnant_11weeks = models.IntegerField()
+    is_pregnant_12weeks = models.IntegerField()
+    is_pregnant_13weeks = models.IntegerField()
+    is_pregnant_14weeks = models.IntegerField()
+    is_pregnant_15weeks = models.IntegerField()
+    is_pregnant_16weeks = models.IntegerField()
+    is_pregnant_17weeks = models.IntegerField()
+    is_pregnant_18weeks = models.IntegerField()
+    is_pregnant_19weeks = models.IntegerField()
+    is_pregnant_20weeks = models.IntegerField()
+    is_pregnant_21weeks = models.IntegerField()
+    is_pregnant_22weeks = models.IntegerField()
+    is_pregnant_23weeks = models.IntegerField()
+    is_pregnant_24weeks = models.IntegerField()
+    is_pregnant_25weeks = models.IntegerField()
+    is_pregnant_26weeks = models.IntegerField()
+    is_pregnant_27weeks = models.IntegerField()
+    is_pregnant_28weeks = models.IntegerField()
+    is_pregnant_29weeks = models.IntegerField()
+    is_pregnant_30weeks = models.IntegerField()
+    is_pregnant_31weeks = models.IntegerField()
+    is_pregnant_32weeks = models.IntegerField()
+    is_pregnant_33weeks = models.IntegerField()
+    is_pregnant_34weeks = models.IntegerField()
+    is_pregnant_35weeks = models.IntegerField()
+    is_pregnant_36weeks = models.IntegerField()
+    is_pregnant_37weeks = models.IntegerField()
+    is_pregnant_38weeks = models.IntegerField()
+    is_pregnant_39weeks = models.IntegerField()
+    is_pregnant_40weeks = models.IntegerField()
+    is_pregnant_40weeks_plus = models.IntegerField()
 
     is_pregnancy_related = models.IntegerField()
 
@@ -148,10 +185,87 @@ class AggregatedMaternalMortalityReport(Report):
                                          blank=True, null=True)
 
     @classmethod
+    def start(cls, period, entity, author, \
+              type=Report.TYPE_AGGREGATED, *args, **kwargs):
+        report = cls(period=period, entity=entity, created_by=author, \
+                     modified_by=author, _status=cls.STATUS_CREATED, \
+                     type=type)
+
+        report.age_under_15 = 0
+        report.age_under_18 = 0
+        report.age_under_20 = 0
+        report.age_under_25 = 0
+        report.age_under_30 = 0
+        report.age_under_35 = 0
+        report.age_under_40 = 0
+        report.age_under_45 = 0
+        report.age_under_50 = 0
+        report.age_over_50 = 0
+
+        report.have_living_children = 0
+        report.have_dead_children = 0
+
+        report.is_pregnant = 0
+        report.is_pregnant_1week = 0
+        report.is_pregnant_2weeks = 0
+        report.is_pregnant_3weeks = 0
+        report.is_pregnant_4weeks = 0
+        report.is_pregnant_5weeks = 0
+        report.is_pregnant_6weeks = 0
+        report.is_pregnant_7weeks = 0
+        report.is_pregnant_8weeks = 0
+        report.is_pregnant_9weeks = 0
+        report.is_pregnant_10weeks = 0
+        report.is_pregnant_11weeks = 0
+        report.is_pregnant_12weeks = 0
+        report.is_pregnant_13weeks = 0
+        report.is_pregnant_14weeks = 0
+        report.is_pregnant_15weeks = 0
+        report.is_pregnant_16weeks = 0
+        report.is_pregnant_17weeks = 0
+        report.is_pregnant_18weeks = 0
+        report.is_pregnant_19weeks = 0
+        report.is_pregnant_20weeks = 0
+        report.is_pregnant_21weeks = 0
+        report.is_pregnant_22weeks = 0
+        report.is_pregnant_23weeks = 0
+        report.is_pregnant_24weeks = 0
+        report.is_pregnant_25weeks = 0
+        report.is_pregnant_26weeks = 0
+        report.is_pregnant_27weeks = 0
+        report.is_pregnant_28weeks = 0
+        report.is_pregnant_29weeks = 0
+        report.is_pregnant_30weeks = 0
+        report.is_pregnant_31weeks = 0
+        report.is_pregnant_32weeks = 0
+        report.is_pregnant_33weeks = 0
+        report.is_pregnant_34weeks = 0
+        report.is_pregnant_35weeks = 0
+        report.is_pregnant_36weeks = 0
+        report.is_pregnant_37weeks = 0
+        report.is_pregnant_38weeks = 0
+        report.is_pregnant_39weeks = 0
+        report.is_pregnant_40weeks = 0
+        report.is_pregnant_40weeks_plus = 0
+
+        report.is_pregnancy_related = 0
+
+        report.cause_bleeding = 0
+        report.cause_fever = 0
+        report.cause_htn = 0
+        report.cause_diarrhea = 0
+        report.cause_crisis = 0
+        report.cause_miscarriage = 0
+        report.cause_abortion = 0
+        report.cause_other = 0
+
+        return report
+
+    @classmethod
     def create_from(cls, period, entity, author):
 
         # create empty
-        agg_report = cls.init_empty(entity, period, author)
+        agg_report = cls.start(entity, period, author)
 
         # find list of sources
         indiv_sources = MaternalMortalityReport \
@@ -187,100 +301,232 @@ class AggregatedMaternalMortalityReport(Report):
     @classmethod
     def update_instance_with_indiv(cls, report, instance):
 
-        # sex
-        if instance.sex == instance.MALE:
-            report.sex_male += 1
-        elif instance.sex == instance.FEMALE:
-            report.sexe_female += 1
-
-        # death place
-        if instance.death_place == instance.HOME:
-            report.death_home += 1
-        elif instance.death_place == instance.CENTER:
-            report.death_center += 1
+        # age
+        age_years = (instance.dod - instance.dob).days / 365
+        if age_years < 15:
+            report.age_under_15 += 1
+        if age_years < 18:
+            report.age_under_18 += 1
+        if age_years < 20:
+            report.age_under_20 += 1
+        if age_years < 25:
+            report.age_under_25 += 1
+        if age_years < 30:
+            report.age_under_30 += 1
+        if age_years < 35:
+            report.age_under_35 += 1
+        if age_years < 40:
+            report.age_under_40 += 1
+        if age_years < 45:
+            report.age_under_45 += 1
+        if age_years < 50:
+            report.age_under_50 += 1
         else:
-            report.death_other += 1
+            report.age_over_50 += 1
+
+        # children
+        if instance.living_children > 0:
+            report.have_living_children += 1
+        if instance.living_children == 1:
+            report.have_one_living_children += 1
+        if instance.living_children == 2:
+            report.have_two_living_children += 1
+        if instance.living_children > 2:
+            report.have_two_plus_living_children += 1
+        if instance.dead_children > 0:
+            report.have_dead_children += 1
+        if instance.dead_children == 1:
+            report.have_one_dead_children += 1
+        if instance.dead_children == 2:
+            report.have_two_dead_children += 1
+        if instance.dead_children > 2:
+            report.have_two_plus_dead_children += 1
+
+        # pregnancy
+        if instance.pregnant:
+            report.is_pregnant += 1
+
+        if instance.pregnancy_weeks == 1:
+            report.is_pregnant_1week += 1
+        if instance.pregnancy_weeks == 2:
+            report.is_pregnant_2weeks += 1
+        if instance.pregnancy_weeks == 3:
+            report.is_pregnant_3weeks += 1
+        if instance.pregnancy_weeks == 4:
+            report.is_pregnant_4weeks += 1
+        if instance.pregnancy_weeks == 5:
+            report.is_pregnant_5weeks += 1
+        if instance.pregnancy_weeks == 6:
+            report.is_pregnant_6weeks += 1
+        if instance.pregnancy_weeks == 7:
+            report.is_pregnant_7weeks += 1
+        if instance.pregnancy_weeks == 8:
+            report.is_pregnant_8weeks += 1
+        if instance.pregnancy_weeks == 9:
+            report.is_pregnant_9weeks += 1
+        if instance.pregnancy_weeks == 10:
+            report.is_pregnant_10weeks += 1
+        if instance.pregnancy_weeks == 11:
+            report.is_pregnant_11weeks += 1
+        if instance.pregnancy_weeks == 12:
+            report.is_pregnant_12weeks += 1
+        if instance.pregnancy_weeks == 13:
+            report.is_pregnant_13weeks += 1
+        if instance.pregnancy_weeks == 14:
+            report.is_pregnant_14weeks += 1
+        if instance.pregnancy_weeks == 15:
+            report.is_pregnant_15weeks += 1
+        if instance.pregnancy_weeks == 16:
+            report.is_pregnant_16weeks += 1
+        if instance.pregnancy_weeks == 17:
+            report.is_pregnant_17weeks += 1
+        if instance.pregnancy_weeks == 18:
+            report.is_pregnant_18weeks += 1
+        if instance.pregnancy_weeks == 19:
+            report.is_pregnant_19weeks += 1
+        if instance.pregnancy_weeks == 20:
+            report.is_pregnant_20weeks += 1
+        if instance.pregnancy_weeks == 21:
+            report.is_pregnant_21weeks += 1
+        if instance.pregnancy_weeks == 22:
+            report.is_pregnant_22weeks += 1
+        if instance.pregnancy_weeks == 23:
+            report.is_pregnant_23weeks += 1
+        if instance.pregnancy_weeks == 24:
+            report.is_pregnant_24weeks += 1
+        if instance.pregnancy_weeks == 25:
+            report.is_pregnant_25weeks += 1
+        if instance.pregnancy_weeks == 26:
+            report.is_pregnant_26weeks += 1
+        if instance.pregnancy_weeks == 27:
+            report.is_pregnant_27weeks += 1
+        if instance.pregnancy_weeks == 28:
+            report.is_pregnant_28weeks += 1
+        if instance.pregnancy_weeks == 29:
+            report.is_pregnant_29weeks += 1
+        if instance.pregnancy_weeks == 30:
+            report.is_pregnant_30weeks += 1
+        if instance.pregnancy_weeks == 31:
+            report.is_pregnant_31weeks += 1
+        if instance.pregnancy_weeks == 32:
+            report.is_pregnant_32weeks += 1
+        if instance.pregnancy_weeks == 33:
+            report.is_pregnant_33weeks += 1
+        if instance.pregnancy_weeks == 34:
+            report.is_pregnant_34weeks += 1
+        if instance.pregnancy_weeks == 35:
+            report.is_pregnant_35weeks += 1
+        if instance.pregnancy_weeks == 36:
+            report.is_pregnant_36weeks += 1
+        if instance.pregnancy_weeks == 37:
+            report.is_pregnant_37weeks += 1
+        if instance.pregnancy_weeks == 38:
+            report.is_pregnant_38weeks += 1
+        if instance.pregnancy_weeks == 39:
+            report.is_pregnant_39weeks += 1
+        if instance.pregnancy_weeks == 40:
+            report.is_pregnant_40weeks += 1
+        if instance.pregnancy_weeks > 40:
+            report.is_pregnant_40weeks_plus += 1
+
+        if instance.pregnancy_related_death:
+            report.is_pregnancy_related += 1
 
         # cause of death
-        if instance.cause_of_death == instance.CAUSE_FEVER:
-            report.cause_death_fever += 1
+        if instance.cause_of_death == instance.CAUSE_BLEEDING:
+            report.cause_bleeding += 1
+        elif instance.cause_of_death == instance.CAUSE_FEVER:
+            report.cause_fever += 1
+        elif instance.cause_of_death == instance.CAUSE_HTN:
+            report.cause_htn += 1
         elif instance.cause_of_death == instance.CAUSE_DIARRHEA:
-            report.cause_death_diarrhea += 1
-        elif instance.cause_of_death == instance.CAUSE_DYSPNEA:
-            report.cause_death_dyspnea += 1
-        elif instance.cause_of_death == instance.CAUSE_ANEMIA:
-            report.cause_death_anemia += 1
-        elif instance.cause_of_death == instance.CAUSE_RASH:
-            report.cause_death_rash += 1
-        elif instance.cause_of_death == instance.CAUSE_COUGH:
-            report.cause_death_cough += 1
-        elif instance.cause_of_death == instance.CAUSE_VOMITING:
-            report.cause_death_vomiting += 1
-        elif instance.cause_of_death == instance.CAUSE_NUCHAL_RIGIDITY:
-            report.cause_death_nuchal_rigidity += 1
-        elif instance.cause_of_death == instance.CAUSE_RED_EYE:
-            report.cause_death_red_eye += 1
-        elif instance.cause_of_death == instance.CAUSE_EAT_REFUSAL:
-            report.cause_death_eat_refusal += 1
+            report.cause_diarrhea += 1
+        elif instance.cause_of_death == instance.CAUSE_CRISIS:
+            report.cause_crisis += 1
+        elif instance.cause_of_death == instance.CAUSE_MISCARRIAGE:
+            report.cause_miscarriage += 1
+        elif instance.cause_of_death == instance.CAUSE_ABORTION:
+            report.cause_abortion += 1
         else:
-            report.cause_death_other += 1
-
-        # age
-        age_days = (instance.dod - instance.dod).days
-        if age_days < 7:
-            report.age_under_1w += 1
-        if age_days < 14:
-            report.age_under_2weeks += 1
-        if age_days < 30:
-            report.age_under_1month += 1
-        if age_days / 30 < 3:
-            report.age_under_3month += 1
-        if age_days / 30 < 6:
-            report.age_under_6month += 1
-        if age_days / 30 < 9:
-            report.age_under_9month += 1
-        if age_days < 365:
-            report.age_under_1 += 1
-        if age_days / 365 < 2:
-            report.age_under_2 += 1
-        if age_days / 365 < 3:
-            report.age_under_3 += 1
-        if age_days / 365 < 4:
-            report.age_under_4 += 1
-        if age_days / 365 <= 5:
-            report.age_under_5 += 1
+            report.cause_other += 1
 
     @classmethod
     def update_instance_with_agg(cls, report, instance):
 
-        report.sex_male += instance.sex_male
-        report.sexe_female += instance.sexe_female
+        # age
+        report.age_under_15 += instance.age_under_15
+        report.age_under_18 += instance.age_under_18
+        report.age_under_20 += instance.age_under_20
+        report.age_under_25 += instance.age_under_25
+        report.age_under_30 += instance.age_under_30
+        report.age_under_35 += instance.age_under_35
+        report.age_under_40 += instance.age_under_40
+        report.age_under_45 += instance.age_under_45
+        report.age_under_50 += instance.age_under_50
+        report.age_over_50 += instance.age_over_50
 
-        report.age_under_1w += instance.age_under_1w
-        report.age_under_2weeks += instance.age_under_2weeks
-        report.age_under_1month += instance.age_under_1month
-        report.age_under_3month += instance.age_under_3month
-        report.age_under_6month += instance.age_under_6month
-        report.age_under_9month += instance.age_under_9month
-        report.age_under_1 += instance.age_under_1
-        report.age_under_2 += instance.age_under_2
-        report.age_under_3 += instance.age_under_3
-        report.age_under_4 += instance.age_under_4
-        report.age_under_5 += instance.age_under_5
+        # children
+        report.have_living_children += instance.have_living_children
+        report.have_one_living_children += instance.have_one_living_children
+        report.have_two_living_children += instance.have_two_living_children
+        report.have_two_plus_living_children += instance.have_two_plus_living_children
+        report.have_dead_children += instance.have_dead_children
+        report.have_one_dead_children += instance.have_one_dead_children
+        report.have_two_dead_children += instance.have_two_dead_children
+        report.have_two_plus_dead_children += instance.have_two_plus_dead_children
 
-        report.death_home += instance.death_home
-        report.death_center += instance.death_center
-        report.death_other += instance.death_other
+        # pregnancy
+        report.is_pregnant += instance.is_pregnant
+        report.is_pregnant_1week += instance.is_pregnant_1week
+        report.is_pregnant_2weeks += instance.is_pregnant_2weeks
+        report.is_pregnant_3weeks += instance.is_pregnant_3weeks
+        report.is_pregnant_4weeks += instance.is_pregnant_4weeks
+        report.is_pregnant_5weeks += instance.is_pregnant_5weeks
+        report.is_pregnant_6weeks += instance.is_pregnant_6weeks
+        report.is_pregnant_7weeks += instance.is_pregnant_7weeks
+        report.is_pregnant_8weeks += instance.is_pregnant_8weeks
+        report.is_pregnant_9weeks += instance.is_pregnant_9weeks
+        report.is_pregnant_10weeks += instance.is_pregnant_10weeks
+        report.is_pregnant_11weeks += instance.is_pregnant_11weeks
+        report.is_pregnant_12weeks += instance.is_pregnant_12weeks
+        report.is_pregnant_13weeks += instance.is_pregnant_13weeks
+        report.is_pregnant_14weeks += instance.is_pregnant_14weeks
+        report.is_pregnant_15weeks += instance.is_pregnant_15weeks
+        report.is_pregnant_16weeks += instance.is_pregnant_16weeks
+        report.is_pregnant_17weeks += instance.is_pregnant_17weeks
+        report.is_pregnant_18weeks += instance.is_pregnant_18weeks
+        report.is_pregnant_19weeks += instance.is_pregnant_19weeks
+        report.is_pregnant_20weeks += instance.is_pregnant_20weeks
+        report.is_pregnant_21weeks += instance.is_pregnant_21weeks
+        report.is_pregnant_22weeks += instance.is_pregnant_22weeks
+        report.is_pregnant_23weeks += instance.is_pregnant_23weeks
+        report.is_pregnant_24weeks += instance.is_pregnant_24weeks
+        report.is_pregnant_25weeks += instance.is_pregnant_25weeks
+        report.is_pregnant_26weeks += instance.is_pregnant_26weeks
+        report.is_pregnant_27weeks += instance.is_pregnant_27weeks
+        report.is_pregnant_28weeks += instance.is_pregnant_28weeks
+        report.is_pregnant_29weeks += instance.is_pregnant_29weeks
+        report.is_pregnant_30weeks += instance.is_pregnant_30weeks
+        report.is_pregnant_31weeks += instance.is_pregnant_31weeks
+        report.is_pregnant_32weeks += instance.is_pregnant_32weeks
+        report.is_pregnant_33weeks += instance.is_pregnant_33weeks
+        report.is_pregnant_34weeks += instance.is_pregnant_34weeks
+        report.is_pregnant_35weeks += instance.is_pregnant_35weeks
+        report.is_pregnant_36weeks += instance.is_pregnant_36weeks
+        report.is_pregnant_37weeks += instance.is_pregnant_37weeks
+        report.is_pregnant_38weeks += instance.is_pregnant_38weeks
+        report.is_pregnant_39weeks += instance.is_pregnant_39weeks
+        report.is_pregnant_40weeks += instance.is_pregnant_40weeks
+        report.is_pregnant_40weeks_plus += instance.is_pregnant_40weeks_plus
 
-        report.cause_death_fever += instance.cause_death_fever
-        report.cause_death_diarrhea += instance.cause_death_diarrhea
-        report.cause_death_dyspnea += instance.cause_death_dyspnea
-        report.cause_death_anemia += instance.cause_death_anemia
-        report.cause_death_rash += instance.cause_death_rash
-        report.cause_death_cough += instance.cause_death_cough
-        report.cause_death_vomiting += instance.cause_death_vomiting
-        report.cause_death_nuchal_rigidity += \
-                                           instance.cause_death_nuchal_rigidity
-        report.cause_death_red_eye += instance.cause_death_red_eye
-        report.cause_death_eat_refusal += instance.cause_death_eat_refusal
-        report.cause_death_other += instance.cause_death_other
+        report.is_pregnancy_related += instance.is_pregnancy_related
+
+        # cause of death
+        report.cause_bleeding += instance.cause_bleeding
+        report.cause_fever += instance.cause_fever
+        report.cause_htn += instance.cause_htn
+        report.cause_diarrhea += instance.cause_diarrhea
+        report.cause_crisis += instance.cause_crisis
+        report.cause_miscarriage += instance.cause_miscarriage
+        report.cause_abortion += instance.cause_abortion
+        report.cause_other += instance.cause_other
