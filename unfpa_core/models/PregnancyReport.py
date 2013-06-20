@@ -34,6 +34,13 @@ class PregnancyReport(IndividualReport):
               (STILLBORN, "Mort-né"),
               (ABORTION, "Avortement"))
 
+    RESULT_STR = {
+        NONE: 'notyet',
+        ALIVE: 'alive',
+        STILLBORN: 'stillborn',
+        ABORTION: 'abortion'
+    }
+
     UNFPA = 'U'
     CREDOS = 'C'
     SOURCES = ((UNFPA, u"UNFPA"),
@@ -69,7 +76,28 @@ class PregnancyReport(IndividualReport):
     # django manager first
     objects = models.Manager()
     periods = PeriodManager()
-    
+
+    def result_to_str(self):
+        return self.RESULT_STR.get(self.pregnancy_result)
+
+    def to_dict(self):
+        data = {}
+        for field in ('reporting_location',
+                      'householder_name',
+                      'mother_name',
+                      'dob',
+                      'dob_auto',
+                      'pregnancy_age',
+                      'expected_delivery_date',
+                      'delivery_date',
+                      'pregnancy_result',
+                      'created_by',
+                      'created_on',
+                      'modified_by',
+                      'modified_on'):
+            data.update({field: getattr(self, field)})
+        return data
+
 
     def __unicode__(self):
         return ugettext(u"%(mother_name)s/%(dob)s"

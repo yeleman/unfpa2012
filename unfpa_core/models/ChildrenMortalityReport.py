@@ -98,6 +98,24 @@ class ChildrenMortalityReport(IndividualReport):
     objects = models.Manager()
     periods = PeriodManager()
 
+    def to_dict(self):
+        data = {}
+        for field in ('reporting_location',
+                      'name',
+                      'sex',
+                      'dob',
+                      'dob_auto',
+                      'dod',
+                      'death_location',
+                      'death_place',
+                      'cause_of_death',
+                      'created_by',
+                      'created_on',
+                      'modified_by',
+                      'modified_on'):
+            data.update({field: getattr(self, field)})
+        return data
+
     def __unicode__(self):
         return ugettext(u"%(name)s/%(dod)s"
                 % {'name': self.name.title(),

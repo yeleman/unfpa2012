@@ -70,7 +70,25 @@ class BirthReport(IndividualReport):
     # django manager first
     objects = models.Manager()
     periods = PeriodManager()
-    
+
+    def to_dict(self):
+        data = {}
+        for field in ('reporting_location',
+                      'family_name',
+                      'surname_mother',
+                      'surname_child',
+                      'sex',
+                      'dob',
+                      'dob_auto',
+                      'born_alive',
+                      'birth_location',
+                      'created_by',
+                      'created_on',
+                      'modified_by',
+                      'modified_by'):
+            data.update({field: getattr(self, field)})
+        return data
+
     def __unicode__(self):
         return ugettext(u"%(family_name)s/%(dob)s"
                 % {'family_name': self.family_name.title(),

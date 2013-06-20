@@ -58,6 +58,11 @@ class RHCommoditiesReport(Report):
     SUPPLIES_AVAILABLE = 1
     SUPPLIES_NOT_AVAILABLE = 0
     SUPPLIES_NOT_PROVIDED = -1
+    YESNOAVAIL_STR = {
+        SUPPLIES_AVAILABLE: 'available',
+        SUPPLIES_NOT_PROVIDED: 'not_provided',
+        SUPPLIES_NOT_AVAILABLE: 'not_available'
+    }
     YESNOAVAIL = ((SUPPLIES_AVAILABLE, _(u"Yes. Supplies available")),
                   (SUPPLIES_NOT_AVAILABLE, _(u"Yes. Supplies not available")),
                   (SUPPLIES_NOT_PROVIDED, _(u"No")))
