@@ -1,4 +1,4 @@
-Babel==0.9.6
+Babel==2.9.1
 BabelDjango==0.2.2
 Django==1.3.1
 South==0.7.3
